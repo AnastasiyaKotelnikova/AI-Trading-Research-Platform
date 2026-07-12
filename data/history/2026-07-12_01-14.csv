@@ -1,0 +1,5 @@
+Symbol,Price,Change_%,Volume,RVOL,Dollar_Volume,Avg_Dollar_Volume,Breakout,Above_SMA20,Above_SMA50,Distance_From_High_%,Relative_Strength,Scanner_Score,Reasons,Risks
+NVVE,13.67,43.29,18060900,5.94,246892504.38,41570538.58,True,True,True,34.09,3590.53,120,"['Strong momentum (+43.29%)', 'Very high RVOL (5.94)', 'Good liquidity', '20-day breakout', 'Above SMA20', 'Above SMA50', 'Outperforming SPY']","['Far below recent high', 'Very large one-day move']"
+FBRX,43.92,15.76,3185600,3.94,139911546.17,35520078.92,True,True,True,3.17,157.05,115,"['Strong momentum (+15.76%)', 'High RVOL (3.94)', 'Good liquidity', '20-day breakout', 'Above SMA20', 'Above SMA50', 'Outperforming SPY']",[]
+REZI,33.94,9.66,3202500,2.16,108692845.6,50407007.16,True,True,True,0.29,8.99,90,"['Good momentum (+9.66%)', 'High RVOL (2.16)', 'Good liquidity', '20-day breakout', 'Above SMA20', 'Above SMA50']",[]
+EQPT,18.65,3.61,7209800,2.5,134462767.25,53692789.4,False,False,False,30.36,-2.99,50,"['High RVOL (2.50)', 'Good liquidity']",['Far below recent high']
