@@ -542,3 +542,83 @@ Status:
 
 Planned
 
+
+
+\---
+
+
+
+\## Historical Threshold Optimizer v1.1
+
+
+
+Date:
+
+2026-07-28
+
+
+
+Changes:
+
+
+
+\- Removed duplicate candidate generation function
+
+\- Improved trade deduplication logic
+
+\- Added validation for minimum trade requirements
+
+
+
+Reason:
+
+
+
+The optimizer was producing results but required cleanup before further research.
+
+
+
+Previous issues:
+
+
+
+\- Duplicate function definitions created unnecessary code duplication
+
+\- Trade deduplication could keep weaker signals when multiple signals existed for the same symbol/date
+
+\- Additional validation was needed before metric calculation
+
+
+
+Improvements:
+
+
+
+\- Candidate generation now uses one standardized percentile-based function
+
+\- Duplicate trades now keep the highest Rank\_Score setup
+
+\- Threshold evaluation rejects insufficient trade samples
+
+
+
+Expected impact:
+
+
+
+\- More reliable threshold optimization
+
+\- Reduced bias from duplicate signals
+
+\- Better reproducibility for future experiments
+
+
+
+Status:
+
+
+
+Completed
+
+
+
