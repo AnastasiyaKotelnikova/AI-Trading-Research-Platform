@@ -13,7 +13,8 @@ def filter_candidates():
     # Basic quality filters
     filtered = df[
         (df["Price"] >= 5) &
-        (df["Price"] <= 500) &
+        (df["Price"] <= 1200) &
+        (df["Volume"] >= 500_000) &
         (df["Dollar_Volume"] >= 20_000_000) &
         (df["RVOL"] >= 1.5) &
         (df["Change_%"] >= 3)

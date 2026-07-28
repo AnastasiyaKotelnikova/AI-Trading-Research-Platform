@@ -1,0 +1,36 @@
+Symbol,Sector,Market_Regime,Market_Regime_Score,Price,Change_%,RSI,Return_5D,Return_20D,RVOL,Volume,Average_Volume,Dollar_Volume,Above_SMA20,Above_SMA50,Breakout,Distance_From_High_%,Overextended,Entry,Stop_Loss,Target_1,Target_2,Risk_Reward,Setup_Quality,Risk_Per_Share,Shares,Capital_Required,Relative_Strength,Momentum_Score,Trend_Score,Volume_Score,Relative_Strength_Score,Setup_Score,Risk_Score,Market_Regime_Adjustment,Risk_Reward_Score,Rank_Score,Signal,Trade_Reason,Signal_Explanation,Score_Breakdown
+SUNE,Technology,Neutral,1,3.36,49.6094,60.59,54.84,30.74,7.94,75649800.0,9527258.0,6829001.55,True,True,False,-12.27,True,3.36,2.5,4.5,6.21,1.33,50,0.86,116.0,389.76,30.42554901943502,10,20,15,5,10.0,-10,0,0,50.0,AVOID,"✓ Strong 20D momentum (+30.7%)
+✓ Outperforming SPY (+30.4%)
+✓ Above SMA20
+✓ Above SMA50
+✓ High volume (RVOL 7.94)
+
+⚠ Price extended from recent base
+⚠ Higher risk setup","['Price above 20-day moving average', 'Price above 50-day moving average', 'High relative volume confirmation', 'Outperforming the market']","Momentum: 10
+Trend: 20
+Volume: 15
+Relative Strength: 5
+Setup Quality: 10.0
+Risk Adjustment: -10
+Risk/Reward: 0"
+CDZI,Utilities,Neutral,1,3.76,10.2757,42.69,-12.15,-6.47,4.9,4459500.0,911020.0,8272893.14,False,False,False,-14.55,False,3.76,3.88,4.9,5.89,,30,,,,-6.784450980564978,0,0,15,0,6.0,0,0,0,21.0,AVOID,✓ High volume (RVOL 4.9),['High relative volume confirmation'],"Momentum: 0
+Trend: 0
+Volume: 15
+Relative Strength: 0
+Setup Quality: 6.0
+Risk Adjustment: 0
+Risk/Reward: 0"
+ELAB,Healthcare,Neutral,1,1.07,5.6604,36.11,-20.52,-31.73,10.69,35425100.0,3314662.0,3236135.8,False,False,False,-31.73,False,1.07,1.22,1.57,2.14,,15,,,,-32.04445098056498,0,0,15,0,3.0,0,0,0,18.0,AVOID,✓ High volume (RVOL 10.69),['High relative volume confirmation'],"Momentum: 0
+Trend: 0
+Volume: 15
+Relative Strength: 0
+Setup Quality: 3.0
+Risk Adjustment: 0
+Risk/Reward: 0"
+SCNX,Healthcare,Neutral,1,0.34,11.1411,41.63,-2.38,-10.43,26.9,46524200.0,1729814.0,659782.46,False,False,False,-13.2,False,0.34,0.35,0.43,0.53,,15,,,,-10.744450980564979,0,0,15,0,3.0,0,0,0,18.0,AVOID,✓ High volume (RVOL 26.9),['High relative volume confirmation'],"Momentum: 0
+Trend: 0
+Volume: 15
+Relative Strength: 0
+Setup Quality: 3.0
+Risk Adjustment: 0
+Risk/Reward: 0"

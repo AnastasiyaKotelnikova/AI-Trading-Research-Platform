@@ -5,14 +5,14 @@ def apply_filters(
     df,
 
     # Price filter
-    min_price=10,
-    max_price=500,
+    min_price=5,
+    max_price=1200,
 
     # Movement filter
     min_change=3,
 
     # Volume filter
-    min_volume=2_000_000,
+    min_volume=500_000,
 
     # Relative volume
     min_rvol=3,
@@ -42,10 +42,10 @@ def apply_filters(
 
 
     # -------------------------
-    # Volume
+    # Average Volume Liquidity
     # -------------------------
     filtered = filtered[
-        filtered["Volume"] >= min_volume
+        filtered["Average_Volume"] >= min_volume
     ]
 
 

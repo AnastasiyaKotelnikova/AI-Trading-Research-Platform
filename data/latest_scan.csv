@@ -1,0 +1,9 @@
+Symbol,Price,Change_%,Volume,RVOL,Dollar_Volume,Avg_Dollar_Volume,Breakout,Above_SMA20,Above_SMA50,Distance_From_High_%,Relative_Strength,Scanner_Score,Reasons,Risks
+QTTB,21.38,16.77,27564473,14.67,589328409.61,40160802.96,True,True,True,-42.34,66.8,95,"['Strong momentum (+16.77%)', 'Very high RVOL (14.67)', 'Good liquidity', '20-day breakout', 'Above SMA20', 'Above SMA50', 'Outperforming SPY']",[]
+VEEE,24.86,103.76,69813683,18.86,1735568201.99,92036673.13,True,True,True,-243.13,279.16,95,"['Strong momentum (+103.76%)', 'Very high RVOL (18.86)', 'Good liquidity', '20-day breakout', 'Above SMA20', 'Above SMA50', 'Outperforming SPY']",['Very large one-day move']
+CNMD,42.41,6.96,2181739,2.83,92527550.66,32693103.38,True,True,True,-9.22,21.7,75,"['Good momentum (+6.96%)', 'High RVOL (2.83)', 'Good liquidity', '20-day breakout', 'Above SMA20', 'Above SMA50', 'Outperforming SPY']",[]
+TCBK,60.07,6.98,3190894,9.0,191677001.61,21291793.37,True,True,True,-8.59,13.88,75,"['Good momentum (+6.98%)', 'Very high RVOL (9.00)', '20-day breakout', 'Above SMA20', 'Above SMA50', 'Outperforming SPY']",[]
+PSNL,15.04,8.75,10631455,2.46,159897082.79,64892226.8,False,True,True,2.08,58.11,70,"['Good momentum (+8.75%)', 'High RVOL (2.46)', 'Good liquidity', 'Above SMA20', 'Above SMA50', 'Outperforming SPY']",[]
+ANRO,28.03,5.97,2079405,2.82,58285723.58,20632470.06,False,True,True,0.95,29.25,65,"['Good momentum (+5.97%)', 'High RVOL (2.82)', 'Above SMA20', 'Above SMA50', 'Outperforming SPY']",[]
+WBD,27.09,2.89,45321575,2.09,1227761473.67,588505567.55,False,True,True,0.77,-0.69,45,"['High RVOL (2.09)', 'Excellent liquidity', 'Above SMA20', 'Above SMA50']",[]
+FHB,29.14,3.89,10386649,4.59,302666945.52,65989348.41,False,False,True,4.71,1.97,43,"['High RVOL (4.59)', 'Good liquidity', 'Above SMA50']",[]

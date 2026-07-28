@@ -12,8 +12,9 @@ def main():
     df = apply_filters(
         df,
         min_price=5,
+        max_price=1200,
         min_change=3,
-        min_volume=1_000_000,
+        min_volume=500_000,
         min_rvol=2,
         min_dollar_volume=25_000_000
     )

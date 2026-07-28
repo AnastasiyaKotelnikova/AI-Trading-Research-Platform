@@ -1,16 +1,67 @@
-venv/
+# ==========================================
+# Python
+# ==========================================
 
+venv/
 __pycache__/
 *.pyc
 
-data/cache/
-data/history/
-data/latest_scan.csv
-data/latest_scan.json
-
-config/finnhub_key.py
-
-.env
+# ==========================================
+# IDE
+# ==========================================
 
 .vscode/
 .idea/
+
+# ==========================================
+# Trained Models
+# ==========================================
+
+data/models/*.pkl
+data/models/*.joblib
+
+# Keep important model tracking files
+!data/models/model_metrics.csv
+!data/models/model_monitoring.csv
+!data/models/model_feedback_analytics.csv
+
+# ==========================================
+# Historical Market Data
+# ==========================================
+
+data/price_history/
+data/feature_history/
+data/market_history/
+data/history/
+
+# ==========================================
+# Generated Output
+# ==========================================
+
+data/results/
+data/signal_history/
+data/backtest_results/
+data/charts/
+data/reports/
+data/logs/
+reports/
+
+# ==========================================
+# Large Datasets
+# ==========================================
+
+data/historical_ml_dataset.csv
+data/historical_ml_dataset_backup.csv
+data/historical_ml_dataset_updated.csv
+data/ml_training_dataset.csv
+data/trade_database.csv
+data/live_trade_database.csv
+data/historical_trade_database.csv
+
+# ==========================================
+# Temporary Files
+# ==========================================
+
+*.log
+*.tmp
+*.bak
