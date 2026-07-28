@@ -8,15 +8,35 @@ Last Updated:
 
 
 
+
+
 Repository:
+
+
 
 AI-Trading-Research-Platform
 
 
 
+
+
+GitHub:
+
+
+
+https://github.com/AnastasiyaKotelnikova/AI-Trading-Research-Platform
+
+
+
+
+
 Local Path:
 
+
+
 C:\\Users\\anast\\scanner-project
+
+
 
 
 
@@ -26,7 +46,11 @@ C:\\Users\\anast\\scanner-project
 
 
 
+
+
 This project is a personal AI-assisted stock trading research platform.
+
+
 
 
 
@@ -34,7 +58,11 @@ The goal is not to create a guaranteed prediction system.
 
 
 
+
+
 The goal is to build a quantitative research assistant that:
+
+
 
 
 
@@ -59,6 +87,8 @@ The goal is to build a quantitative research assistant that:
 
 
 Long-term vision:
+
+
 
 
 
@@ -104,7 +134,13 @@ Model Improvement
 
 
 
+
+
+
+
 \# 2. Development Environment
+
+
 
 
 
@@ -116,11 +152,15 @@ Windows
 
 
 
+
+
 Python:
 
 
 
 3.11.9
+
+
 
 
 
@@ -134,7 +174,7 @@ venv
 
 
 
-Run application modules:
+Run modules:
 
 
 
@@ -154,7 +194,13 @@ C:\\Users\\anast\\scanner-project
 
 
 
+
+
+
+
 \# 3. Current Development Phase
+
+
 
 
 
@@ -168,7 +214,7 @@ Phase 3 — AI Research Engine
 
 
 
-Estimated completion:
+Estimated Completion:
 
 
 
@@ -178,7 +224,7 @@ Estimated completion:
 
 
 
-Overall project completion:
+Overall Platform Completion:
 
 
 
@@ -188,11 +234,27 @@ Approximately 45-50%
 
 
 
-Current focus:
+Current Focus:
 
 
 
-Improving AI ranking, confidence calibration, risk adjustment, and research scoring.
+Improving:
+
+
+
+\- AI ranking
+
+\- confidence calibration
+
+\- research scoring
+
+\- risk adjustment
+
+\- historical threshold optimization
+
+
+
+
 
 
 
@@ -204,7 +266,9 @@ Improving AI ranking, confidence calibration, risk adjustment, and research scor
 
 
 
-\## Phase 1 — Data Engineering
+
+
+\# Phase 1 — Data Engineering
 
 
 
@@ -242,13 +306,15 @@ Completed:
 
 
 
-✓ Daily data pipeline
+✓ Daily pipeline automation
 
 
 
 
 
 Main components:
+
+
 
 
 
@@ -272,7 +338,13 @@ app/daily\_pipeline.py
 
 
 
-\## Phase 2 — Machine Learning Foundation
+
+
+
+
+\# Phase 2 — Machine Learning Foundation
+
+
 
 
 
@@ -287,6 +359,8 @@ Mostly Complete
 
 
 Completed:
+
+
 
 
 
@@ -310,7 +384,7 @@ Completed:
 
 
 
-✓ ML predictions
+✓ ML prediction pipeline
 
 
 
@@ -318,9 +392,21 @@ Completed:
 
 
 
+✓ ROC-AUC evaluation
+
+
+
+✓ Improved model comparison logic
+
+
+
+
+
 
 
 Main components:
+
+
 
 
 
@@ -344,13 +430,21 @@ app/ml\_backtest.py
 
 
 
-\# 5. Important Model History
+
+
+
+
+\# 5. Important Model Evolution
+
+
 
 
 
 
 
 \## Retired Model
+
+
 
 
 
@@ -374,7 +468,11 @@ RETIRED
 
 
 
+
+
 Reason:
+
+
 
 
 
@@ -382,15 +480,25 @@ The model showed unrealistic performance:
 
 
 
+
+
 Accuracy:
+
+
 
 98.3%
 
 
 
+
+
 F1:
 
+
+
 96.1%
+
+
 
 
 
@@ -400,13 +508,15 @@ Problems discovered:
 
 
 
+
+
 \- trained on smaller dataset
 
 \- possible data leakage
 
 \- biased historical representation
 
-\- unrealistic for live trading
+\- unrealistic validation results
 
 
 
@@ -416,7 +526,17 @@ Decision:
 
 
 
-Do not use model\_v27 as performance benchmark.
+
+
+model\_v27 is not used as a performance benchmark.
+
+
+
+
+
+
+
+
 
 
 
@@ -428,7 +548,11 @@ Do not use model\_v27 as performance benchmark.
 
 
 
+
+
 Dataset:
+
+
 
 
 
@@ -438,11 +562,17 @@ data/historical\_ml\_dataset.csv
 
 
 
+
+
 Current training size:
 
 
 
+
+
 Training samples:
+
+
 
 3,504,289
 
@@ -460,11 +590,17 @@ Testing samples:
 
 
 
-Training method:
+
+
+Validation method:
 
 
 
-Chronological split.
+
+
+Chronological split
+
+
 
 
 
@@ -472,7 +608,11 @@ Purpose:
 
 
 
-Prevent future information leakage.
+
+
+Reduce future information leakage and create more realistic evaluation.
+
+
 
 
 
@@ -486,7 +626,11 @@ Prevent future information leakage.
 
 
 
-Latest accepted model:
+
+
+Latest Accepted Model:
+
+
 
 
 
@@ -496,7 +640,11 @@ model\_v33
 
 
 
+
+
 Algorithm:
+
+
 
 
 
@@ -506,35 +654,57 @@ Random Forest
 
 
 
+
+
 Configuration:
+
+
 
 
 
 n\_estimators:
 
+
+
 500
+
+
 
 
 
 max\_depth:
 
+
+
 20
+
+
 
 
 
 min\_samples\_leaf:
 
+
+
 10
+
+
 
 
 
 max\_features:
 
+
+
 sqrt
 
 
 
+
+
 class\_weight:
+
+
 
 balanced
 
@@ -544,7 +714,11 @@ balanced
 
 
 
+
+
 Performance:
+
+
 
 
 
@@ -578,19 +752,31 @@ Accuracy:
 
 
 
+
+
 Backtest:
+
+
 
 
 
 Trades:
 
+
+
 210
+
+
 
 
 
 Win Rate:
 
+
+
 46.7%
+
+
 
 
 
@@ -606,11 +792,9 @@ Average Return:
 
 
 
-Important:
+Champion selection now considers:
 
 
-
-Current model evaluation uses multiple factors:
 
 
 
@@ -626,7 +810,13 @@ Current model evaluation uses multiple factors:
 
 
 
-The champion system no longer accepts models based only on F1.
+
+
+Models are no longer accepted only because of high classification metrics.
+
+
+
+
 
 
 
@@ -640,9 +830,15 @@ The champion system no longer accepts models based only on F1.
 
 
 
-Features currently used:
 
 
+Features used:
+
+
+
+
+
+\## Volume
 
 
 
@@ -650,9 +846,25 @@ Volume
 
 
 
+Average\_Volume
 
 
-Returns:
+
+RVOL
+
+
+
+Volume\_Trend
+
+
+
+
+
+
+
+\## Returns
+
+
 
 
 
@@ -670,7 +882,11 @@ Return\_20D
 
 
 
-Momentum:
+
+
+\## Momentum
+
+
 
 
 
@@ -680,7 +896,11 @@ Momentum\_Acceleration
 
 
 
-Technical indicators:
+
+
+\## Technical Indicators
+
+
 
 
 
@@ -714,7 +934,11 @@ SMA\_Gap
 
 
 
-Volatility:
+
+
+\## Volatility
+
+
 
 
 
@@ -732,25 +956,11 @@ ATR\_Percent
 
 
 
-Volume:
 
 
-
-Average\_Volume
-
+\## Position
 
 
-RVOL
-
-
-
-Volume\_Trend
-
-
-
-
-
-Position:
 
 
 
@@ -766,13 +976,19 @@ Distance\_From\_52W\_High
 
 
 
+
+
 \# 8. AI Research Engine Status
 
 
 
 
 
+
+
 Completed:
+
+
 
 
 
@@ -784,7 +1000,7 @@ Completed:
 
 
 
-✓ AI confidence
+✓ AI confidence system
 
 
 
@@ -800,13 +1016,17 @@ Completed:
 
 
 
-✓ Automated reports
+✓ Automated research reports
 
 
 
 
 
-Current files:
+
+
+Main files:
+
+
 
 
 
@@ -830,7 +1050,11 @@ app/trade\_quality\_filter.py
 
 
 
+
+
 \# 9. Current Research Problems
+
+
 
 
 
@@ -840,7 +1064,11 @@ app/trade\_quality\_filter.py
 
 
 
+
+
 Needs:
+
+
 
 
 
@@ -848,7 +1076,9 @@ Needs:
 
 \- percentile scaling
 
-\- better distribution handling
+\- distribution correction
+
+
 
 
 
@@ -858,7 +1088,11 @@ Needs:
 
 
 
+
+
 Needs:
+
+
 
 
 
@@ -870,7 +1104,11 @@ Needs:
 
 
 
+
+
 \## Risk Adjustment
+
+
 
 
 
@@ -878,7 +1116,9 @@ Future:
 
 
 
-\- volatility based stops
+
+
+\- volatility-based stops
 
 \- market regime adjustment
 
@@ -888,7 +1128,11 @@ Future:
 
 
 
+
+
 \## Confidence Calibration
+
+
 
 
 
@@ -896,7 +1140,9 @@ Goal:
 
 
 
-A confidence score should represent real historical probability.
+
+
+Confidence scores should represent real historical probabilities.
 
 
 
@@ -906,7 +1152,13 @@ Example:
 
 
 
+
+
 70% confidence should historically produce approximately 70% successful setups.
+
+
+
+
 
 
 
@@ -920,7 +1172,11 @@ Example:
 
 
 
+
+
 Current file:
+
+
 
 
 
@@ -930,7 +1186,11 @@ app/historical\_threshold\_optimizer.py
 
 
 
+
+
 Purpose:
+
+
 
 
 
@@ -940,7 +1200,11 @@ Find optimal filtering thresholds.
 
 
 
-Current optimization targets:
+
+
+Current targets:
+
+
 
 
 
@@ -954,7 +1218,11 @@ Current optimization targets:
 
 
 
+
+
 Future improvements:
+
+
 
 
 
@@ -968,19 +1236,165 @@ Future improvements:
 
 \- Sharpe-like scoring
 
+\- expectancy optimization
 
 
 
 
 
 
-\# 11. Data Files
 
 
 
 
 
-Important:
+\# 11. Documentation System
+
+
+
+
+
+Created:
+
+
+
+
+
+docs/
+
+
+
+
+
+AI\_PROJECT\_MEMORY.md
+
+
+
+ARCHITECTURE.md
+
+
+
+EXPERIMENT\_LOG.md
+
+
+
+MODEL\_HISTORY.md
+
+
+
+ROADMAP.md
+
+
+
+DEVELOPMENT\_RULES.md
+
+
+
+
+
+
+
+Purpose:
+
+
+
+
+
+Maintain:
+
+
+
+
+
+\- project history
+
+\- experiment results
+
+\- model evolution
+
+\- architecture decisions
+
+\- development roadmap
+
+
+
+
+
+
+
+
+
+\# 12. Git Development Workflow
+
+
+
+
+
+
+
+Repository:
+
+
+
+
+
+AI-Trading-Research-Platform
+
+
+
+
+
+
+
+Major changes:
+
+
+
+
+
+git add .
+
+
+
+git commit -m "Description"
+
+
+
+git push
+
+
+
+
+
+
+
+Documentation updates are required after:
+
+
+
+
+
+\- model changes
+
+\- architecture changes
+
+\- completed phases
+
+\- major experiments
+
+
+
+
+
+
+
+
+
+
+
+\# 13. Important Data Files
+
+
 
 
 
@@ -990,7 +1404,11 @@ Historical ML dataset:
 
 
 
+
+
 data/historical\_ml\_dataset.csv
+
+
 
 
 
@@ -1000,7 +1418,11 @@ Trade database:
 
 
 
+
+
 data/trade\_database.csv
+
+
 
 
 
@@ -1010,7 +1432,11 @@ Quality results:
 
 
 
+
+
 data/results/quality\_results.csv
+
+
 
 
 
@@ -1020,13 +1446,19 @@ Models:
 
 
 
+
+
 data/models/
 
 
 
 
 
+
+
 Reports:
+
+
 
 
 
@@ -1038,47 +1470,9 @@ data/reports/
 
 
 
-\# 12. Future Documentation Rule
 
 
-
-
-
-Every major change must update:
-
-
-
-docs/EXPERIMENT\_LOG.md
-
-
-
-
-
-Every model training must update:
-
-
-
-docs/MODEL\_HISTORY.md
-
-
-
-
-
-Every phase completion must update:
-
-
-
-docs/ROADMAP.md
-
-
-
-
-
-Architecture changes update:
-
-
-
-docs/ARCHITECTURE.md
+\# 14. Next Development Priorities
 
 
 
@@ -1086,17 +1480,9 @@ docs/ARCHITECTURE.md
 
 
 
-\# 13. Next Development Priorities
+\## Priority 1 — AI Research Engine
 
 
-
-
-
-Priority 1:
-
-
-
-Improve AI Research Engine.
 
 
 
@@ -1106,29 +1492,39 @@ Tasks:
 
 
 
-1\. Research score normalization
 
 
-
-2\. AI score optimization
-
-
-
-3\. Confidence calibration
-
-
-
-4\. Explainable AI
+1\. Improve research score normalization
 
 
 
 
 
-Priority 2:
+2\. Optimize AI final score weighting
 
 
 
-Improve professional backtesting.
+
+
+3\. Implement confidence calibration
+
+
+
+
+
+4\. Improve explainable AI
+
+
+
+
+
+
+
+
+
+\## Priority 2 — Historical Threshold Optimizer
+
+
 
 
 
@@ -1138,7 +1534,39 @@ Tasks:
 
 
 
-\- walk-forward testing
+
+
+\- remove duplicate threshold results
+
+\- use percentile-based search
+
+\- support decimal thresholds
+
+\- connect optimized thresholds to scanner
+
+
+
+
+
+
+
+
+
+\## Priority 3 — Professional Backtesting
+
+
+
+
+
+
+
+Tasks:
+
+
+
+
+
+\- walk-forward validation
 
 \- benchmark comparison
 
@@ -1146,21 +1574,27 @@ Tasks:
 
 \- drawdown analysis
 
+\- Sharpe/Sortino metrics
 
 
 
 
-Priority 3:
 
 
 
-Improve model monitoring.
+
+
+\## Priority 4 — Model Monitoring
+
+
 
 
 
 
 
 Tasks:
+
+
 
 
 
@@ -1170,11 +1604,19 @@ Tasks:
 
 \- model rollback
 
+\- performance tracking
 
 
 
 
-\# 14. Important Development Philosophy
+
+
+
+
+
+\# 15. Development Philosophy
+
+
 
 
 
@@ -1186,7 +1628,11 @@ The platform should evolve like a professional quantitative research system.
 
 
 
+
+
 Avoid:
+
+
 
 
 
@@ -1194,15 +1640,19 @@ Avoid:
 
 \- unrealistic metrics
 
-\- leakage
+\- data leakage
 
-\- accepting models only because of high accuracy
+\- accepting models only because of accuracy
+
+
 
 
 
 
 
 Prefer:
+
+
 
 
 
