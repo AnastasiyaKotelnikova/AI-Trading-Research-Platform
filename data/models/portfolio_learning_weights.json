@@ -1,0 +1,11 @@
+{
+    "Created": "2026-07-29 15:34:34.082414",
+    "AI_Learning_Status": "ACTIVE",
+    "Strategies": {
+        "MOMENTUM": 0.245,
+        "PULLBACK CONTINUATION": 0.35,
+        "QUALITY SETUP": 0.291,
+        "STRONG PULLBACK": 0.313,
+        "WATCH": 0.033
+    }
+}
