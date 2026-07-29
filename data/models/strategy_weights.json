@@ -1,0 +1,33 @@
+{
+    "Created": "2026-07-29 15:08:42.854089",
+    "Strategies": {
+        "PULLBACK CONTINUATION": {
+            "Weight": 0.638,
+            "Reliability": "MEDIUM",
+            "Trades": 1450,
+            "Win_Rate": 63.64,
+            "Average_Return": 3.0
+        },
+        "QUALITY SETUP": {
+            "Weight": 0.456,
+            "Reliability": "LOW",
+            "Trades": 464,
+            "Win_Rate": 33.33,
+            "Average_Return": 3.96
+        },
+        "MOMENTUM": {
+            "Weight": 0.438,
+            "Reliability": "LOW",
+            "Trades": 522,
+            "Win_Rate": 50.0,
+            "Average_Return": 2.8
+        },
+        "STRONG PULLBACK": {
+            "Weight": 0.348,
+            "Reliability": "LOW",
+            "Trades": 1276,
+            "Win_Rate": 20.0,
+            "Average_Return": 2.25
+        }
+    }
+}
