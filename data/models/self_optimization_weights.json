@@ -1,0 +1,10 @@
+{
+    "Created": "2026-07-29 15:37:39.661067",
+    "Optimization_Status": "ACTIVE",
+    "Strategy_Optimization_Weights": {
+        "PULLBACK CONTINUATION": 0.419,
+        "QUALITY SETUP": NaN,
+        "MOMENTUM": 0.269,
+        "STRONG PULLBACK": 0.224
+    }
+}
