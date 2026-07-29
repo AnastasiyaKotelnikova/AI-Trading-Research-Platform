@@ -5,8 +5,24 @@ from datetime import datetime
 import os
 
 
-MIN_TRADES = 75
+# Statistical reliability requirements
+# Prevent optimizer from selecting lucky small samples
+
+# Statistical reliability requirements
+
+MIN_TRADES = 100
 MIN_SYMBOLS = 10
+
+# Prefer larger samples but allow research during development
+TARGET_TRADES = 500
+TARGET_SYMBOLS = 40
+
+MIN_AVG_TRADES_PER_SYMBOL = 3
+# Overfitting protection
+MIN_AVG_TRADES_PER_SYMBOL = 3
+
+# Validation requirements
+MIN_VALIDATION_TRADES = 50
 
 
 def calculate_drawdown(returns):
@@ -248,6 +264,47 @@ def calculate_metrics(filtered):
     }
 
 
+  
+def calculate_reliability(metrics):
+
+    trade_score = min(
+        metrics["Trades"] / TARGET_TRADES,
+        1
+    )
+
+    symbol_score = min(
+        metrics["Unique_Symbols"] / TARGET_SYMBOLS,
+        1
+    )
+
+    diversity_score = min(
+        1 /
+        metrics["Avg_Trades_Per_Symbol"],
+        0.5
+    )
+
+
+    reliability = (
+
+        trade_score * 50
+
+        +
+
+        symbol_score * 40
+
+        +
+
+        diversity_score * 20
+
+    )
+
+
+    return round(
+        reliability,
+        2
+    )
+
+
 
 def calculate_score(metrics):
 
@@ -271,6 +328,11 @@ def calculate_score(metrics):
         -
 
         metrics["Max_Drawdown"] * 2
+
+        +
+
+        metrics["Reliability_Score"] * 0.5
+
 
     )
 
@@ -420,6 +482,11 @@ def evaluate_threshold(
 
     })
 
+
+
+    metrics["Reliability_Score"] = calculate_reliability(
+        metrics
+    )
 
 
     metrics["Optimizer_Score"] = calculate_score(
