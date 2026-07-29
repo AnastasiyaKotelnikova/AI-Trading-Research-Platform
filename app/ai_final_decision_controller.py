@@ -256,12 +256,12 @@ def create_decision(row):
         return "REJECT"
 
 
-    if score >= 85:
+    if score >= 70:
 
         return "BUY"
 
 
-    elif score >= 65:
+    elif score >= 55:
 
         return "WATCH"
 
@@ -275,12 +275,12 @@ def create_decision(row):
 def confidence_level(score):
 
 
-    if score >= 85:
+    if score >= 70:
 
         return "HIGH"
 
 
-    elif score >= 65:
+    elif score >= 55:
 
         return "MEDIUM"
 
