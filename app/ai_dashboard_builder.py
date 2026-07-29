@@ -1,13 +1,14 @@
 """
-AI Dashboard Builder v1.8
+AI Dashboard Builder v1.9
 
 Purpose:
 ---------
-Creates final interactive-style HTML dashboard.
+Creates final AI investment research dashboard.
 
 Inputs:
     data/analysis/final_ai_decision_controller.csv
     data/analysis/final_portfolio_risk_decisions.csv
+    data/analysis/ai_trade_explanations.csv
     data/results/trade_quality_report.csv
 
 Output:
@@ -15,12 +16,14 @@ Output:
 
 
 Features:
-    - Portfolio overview
-    - AI decision summary
-    - Conviction ranking
+    - Portfolio summary
+    - AI ranking table
     - Risk analysis
     - Strategy performance
-    - ML confidence
+    - AI explanations
+    - Strengths
+    - Weaknesses
+    - Recommended actions
 """
 
 
@@ -45,6 +48,11 @@ RISK_FILE = (
 )
 
 
+EXPLANATION_FILE = (
+    "data/analysis/ai_trade_explanations.csv"
+)
+
+
 STRATEGY_FILE = (
     "data/results/trade_quality_report.csv"
 )
@@ -65,7 +73,8 @@ OUTPUT_FILE = (
 
 def load_data():
 
-    print("\nLoading AI dashboard data...")
+
+    print("\nLoading dashboard intelligence...")
 
 
     ai = pd.read_csv(
@@ -76,6 +85,12 @@ def load_data():
 
     risk = pd.read_csv(
         RISK_FILE,
+        low_memory=False
+    )
+
+
+    explanation = pd.read_csv(
+        EXPLANATION_FILE,
         low_memory=False
     )
 
@@ -97,12 +112,63 @@ def load_data():
         f"AI records: {len(ai)}"
     )
 
+
     print(
         f"Risk records: {len(risk)}"
     )
 
 
-    return ai, risk, strategy
+    print(
+        f"Explanation records: {len(explanation)}"
+    )
+
+
+    return ai, risk, explanation, strategy
+
+
+
+
+
+# =====================================================
+# MERGE
+# =====================================================
+
+
+def merge_data(
+        ai,
+        explanation
+):
+
+
+    columns = [
+
+        "Symbol",
+        "AI_Strengths",
+        "AI_Weaknesses",
+        "AI_Explanation",
+        "AI_Recommended_Action"
+
+    ]
+
+
+    explanation = explanation[
+        columns
+    ]
+
+
+    df = ai.merge(
+
+        explanation,
+
+        on="Symbol",
+
+        how="left"
+
+    )
+
+
+    return df
+
 
 
 
@@ -160,7 +226,7 @@ def create_summary(df):
             ),
 
 
-        "Average AI Score":
+        "Average AI Analyst Score":
             round(
                 df["AI_Analyst_Score"]
                 .mean(),
@@ -173,22 +239,22 @@ def create_summary(df):
 
 
 # =====================================================
-# HTML BUILDER
+# DASHBOARD HTML
 # =====================================================
 
 
-def build_html(
-        ai,
+def build_dashboard(
+        df,
         risk,
         strategy
 ):
 
 
-    summary = create_summary(ai)
+    summary = create_summary(df)
 
 
 
-    ranked = ai.sort_values(
+    ranked = df.sort_values(
         "Final_Conviction_Score",
         ascending=False
     )
@@ -201,8 +267,9 @@ def build_html(
 
 <head>
 
+
 <title>
-AI Trading Research Dashboard
+AI Trading Research Dashboard v1.9
 </title>
 
 
@@ -213,9 +280,9 @@ body {{
 
 font-family: Arial;
 
-background:#f4f4f4;
-
 margin:30px;
+
+background:#f5f5f5;
 
 }}
 
@@ -226,9 +293,9 @@ background:white;
 
 padding:20px;
 
-margin-bottom:20px;
+margin-bottom:25px;
 
-border-radius:10px;
+border-radius:12px;
 
 }}
 
@@ -240,20 +307,20 @@ display:grid;
 grid-template-columns:
 repeat(3,1fr);
 
-gap:20px;
+gap:15px;
 
 }}
 
 
-.box {{
+.metric {{
 
 background:white;
 
 padding:20px;
 
-text-align:center;
-
 border-radius:10px;
+
+text-align:center;
 
 font-size:20px;
 
@@ -271,11 +338,11 @@ background:white;
 }}
 
 
-th,td {{
-
-padding:10px;
+td,th {{
 
 border:1px solid #ccc;
+
+padding:8px;
 
 text-align:center;
 
@@ -291,7 +358,7 @@ background:#b7f7b7;
 
 .WATCH {{
 
-background:#fff2a8;
+background:#fff1a8;
 
 }}
 
@@ -302,6 +369,18 @@ background:#ffb3b3;
 
 }}
 
+
+.stock {{
+
+border-left:6px solid #555;
+
+padding:15px;
+
+margin-top:15px;
+
+background:#fafafa;
+
+}}
 
 
 </style>
@@ -314,7 +393,7 @@ background:#ffb3b3;
 
 
 <h1>
-AI Trading Research Dashboard
+AI Trading Research Dashboard v1.9
 </h1>
 
 
@@ -334,11 +413,14 @@ Generated:
 
     for key,value in summary.items():
 
+
         html += f"""
 
-<div class="box">
+<div class="metric">
 
-<b>{key}</b>
+<b>
+{key}
+</b>
 
 <br>
 
@@ -355,19 +437,17 @@ Generated:
 </div>
 
 
-<br>
-
 
 
 <div class="card">
 
 <h2>
-Top AI Ranked Candidates
+AI Candidate Ranking
 </h2>
 
 
-
 <table>
+
 
 <tr>
 
@@ -377,10 +457,6 @@ Rank
 
 <th>
 Symbol
-</th>
-
-<th>
-Strategy
 </th>
 
 <th>
@@ -410,8 +486,7 @@ Risk
 
 
         decision = row.get(
-            "AI_Final_Decision",
-            "N/A"
+            "AI_Final_Decision"
         )
 
 
@@ -427,11 +502,6 @@ Risk
 
 <td>
 {row.get('Symbol')}
-</td>
-
-
-<td>
-{row.get('Strategy')}
 </td>
 
 
@@ -473,7 +543,7 @@ Risk
 
 
 <h2>
-Portfolio Risk Overview
+AI Analyst Explanations
 </h2>
 
 
@@ -481,25 +551,91 @@ Portfolio Risk Overview
 
 
 
-    if len(risk) > 0:
+    for _,row in ranked.iterrows():
 
 
-        html += risk[
-            [
-                "Symbol",
-                "Risk_Score",
-                "Sector_Risk",
-                "Final_Portfolio_Decision"
-            ]
-        ].to_html(
-            index=False
-        )
+        html += f"""
+
+<div class="stock">
 
 
-    else:
+<h3>
+{row['Symbol']}
+-
+{row['AI_Final_Decision']}
+</h3>
 
 
-        html += "<p>No risk data available</p>"
+<p>
+
+<b>
+Conviction:
+</b>
+
+{round(row.get('Final_Conviction_Score',0),2)}
+
+</p>
+
+
+<p>
+
+<b>
+AI Explanation:
+</b>
+
+<br>
+
+{row.get('AI_Explanation','N/A')}
+
+</p>
+
+
+
+<p>
+
+<b>
+Strengths:
+</b>
+
+<br>
+
+{row.get('AI_Strengths','N/A')}
+
+</p>
+
+
+
+<p>
+
+<b>
+Weaknesses:
+</b>
+
+<br>
+
+{row.get('AI_Weaknesses','N/A')}
+
+</p>
+
+
+
+<p>
+
+<b>
+Recommended Action:
+</b>
+
+<br>
+
+{row.get('AI_Recommended_Action','N/A')}
+
+</p>
+
+
+</div>
+
+
+"""
 
 
 
@@ -511,11 +647,31 @@ Portfolio Risk Overview
 
 <div class="card">
 
+<h2>
+Portfolio Risk Overview
+</h2>
+
+"""
+
+
+
+    html += risk.to_html(
+        index=False
+    )
+
+
+
+    html += """
+
+</div>
+
+
+
+<div class="card">
 
 <h2>
 Strategy Performance
 </h2>
-
 
 """
 
@@ -531,8 +687,9 @@ Strategy Performance
 
     else:
 
-        html += "<p>No strategy data available</p>"
-
+        html += (
+            "<p>No strategy data available</p>"
+        )
 
 
     html += """
@@ -553,6 +710,7 @@ Strategy Performance
 
 
 
+
 # =====================================================
 # MAIN
 # =====================================================
@@ -562,22 +720,36 @@ def main():
 
 
     print()
+
     print("==============================")
-    print("AI Dashboard Builder v1.8")
+
+    print(
+        "AI Dashboard Builder v1.9"
+    )
+
     print("==============================")
+
     print()
 
 
 
-    ai,risk,strategy = load_data()
+    ai,risk,explanation,strategy = load_data()
 
 
 
-    html = build_html(
+    df = merge_data(
         ai,
+        explanation
+    )
+
+
+
+    html = build_dashboard(
+        df,
         risk,
         strategy
     )
+
 
 
     os.makedirs(
