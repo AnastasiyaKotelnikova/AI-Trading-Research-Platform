@@ -1,0 +1,51 @@
+{
+    "Created": "2026-07-29 15:15:34.072744",
+    "Engine": "Adaptive Strategy Learner v1.5",
+    "Strategies": {
+        "MOMENTUM": {
+            "Old_Weight": 0.438,
+            "New_Weight": 0.438,
+            "Change": 0.0,
+            "Learning_Score": 25.23,
+            "Win_Rate": 33.33,
+            "Average_Return": 2.8,
+            "Trades": 522
+        },
+        "PULLBACK CONTINUATION": {
+            "Old_Weight": 0.638,
+            "New_Weight": 0.738,
+            "Change": 0.1,
+            "Learning_Score": 110.1,
+            "Win_Rate": 28.0,
+            "Average_Return": 3.0,
+            "Trades": 1450
+        },
+        "QUALITY SETUP": {
+            "Old_Weight": 0.456,
+            "New_Weight": 0.456,
+            "Change": 0.0,
+            "Learning_Score": 34.06,
+            "Win_Rate": 12.5,
+            "Average_Return": 3.96,
+            "Trades": 464
+        },
+        "STRONG PULLBACK": {
+            "Old_Weight": 0.348,
+            "New_Weight": 0.348,
+            "Change": 0.0,
+            "Learning_Score": 38.99,
+            "Win_Rate": 9.09,
+            "Average_Return": 2.25,
+            "Trades": 1276
+        },
+        "WATCH": {
+            "Old_Weight": 0,
+            "New_Weight": 0.05,
+            "Change": 0.05,
+            "Learning_Score": 0.44,
+            "Win_Rate": 0.0,
+            "Average_Return": -0.26,
+            "Trades": 232
+        }
+    }
+}
