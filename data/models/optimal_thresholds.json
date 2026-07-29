@@ -3,8 +3,8 @@
     "Confidence_Score": 75.0,
     "Research_Score": 103.0,
     "Risk_Reward": 2.81,
-    "Minimum_Trades": 75,
+    "Minimum_Trades": 100,
     "Minimum_Symbols": 10,
-    "Optimizer_Score": 30.77,
-    "Created": "2026-07-28 19:52:08"
+    "Optimizer_Score": 42.61,
+    "Created": "2026-07-28 22:39:14"
 }

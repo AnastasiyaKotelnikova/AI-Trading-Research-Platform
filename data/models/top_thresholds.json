@@ -17,7 +17,8 @@
         "Confidence_Threshold":75.0,
         "Research_Threshold":103.0,
         "Risk_Reward_Threshold":2.81,
-        "Optimizer_Score":30.77
+        "Reliability_Score":23.67,
+        "Optimizer_Score":42.61
     },
     {
         "Trades":132,
@@ -37,7 +38,8 @@
         "Confidence_Threshold":60.0,
         "Research_Threshold":103.0,
         "Risk_Reward_Threshold":2.9,
-        "Optimizer_Score":-9.57
+        "Reliability_Score":25.87,
+        "Optimizer_Score":3.37
     },
     {
         "Trades":144,
@@ -57,6 +59,7 @@
         "Confidence_Threshold":60.0,
         "Research_Threshold":103.0,
         "Risk_Reward_Threshold":2.81,
-        "Optimizer_Score":-55.92
+        "Reliability_Score":28.07,
+        "Optimizer_Score":-41.89
     }
 ]
