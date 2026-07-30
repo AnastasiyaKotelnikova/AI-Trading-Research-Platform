@@ -415,76 +415,117 @@ Continue improving threshold selection before automatic deployment.
 
 ---
 
-## EXP-007 — Historical Trade Database Creation
+---
+
+## EXP-007 — Research Score Normalization V3
 
 
 Date:
 
-2026-07
+2026-07-29
 
 
 Objective:
 
-
-Create historical memory system for learning from previous trade outcomes.
-
-
-Files:
+Improve Research Score quality by removing score inflation and creating a normalized research ranking system.
 
 
-app/historical_trade_database.py
+Problem:
 
+Previous Research Score calculation:
 
-Dataset:
-
-
-data/historical_trade_database.csv
-
-
-Stored information:
-
-
-- Symbol
-
-- Entry
-
-- Exit
-
-- Return %
-
-- Result
-
-- Strategy
-
-- Sector
-
-- Research Score
-
-- Confidence Score
-
-- Rank Score
-
-- Momentum Score
-
-- Trend Score
-
-- Relative Strength
-
-- Risk Reward
-
-- Technical conditions
+- directly added Rank Score
+- strategy bonuses
+- sector bonuses
+- risk reward bonuses
+- RSI bonuses
 
 
 Result:
 
+Scores exceeded expected range:
 
-Platform gained ability to analyze which setups historically performed better.
+Examples:
+
+Research_Score > 100
+
+
+Problems:
+
+- poor comparability
+- threshold optimization distortion
+- ranking saturation
+
+
+Changes:
+
+
+Updated:
+
+app/research_ranker.py
+
+
+Implemented:
+
+- normalized Research Score calculation
+- improved factor weighting
+- controlled scoring range
+- better distribution
+
+
+New Distribution:
+
+
+Minimum:
+
+35.04
+
+
+Maximum:
+
+77.15
+
+
+Average:
+
+53.98
+
+
+
+Impact:
+
+
+Improved:
+
+✓ score interpretability
+
+✓ ranking separation
+
+✓ threshold optimization readiness
+
+✓ historical validation compatibility
 
 
 Decision:
 
+Accept Research Ranker V3.
 
-Use historical trade outcomes as feedback for ranking improvements.
+
+Next action:
+
+
+Continue optimizing:
+
+- AI Final Score weighting
+- Confidence calibration
+- historical score validation
+
+
+Status:
+
+Completed
+
+---
 
 
 
