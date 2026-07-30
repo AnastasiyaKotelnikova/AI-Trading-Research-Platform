@@ -5,25 +5,73 @@ from datetime import datetime
 import os
 
 
-# Statistical reliability requirements
-# Prevent optimizer from selecting lucky small samples
+# ============================================================
+# Optimization Profiles
+# ============================================================
 
-# Statistical reliability requirements
+PROFILES = {
 
-MIN_TRADES = 100
-MIN_SYMBOLS = 10
 
-# Prefer larger samples but allow research during development
+    "AGGRESSIVE": {
+
+        "MIN_TRADES": 100,
+        "MIN_SYMBOLS": 10,
+
+        "MIN_WIN_RATE": 25,
+        "MIN_PROFIT_FACTOR": 1.5,
+        "MIN_EXPECTANCY": 5,
+
+        "MAX_DRAWDOWN": 70
+
+    },
+
+
+    "BALANCED": {
+
+        "MIN_TRADES": 125,
+        "MIN_SYMBOLS": 10,
+
+        "MIN_WIN_RATE": 30,
+        "MIN_PROFIT_FACTOR": 2.0,
+        "MIN_EXPECTANCY": 5,
+
+        "MAX_DRAWDOWN": 55
+
+    },
+
+
+    "CONSERVATIVE": {
+
+        "MIN_TRADES": 200,
+        "MIN_SYMBOLS": 25,
+
+        "MIN_WIN_RATE": 45,
+        "MIN_PROFIT_FACTOR": 2.5,
+        "MIN_EXPECTANCY": 3,
+
+        "MAX_DRAWDOWN": 35
+
+    }
+
+}
+
+
+
+CURRENT_PROFILE = "BALANCED"
+
+
+
+PROFILE = PROFILES[CURRENT_PROFILE]
+
+
+
 TARGET_TRADES = 500
 TARGET_SYMBOLS = 40
 
-MIN_AVG_TRADES_PER_SYMBOL = 3
-# Overfitting protection
-MIN_AVG_TRADES_PER_SYMBOL = 3
 
-# Validation requirements
-MIN_VALIDATION_TRADES = 50
-
+# ============================================================
+# Drawdown Calculation
+# ============================================================
 
 def calculate_drawdown(returns):
 
@@ -43,7 +91,12 @@ def calculate_drawdown(returns):
 
 
 
+# ============================================================
+# Metrics
+# ============================================================
+
 def calculate_metrics(filtered):
+
 
     returns = pd.to_numeric(
         filtered["Return_%"],
@@ -51,23 +104,22 @@ def calculate_metrics(filtered):
     ).dropna()
 
 
-    if len(returns) < MIN_TRADES:
+    if len(returns) < PROFILE["MIN_TRADES"]:
         return None
 
 
-    wins = returns[
-        returns > 0
-    ]
 
-    losses = returns[
-        returns < 0
-    ]
+    wins = returns[returns > 0]
+
+    losses = returns[returns < 0]
 
 
     if len(losses) == 0:
         return None
 
 
+
+    # Calculate win rate FIRST
 
     win_rate = (
         len(wins)
@@ -77,7 +129,41 @@ def calculate_metrics(filtered):
 
 
 
+    # Calculate symbols FIRST
+
+    unique_symbols = (
+        filtered["Symbol"]
+        .nunique()
+    )
+
+
+
+    print(
+        "DEBUG:",
+        "Trades:",
+        len(returns),
+        "Symbols:",
+        unique_symbols,
+        "Win:",
+        round(win_rate,2)
+    )
+
+
+
+    if len(returns) >= 150:
+
+        print(
+            "VALIDATION:",
+            len(returns),
+            "trades",
+            unique_symbols,
+            "symbols"
+        )
+
+
+
     avg_return = returns.mean()
+
 
 
     avg_win = (
@@ -87,9 +173,15 @@ def calculate_metrics(filtered):
     )
 
 
+
     avg_loss = abs(
         losses.mean()
     )
+
+
+
+    if abs(losses.sum()) == 0:
+        return None
 
 
 
@@ -100,6 +192,11 @@ def calculate_metrics(filtered):
         abs(losses.sum())
 
     )
+
+
+
+    if profit_factor < PROFILE["MIN_PROFIT_FACTOR"]:
+        return None
 
 
 
@@ -115,13 +212,16 @@ def calculate_metrics(filtered):
 
 
 
+    if expectancy < PROFILE["MIN_EXPECTANCY"]:
+        return None
+
+
+
     stop_rate = (
 
         len(
             filtered[
-                filtered["Result"]
-                ==
-                "STOP HIT"
+                filtered["Result"] == "STOP HIT"
             ]
         )
         /
@@ -135,9 +235,7 @@ def calculate_metrics(filtered):
 
         len(
             filtered[
-                filtered["Result"]
-                ==
-                "TARGET 1 HIT"
+                filtered["Result"] == "TARGET 1 HIT"
             ]
         )
         /
@@ -153,10 +251,14 @@ def calculate_metrics(filtered):
 
 
 
+    if max_drawdown > PROFILE["MAX_DRAWDOWN"]:
+        return None
+
+
+
     sharpe_like = (
 
-        avg_return
-        /
+        avg_return /
         returns.std()
 
         if returns.std() != 0
@@ -167,24 +269,21 @@ def calculate_metrics(filtered):
 
 
 
-    unique_symbols = (
-        filtered["Symbol"]
-        .nunique()
-    )
+    if unique_symbols < PROFILE["MIN_SYMBOLS"]:
+        return None
 
-
-    if unique_symbols < MIN_SYMBOLS:
+    if len(returns) / unique_symbols < 8:
         return None
 
 
-
-    avg_trades_per_symbol = (
+    avg_trades_symbol = (
 
         len(filtered)
         /
         unique_symbols
 
     )
+
 
 
     return {
@@ -196,92 +295,72 @@ def calculate_metrics(filtered):
             unique_symbols,
 
         "Avg_Trades_Per_Symbol":
-            round(
-                avg_trades_per_symbol,
-                2
-            ),
+            round(avg_trades_symbol,2),
 
         "Win_Rate":
-            round(
-                win_rate,
-                2
-            ),
+            round(win_rate,2),
 
         "Average_Return":
-            round(
-                avg_return,
-                2
-            ),
+            round(avg_return,3),
 
         "Avg_Win":
-            round(
-                avg_win,
-                2
-            ),
+            round(avg_win,3),
 
         "Avg_Loss":
-            round(
-                avg_loss,
-                2
-            ),
+            round(avg_loss,3),
 
         "Profit_Factor":
-            round(
-                profit_factor,
-                2
-            ),
+            round(profit_factor,3),
 
         "Expectancy":
-            round(
-                expectancy,
-                2
-            ),
+            round(expectancy,3),
 
         "Stop_Loss_Rate":
-            round(
-                stop_rate,
-                2
-            ),
+            round(stop_rate,2),
 
         "Target_Hit_Rate":
-            round(
-                target_rate,
-                2
-            ),
+            round(target_rate,2),
 
         "Max_Drawdown":
-            round(
-                max_drawdown,
-                2
-            ),
+            round(max_drawdown,2),
 
         "Sharpe_Like":
-            round(
-                sharpe_like,
-                3
-            )
+            round(sharpe_like,3)
 
     }
 
+# ============================================================
+# Reliability Score
+# ============================================================
 
-  
 def calculate_reliability(metrics):
 
+
     trade_score = min(
-        metrics["Trades"] / TARGET_TRADES,
+        metrics["Trades"] /
+        TARGET_TRADES,
         1
     )
+
 
     symbol_score = min(
-        metrics["Unique_Symbols"] / TARGET_SYMBOLS,
+        metrics["Unique_Symbols"] /
+        TARGET_SYMBOLS,
         1
     )
 
-    diversity_score = min(
+
+    diversity_score = (
+
         1 /
-        metrics["Avg_Trades_Per_Symbol"],
-        0.5
+        metrics["Avg_Trades_Per_Symbol"]
+
+        if metrics["Avg_Trades_Per_Symbol"] > 0
+
+        else 0
+
     )
+
 
 
     reliability = (
@@ -294,9 +373,14 @@ def calculate_reliability(metrics):
 
         +
 
-        diversity_score * 20
+        min(
+            diversity_score,
+            0.5
+        )
+        * 20
 
     )
+
 
 
     return round(
@@ -305,6 +389,52 @@ def calculate_reliability(metrics):
     )
 
 
+
+# ============================================================
+# Consistency Score
+# ============================================================
+
+def calculate_consistency(metrics):
+
+    score = 0
+
+
+    if metrics["Profit_Factor"] >= 2:
+        score += 30
+
+    elif metrics["Profit_Factor"] >= 1.5:
+        score += 20
+
+
+    if metrics["Expectancy"] > 5:
+        score += 30
+
+    elif metrics["Expectancy"] > 0:
+        score += 15
+
+
+
+    if metrics["Unique_Symbols"] >= 25:
+        score += 20
+
+    elif metrics["Unique_Symbols"] >= 10:
+        score += 10
+
+
+
+    if metrics["Max_Drawdown"] < 30:
+        score += 20
+
+    elif metrics["Max_Drawdown"] < 50:
+        score += 10
+
+
+    return score
+
+
+# ============================================================
+# Optimizer Score
+# ============================================================
 
 def calculate_score(metrics):
 
@@ -319,41 +449,62 @@ def calculate_score(metrics):
 
         +
 
-        metrics["Win_Rate"] * 0.35
+        metrics["Win_Rate"] * 0.60
 
         +
 
-        metrics["Sharpe_Like"] * 25
+        metrics["Sharpe_Like"] * 20
 
         -
 
-        metrics["Max_Drawdown"] * 2
+        metrics["Max_Drawdown"] * 1.5 
 
         +
 
         metrics["Reliability_Score"] * 0.5
 
+        +
+
+        metrics["Consistency_Score"]
 
     )
 
-
-    # reward diversification
 
     if metrics["Unique_Symbols"] >= 25:
 
         score *= 1.25
 
-
-    elif metrics["Unique_Symbols"] < 10:
-
-        score *= 0.5
+    if metrics["Unique_Symbols"] < 10:
+        score *= 0.75
 
 
+    elif metrics["Unique_Symbols"] < 15:
 
-    return round(
-        score,
-        2
-    )
+        score *= 0.85
+
+
+    return round(score,2)
+
+
+
+# ============================================================
+# Candidate Generation
+# ============================================================
+
+def generate_candidates(series):
+
+
+    percentiles = [
+        40,
+        50,
+        60,
+        70,
+        75,
+        80,
+        85,
+        90,
+        95
+    ]
 
 
     values=[]
@@ -377,51 +528,15 @@ def calculate_score(metrics):
             )
 
 
-
     return sorted(
         list(set(values))
     )
 
 
-def generate_candidates(series):
 
-    """
-    Generate realistic threshold candidates.
-
-    Uses percentiles instead of fixed values
-    to adapt to changing score distributions.
-    """
-
-    percentiles = [
-        40,
-        50,
-        60,
-        70,
-        75,
-        80,
-        85,
-        90,
-        95
-    ]
-
-    values = []
-
-    for p in percentiles:
-
-        value = series.quantile(
-            p / 100
-        )
-
-        values.append(
-            round(float(value),2)
-        )
-
-
-    return sorted(
-        list(set(values))
-    )
-
-
+# ============================================================
+# Threshold Evaluation
+# ============================================================
 
 def evaluate_threshold(
         df,
@@ -452,13 +567,10 @@ def evaluate_threshold(
 
 
 
-    if len(filtered) < MIN_TRADES:
-        return None
-
-
     metrics = calculate_metrics(
         filtered
     )
+
 
 
     if metrics is None:
@@ -489,6 +601,11 @@ def evaluate_threshold(
     )
 
 
+    metrics["Consistency_Score"] = calculate_consistency(
+        metrics
+    )
+
+
     metrics["Optimizer_Score"] = calculate_score(
         metrics
     )
@@ -497,93 +614,29 @@ def evaluate_threshold(
     return metrics
 
 
-def save_optimal_thresholds(results):
 
-    if len(results) == 0:
+# ============================================================
+# Optimization
+# ============================================================
 
-        print(
-            "No valid thresholds found"
-        )
+def optimize(dataset, profile_name):
 
-        return
-
-
-    best = results.iloc[0]
+    global CURRENT_PROFILE
+    global PROFILE
 
 
-    thresholds = {
+    CURRENT_PROFILE = profile_name
 
-        "Rank_Score":
-            float(best["Rank_Threshold"]),
-
-        "Confidence_Score":
-            float(best["Confidence_Threshold"]),
-
-        "Research_Score":
-            float(best["Research_Threshold"]),
-
-        "Risk_Reward":
-            float(best["Risk_Reward_Threshold"]),
-
-
-        "Minimum_Trades":
-            MIN_TRADES,
-
-        "Minimum_Symbols":
-            MIN_SYMBOLS,
-
-
-        "Optimizer_Score":
-            float(best["Optimizer_Score"]),
-
-
-        "Created":
-            datetime.now().strftime(
-                "%Y-%m-%d %H:%M:%S"
-            )
-    }
-
-
-    os.makedirs(
-        "data/models",
-        exist_ok=True
-    )
-
-
-    with open(
-        "data/models/optimal_thresholds.json",
-        "w"
-    ) as f:
-
-        json.dump(
-            thresholds,
-            f,
-            indent=4
-        )
+    PROFILE = PROFILES[profile_name]
 
 
     print(
-        "\nSaved:"
-        " data/models/optimal_thresholds.json"
+        "Optimization Profile:",
+        CURRENT_PROFILE
     )
-
-
-    # Save top candidates
-    results.head(25).to_json(
-        "data/models/top_thresholds.json",
-        orient="records",
-        indent=4
-    )
-
-
     print(
-        "Saved:"
-        " data/models/top_thresholds.json"
+        "\nLoading trade database..."
     )
-
-def optimize(dataset):
-
-    print("\nLoading trade database...")
 
 
     df = pd.read_csv(
@@ -592,19 +645,6 @@ def optimize(dataset):
     )
 
 
-    print(
-        "Total rows loaded:",
-        len(df)
-    )
-
-
-    print("\nResult distribution:")
-    print(
-        df["Result"].value_counts()
-    )
-
-
-    # Only completed trades
     df = df[
         df["Result"].isin(
             [
@@ -615,15 +655,15 @@ def optimize(dataset):
     ].copy()
 
 
-    # Remove duplicate forward-test snapshots
-    # Keep the highest quality signal for the same stock/date
 
     df = (
+
         df
         .sort_values(
             "Rank_Score",
             ascending=False
         )
+
         .drop_duplicates(
             subset=[
                 "Symbol",
@@ -631,16 +671,12 @@ def optimize(dataset):
             ],
             keep="first"
         )
+
     )
 
 
-    print(
-        "\nUnique trades after deduplication:",
-        len(df)
-    )
 
-
-    numeric_columns = [
+    numeric = [
 
         "Return_%",
 
@@ -655,7 +691,8 @@ def optimize(dataset):
     ]
 
 
-    for col in numeric_columns:
+
+    for col in numeric:
 
         df[col] = pd.to_numeric(
             df[col],
@@ -663,9 +700,11 @@ def optimize(dataset):
         )
 
 
+
     df = df.dropna(
-        subset=numeric_columns
+        subset=numeric
     )
+
 
 
     df["Risk_Reward"] = df["Risk_Reward"].clip(
@@ -674,72 +713,37 @@ def optimize(dataset):
     )
 
 
-    print(
-        "\nTrades used:",
-        len(df)
-    )
-
-
-    print(
-        "Unique Symbols:",
-        df["Symbol"].nunique()
-    )
-
-
-    print(
-        "Date Range:",
-        df["Scan_Date"].min(),
-        "to",
-        df["Scan_Date"].max()
-    )
-
 
     candidates = {
 
-        "Rank_Score":
-            generate_candidates(
-                df["Rank_Score"]
-            ),
+        col:
+        generate_candidates(df[col])
 
+        for col in [
 
-        "Confidence_Score":
-            generate_candidates(
-                df["Confidence_Score"]
-            ),
+            "Rank_Score",
 
+            "Confidence_Score",
 
-        "Research_Score":
-            generate_candidates(
-                df["Research_Score"]
-            ),
+            "Research_Score",
 
+            "Risk_Reward"
 
-        "Risk_Reward":
-            generate_candidates(
-                df["Risk_Reward"]
-            )
+        ]
 
     }
 
 
-    print("\nCandidates:")
 
-    for key,value in candidates.items():
-
-        print(
-            key,
-            value
-        )
+    results=[]
 
 
-    results = []
 
+    for r in candidates["Rank_Score"]:
 
-    for rank in candidates["Rank_Score"]:
+        for c in candidates["Confidence_Score"]:
 
-        for confidence in candidates["Confidence_Score"]:
-
-            for research in candidates["Research_Score"]:
+            for s in candidates["Research_Score"]:
 
                 for rr in candidates["Risk_Reward"]:
 
@@ -747,13 +751,9 @@ def optimize(dataset):
                     result = evaluate_threshold(
 
                         df,
-
-                        rank,
-
-                        confidence,
-
-                        research,
-
+                        r,
+                        c,
+                        s,
                         rr
 
                     )
@@ -766,55 +766,173 @@ def optimize(dataset):
                         )
 
 
+
     results_df = pd.DataFrame(
         results
     )
 
 
-    if len(results_df) == 0:
+
+    if len(results_df)==0:
 
         return results_df
 
 
-    # Remove duplicate outcomes
+
     results_df = results_df.drop_duplicates(
+
         subset=[
-            "Trades",
-            "Unique_Symbols",
-            "Win_Rate",
-            "Average_Return",
-            "Profit_Factor",
-            "Expectancy"
+
+            "Rank_Threshold",
+
+            "Confidence_Threshold",
+
+            "Research_Threshold",
+
+            "Risk_Reward_Threshold"
+
         ]
+
     )
+
 
 
     return results_df.sort_values(
+
         "Optimizer_Score",
+
         ascending=False
+
     )
 
+
+
+# ============================================================
+# Save
+# ============================================================
+
+def save_optimal_thresholds(results):
+
+
+    best = results.iloc[0]
+
+
+    output = {
+
+         "Profile":
+            best["Profile"],
+
+        "Rank_Score":
+            float(best["Rank_Threshold"]),
+
+
+        "Confidence_Score":
+            float(best["Confidence_Threshold"]),
+
+
+        "Research_Score":
+            float(best["Research_Threshold"]),
+
+
+        "Risk_Reward":
+            float(best["Risk_Reward_Threshold"]),
+
+
+        "Optimizer_Score":
+            float(best["Optimizer_Score"]),
+
+
+        "Created":
+            datetime.now().strftime(
+                "%Y-%m-%d %H:%M:%S"
+            )
+
+    }
+
+
+
+    os.makedirs(
+        "data/models",
+        exist_ok=True
+    )
+
+
+    with open(
+        "data/models/optimal_thresholds.json",
+        "w"
+    ) as f:
+
+        json.dump(
+            output,
+            f,
+            indent=4
+        )
+
+
+
+    results.head(25).to_json(
+
+        "data/models/top_thresholds.json",
+
+        orient="records",
+
+        indent=4
+
+    )
+
+
+
+# ============================================================
+# Main
+# ============================================================
 
 if __name__ == "__main__":
 
 
-    results = optimize(
-        "data/trade_database.csv"
-    )
+    all_results = []
 
 
-    if len(results) == 0:
+    for profile in PROFILES:
+
+
+        results = optimize(
+            "data/trade_database.csv",
+            profile
+        )
+
+
+        if len(results) > 0:
+
+            results["Profile"] = profile
+
+            all_results.append(results)
+
+
+
+    if len(all_results) == 0:
 
         print(
-            "\nNo optimization results."
+            "No valid thresholds found"
         )
 
         exit()
 
 
 
+    results = pd.concat(
+        all_results,
+        ignore_index=True
+    )
+
+
+    results = results.sort_values(
+        "Optimizer_Score",
+        ascending=False
+    )
+
+
     print(
-        "\n===== BEST HISTORICAL THRESHOLDS =====\n"
+        "\n===== BEST THRESHOLDS =====\n"
     )
 
 
@@ -831,6 +949,7 @@ if __name__ == "__main__":
     )
 
 
+
     results.to_csv(
 
         "data/results/historical_threshold_results.csv",
@@ -840,13 +959,13 @@ if __name__ == "__main__":
     )
 
 
-    print(
-        "\nSaved:"
-        " data/results/historical_threshold_results.csv"
-    )
-
-
+    # Save only best overall threshold
 
     save_optimal_thresholds(
         results
+    )
+
+
+    print(
+        "\nThreshold optimization completed."
     )

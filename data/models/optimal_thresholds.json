@@ -1,10 +1,9 @@
 {
-    "Rank_Score": 78.0,
+    "Profile": "AGGRESSIVE",
+    "Rank_Score": 79.0,
     "Confidence_Score": 75.0,
     "Research_Score": 103.0,
     "Risk_Reward": 2.81,
-    "Minimum_Trades": 100,
-    "Minimum_Symbols": 10,
-    "Optimizer_Score": 42.61,
-    "Created": "2026-07-28 22:39:14"
+    "Optimizer_Score": 111.92,
+    "Created": "2026-07-29 20:05:20"
 }

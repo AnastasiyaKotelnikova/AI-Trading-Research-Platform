@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+import numpy as np
 
 
 INPUT = "data/analysis/strategy_results.csv"
@@ -14,102 +15,213 @@ def load_data():
 
 
 
+def normalize(series):
+
+    if series.max() == series.min():
+        return pd.Series(
+            [50] * len(series),
+            index=series.index
+        )
+
+    return (
+        (series - series.min())
+        /
+        (series.max() - series.min())
+        *
+        100
+    )
+
+
+
 def calculate_research_score(df):
 
-    scores = []
 
-    for _, row in df.iterrows():
-
-        score = 0
-
-
-        # Base quality
-        score += row["Rank_Score"]
+    # =====================================
+    # Normalize individual factors
+    # =====================================
 
 
-        # Strategy bonus
-        if row["Strategy"] == "PULLBACK CONTINUATION":
-            score += 15
-
-        elif row["Strategy"] == "STRONG PULLBACK":
-            score += 10
-
-        elif row["Strategy"] == "QUALITY SETUP":
-            score += 8
-
-        elif row["Strategy"] == "MOMENTUM":
-            score += 5
-
-        else:
-            score -= 10
+    rank_score = normalize(
+        df["Rank_Score"]
+    )
 
 
+    momentum_score = normalize(
+        df["Momentum_Score"]
+    )
 
-        # Sector strength bonus
 
-        if row["Sector"] == "Healthcare":
-            score += 10
+    trend_score = normalize(
+        df["Trend_Score"]
+    )
 
-        elif row["Sector"] == "Financial Services":
-            score += 5
+
+    relative_strength = normalize(
+        df["Relative_Strength"]
+    )
+
+
+    risk_reward = normalize(
+        df["Risk_Reward"]
+    )
+
+
+    return_score = normalize(
+        df["Return_%"]
+    )
 
 
 
-        # Risk reward bonus
-
-        if row["Risk_Reward"] >= 5:
-            score += 8
-
-        elif row["Risk_Reward"] >= 3:
-            score += 5
+    # =====================================
+    # Technical bonuses
+    # =====================================
 
 
-
-        # RSI sweet spot
-
-        if 50 <= row["RSI"] <= 58:
-            score += 5
-
-
-        scores.append(score)
+    technical_bonus = pd.Series(
+        0,
+        index=df.index
+    )
 
 
-    df["Research_Score"] = scores
+    technical_bonus += (
+        df["Above_SMA20"]
+        .astype(int)
+        * 5
+    )
+
+
+    technical_bonus += (
+        df["Above_SMA50"]
+        .astype(int)
+        * 5
+    )
+
+
+    technical_bonus += (
+        df["Breakout"]
+        .astype(int)
+        * 10
+    )
+
+
+    technical_bonus -= (
+        df["Overextended"]
+        .astype(int)
+        * 10
+    )
+
+
+
+    # =====================================
+    # Weighted Research Model
+    # =====================================
+
+
+    raw_score = (
+
+        rank_score * 0.30
+
+        +
+
+        momentum_score * 0.15
+
+        +
+
+        trend_score * 0.15
+
+        +
+
+        relative_strength * 0.15
+
+        +
+
+        risk_reward * 0.15
+
+        +
+
+        return_score * 0.10
+
+        +
+
+        technical_bonus
+
+    )
+
+
+
+    df["Raw_Research_Score"] = (
+        raw_score
+    )
+
+
+
+    # =====================================
+    # Percentile ranking
+    # =====================================
+
+
+    df["Research_Score"] = (
+
+        df["Raw_Research_Score"]
+        .rank(
+            pct=True
+        )
+
+        *
+
+        100
+
+    ).round(2)
+
 
 
     return df
 
 
 
+
 def main():
 
-    print("\n===== RESEARCH RANKER =====\n")
+
+    print(
+        "\n===== RESEARCH RANKER V2 =====\n"
+    )
 
 
     df = load_data()
 
 
-    df = calculate_research_score(df)
+    df = calculate_research_score(
+        df
+    )
 
 
     result = (
+
         df.sort_values(
             "Research_Score",
             ascending=False
         )
+
         [
-            [
-                "Symbol",
-                "Sector",
-                "Strategy",
-                "Research_Score",
-                "Rank_Score",
-                "RSI",
-                "Risk_Reward",
-                "Return_%"
-            ]
+
+        [
+            "Symbol",
+            "Sector",
+            "Strategy",
+            "Research_Score",
+            "Rank_Score",
+            "Momentum_Score",
+            "Trend_Score",
+            "Risk_Reward",
+            "Return_%"
+
         ]
+
+        ]
+
         .head(25)
+
     )
 
 
@@ -129,10 +241,16 @@ def main():
     )
 
 
-    print("\nSaved:")
-    print(OUTPUT)
+    print(
+        "\nSaved:"
+    )
+
+    print(
+        OUTPUT
+    )
 
 
 
 if __name__ == "__main__":
+
     main()
