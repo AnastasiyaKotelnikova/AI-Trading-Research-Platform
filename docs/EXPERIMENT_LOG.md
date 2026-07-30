@@ -531,68 +531,60 @@ Completed
 
 ---
 
-## EXP-008 — Historical Threshold Optimizer v1.1
-
+EXP-008 — Research Score Calibration Validation
 
 Date:
+2026-07-29
 
-2026-07-28
+Objective:
+Validate whether Research_Score ranking correlates with future trade performance.
 
+Dataset:
+data/trade_database.csv
 
-Changes:
+Rows:
+20,420 trades
 
+Method:
+Quartile bucket analysis
 
-- Removed duplicate candidate generation logic
+Results:
 
-- Improved trade deduplication
+Research Score buckets:
 
-- Added minimum trade validation
+Top:
+944 trades
+Average Return:
++7.98%
 
-- Improved threshold evaluation reliability
+High:
+767 trades
+Average Return:
++3.48%
 
+Medium:
+1003 trades
+Average Return:
+-0.92%
 
-Reason:
-
-
-Optimizer was producing results but required cleanup before deeper research.
-
-
-Previous issues:
-
-
-- Duplicate function definitions created unnecessary code duplication
-
-- Duplicate trades could bias results
-
-- Insufficient trade samples affected metrics
-
-
-Improvements:
-
-
-- Standardized candidate generation
-
-- Duplicate signals now keep strongest setup
-
-- Minimum sample requirements added
+Low:
+1298 trades
+Average Return:
++1.05%
 
 
-Expected impact:
+Finding:
 
+Research_Score demonstrates meaningful ranking ability.
+Higher Research Scores produced significantly higher average returns.
 
-- More reliable optimization
+Decision:
 
-- Reduced duplicate signal bias
+Accept Research_Score V3 as improved ranking model.
 
-- Better experiment reproducibility
+Next:
 
-
-Status:
-
-
-Completed
-
-
+Validate AI_Final_Score using historical trade database after adding score persistence.
 
 ---
 
