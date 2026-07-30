@@ -255,42 +255,23 @@ Main components:
 
 
 
-Completed Research Score Improvement:
+✓ Research Score normalization completed
 
+Improvement:
 
-Previous problem:
+Previous Research Score system allowed scores above 100.
 
-Research Score used additive bonuses which caused scores above 100 and loss of ranking resolution.
+New system:
 
+- normalized scoring range
+- improved factor weighting
+- reduced score inflation
+- better threshold optimization compatibility
+- improved comparison between opportunities
 
+Version:
 
-Fixed:
-
-
-✓ converted Research Score into weighted scoring
-
-✓ removed score saturation problem
-
-✓ preserved ranking differences
-
-✓ created more realistic 0-100 research quality scale
-
-
-
-Remaining:
-
-
-- AI Final Score weight optimization
-
-- Confidence calibration
-
-- SHAP/LIME explainability
-
-- Historical score validation
-
-- False positive reduction
-
-
+Research Ranker V3
 
 ---
 
