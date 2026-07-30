@@ -1,9 +1,7 @@
-\# AI Trading Research Platform — Experiment Log
+# AI Trading Research Platform — Experiment Log
 
 
-
-\## Purpose
-
+## Purpose
 
 
 This document tracks important engineering experiments,
@@ -11,41 +9,32 @@ This document tracks important engineering experiments,
 changes, tests, and their outcomes.
 
 
-
 Each experiment should record:
 
 
+- Date
 
-\- Date
+- Objective
 
-\- Objective
+- Files changed
 
-\- Files changed
+- Dataset/model impact
 
-\- Dataset/model impact
+- Result
 
-\- Result
+- Decision
 
-\- Decision
-
-\- Next action
-
+- Next action
 
 
 
+---
 
-\---
-
-
-
-\# Experiment History
+# Experiment History
 
 
 
-
-
-\## EXP-001 — Initial Scanner Development
-
+## EXP-001 — Initial Scanner Development
 
 
 Date:
@@ -53,29 +42,25 @@ Date:
 2026-07
 
 
-
 Objective:
 
 Build first automated stock scanning pipeline.
 
 
-
 Changes:
 
-\- Created stock universe builder
+- Created stock universe builder
 
-\- Added Yahoo price collection
+- Added Yahoo price collection
 
-\- Added technical indicators
+- Added technical indicators
 
-\- Created scanner pipeline
-
+- Created scanner pipeline
 
 
 Result:
 
 Successfully generated technical stock signals.
-
 
 
 Decision:
@@ -84,14 +69,9 @@ Continue expanding into ML prediction system.
 
 
 
+---
 
-
-\---
-
-
-
-\## EXP-002 — Historical Feature Dataset Creation
-
+## EXP-002 — Historical Feature Dataset Creation
 
 
 Date:
@@ -99,31 +79,26 @@ Date:
 2026-07
 
 
-
 Objective:
 
 Create historical training data for machine learning.
 
 
-
 Changes:
 
-\- Built feature\_history\_builder.py
+- Built feature_history_builder.py
 
-\- Generated historical feature files
+- Generated historical feature files
 
-\- Created historical\_ml\_dataset.csv
-
+- Created historical_ml_dataset.csv
 
 
 Dataset:
 
 
-
 Stocks:
 
-\~4,000
-
+~4,000
 
 
 Rows:
@@ -131,29 +106,24 @@ Rows:
 220,849+
 
 
-
 Features:
 
-\- Returns
+- Returns
 
-\- RSI
+- RSI
 
-\- SMA
+- SMA
 
-\- Volume metrics
+- Volume metrics
 
-\- Volatility
+- Volatility
 
-\- Momentum
-
-
-
+- Momentum
 
 
 Result:
 
 Created foundation ML dataset.
-
 
 
 Decision:
@@ -162,14 +132,14 @@ Proceed with supervised learning.
 
 
 
+---
+
+## EXP-003 — First ML Models
 
 
-\---
+Date:
 
-
-
-\## EXP-003 — First ML Models
-
+2026-07
 
 
 Objective:
@@ -177,43 +147,33 @@ Objective:
 Train prediction models for successful trades.
 
 
-
 Models tested:
 
 
+- Logistic Regression
 
-\- Logistic Regression
-
-\- Random Forest
-
-
-
+- Random Forest
 
 
 Evaluation:
 
 
-
 Metrics:
 
-\- Accuracy
+- Accuracy
 
-\- Precision
+- Precision
 
-\- Recall
+- Recall
 
-\- F1
+- F1
 
-\- ROC-AUC
-
-
-
+- ROC-AUC
 
 
 Result:
 
 Random Forest performed better for trade recall.
-
 
 
 Decision:
@@ -222,14 +182,9 @@ Use champion/challenger system.
 
 
 
+---
 
-
-\---
-
-
-
-\## EXP-004 — Model v27 Investigation
-
+## EXP-004 — Model v27 Investigation
 
 
 Date:
@@ -237,23 +192,17 @@ Date:
 2026-07
 
 
-
 Objective:
 
 Review previous champion model.
 
 
-
 Model:
 
-model\_v27
-
-
-
+model_v27
 
 
 Original metrics:
-
 
 
 Accuracy:
@@ -261,55 +210,42 @@ Accuracy:
 98.3%
 
 
-
 F1:
 
 96.1%
 
 
-
-
-
 Finding:
-
 
 
 Model likely affected by:
 
 
+- Small dataset
 
-\- Small dataset
+- Data leakage
 
-\- Data leakage
+- Biased historical representation
 
-\- Bias
-
-
-
+- Unrealistic validation
 
 
 Decision:
 
 
-
-Retire model\_v27 as unreliable.
-
+Retire model_v27 as unreliable.
 
 
 New models must be trained using:
 
 
+- Larger historical dataset
 
-\- Larger historical dataset
+- Improved features
 
-\- Improved features
+- Leakage prevention
 
-\- Leakage prevention
-
-\- Realistic validation
-
-
-
+- Realistic validation
 
 
 Status:
@@ -318,50 +254,40 @@ Completed
 
 
 
+---
+
+## EXP-005 — Expanded Dataset Retraining
 
 
-\---
+Date:
 
-
-
-\## EXP-005 — Expanded Dataset Retraining
-
+2026-07
 
 
 Objective:
 
 
-
 Retrain models using improved dataset.
-
-
-
 
 
 Changes:
 
 
-
 Added:
 
 
+- ATR
 
-\- ATR
+- ATR_Percent
 
-\- ATR\_Percent
+- Range_Position
 
-\- Range\_Position
+- Distance_From_52W_High
 
-\- Distance\_From\_52W\_High
-
-\- Volume\_Trend
-
-
-
+- Volume_Trend
 
 
 Dataset:
-
 
 
 Training records:
@@ -369,21 +295,15 @@ Training records:
 3,504,289
 
 
-
 Testing records:
 
 98,034
 
 
-
-
-
 Results:
 
 
-
 Random Forest:
-
 
 
 F1:
@@ -391,17 +311,12 @@ F1:
 0.467
 
 
-
 ROC-AUC:
 
 0.669
 
 
-
-
-
 Backtest:
-
 
 
 Trades:
@@ -409,147 +324,173 @@ Trades:
 210
 
 
-
 Average Return:
 
-0.448
-
-
-
+0.448%
 
 
 Decision:
-
 
 
 Accepted as new champion because previous model was unreliable.
 
 
 
+---
+
+# AI Research Engine Experiments
 
 
-\---
+
+## EXP-006 — Automatic Threshold Optimization
 
 
+Date:
 
-\## EXP-006 — Automatic Threshold Optimization
-
+2026-07
 
 
 Status:
 
-In Progress
-
-
-
+Completed / Improving
 
 
 Objective:
 
 
-
-Replace manually selected filters:
-
+Replace manually selected filters with data-driven optimization.
 
 
-AI\_Confidence > 40
-
-ML Probability > 25
-
-Rank > 50
+Previous manual filters:
 
 
+- AI_Confidence > 40
 
+- ML Probability > 25
 
-
-with data-driven thresholds.
-
-
-
+- Rank > 50
 
 
 Files:
 
 
-
-app/historical\_threshold\_optimizer.py
-
-
-
+app/historical_threshold_optimizer.py
 
 
 Goal:
 
 
-
 Create:
 
 
-
-data/models/optimal\_thresholds.json
-
+data/models/optimal_thresholds.json
 
 
+Implemented:
 
 
-Status:
+- Historical threshold evaluation
+
+- Multiple optimization profiles
+
+- Risk-adjusted scoring
+
+- Expectancy calculation
+
+- Drawdown consideration
 
 
-
-Improving optimizer logic.
-
+Result:
 
 
+Optimizer successfully evaluates historical filtering performance.
 
 
-\---
+Decision:
 
 
-
-\# Future Experiments
-
-
-
-\## EXP-007 — Probability Calibration
-
-
-
-Status:
-
-Planned
+Continue improving threshold selection before automatic deployment.
 
 
 
+---
+
+## EXP-007 — Historical Trade Database Creation
 
 
-\## EXP-008 — SHAP Explainability
+Date:
+
+2026-07
+
+
+Objective:
+
+
+Create historical memory system for learning from previous trade outcomes.
+
+
+Files:
+
+
+app/historical_trade_database.py
+
+
+Dataset:
+
+
+data/historical_trade_database.csv
+
+
+Stored information:
+
+
+- Symbol
+
+- Entry
+
+- Exit
+
+- Return %
+
+- Result
+
+- Strategy
+
+- Sector
+
+- Research Score
+
+- Confidence Score
+
+- Rank Score
+
+- Momentum Score
+
+- Trend Score
+
+- Relative Strength
+
+- Risk Reward
+
+- Technical conditions
+
+
+Result:
+
+
+Platform gained ability to analyze which setups historically performed better.
+
+
+Decision:
+
+
+Use historical trade outcomes as feedback for ranking improvements.
 
 
 
-Status:
+---
 
-Planned
-
-
-
-
-
-\## EXP-009 — Walk Forward Validation
-
-
-
-Status:
-
-Planned
-
-
-
-\---
-
-
-
-\## Historical Threshold Optimizer v1.1
-
+## EXP-008 — Historical Threshold Optimizer v1.1
 
 
 Date:
@@ -557,68 +498,396 @@ Date:
 2026-07-28
 
 
-
 Changes:
 
 
+- Removed duplicate candidate generation logic
 
-\- Removed duplicate candidate generation function
+- Improved trade deduplication
 
-\- Improved trade deduplication logic
+- Added minimum trade validation
 
-\- Added validation for minimum trade requirements
-
+- Improved threshold evaluation reliability
 
 
 Reason:
 
 
-
-The optimizer was producing results but required cleanup before further research.
-
+Optimizer was producing results but required cleanup before deeper research.
 
 
 Previous issues:
 
 
+- Duplicate function definitions created unnecessary code duplication
 
-\- Duplicate function definitions created unnecessary code duplication
+- Duplicate trades could bias results
 
-\- Trade deduplication could keep weaker signals when multiple signals existed for the same symbol/date
-
-\- Additional validation was needed before metric calculation
-
+- Insufficient trade samples affected metrics
 
 
 Improvements:
 
 
+- Standardized candidate generation
 
-\- Candidate generation now uses one standardized percentile-based function
+- Duplicate signals now keep strongest setup
 
-\- Duplicate trades now keep the highest Rank\_Score setup
-
-\- Threshold evaluation rejects insufficient trade samples
-
+- Minimum sample requirements added
 
 
 Expected impact:
 
 
+- More reliable optimization
 
-\- More reliable threshold optimization
+- Reduced duplicate signal bias
 
-\- Reduced bias from duplicate signals
-
-\- Better reproducibility for future experiments
-
+- Better experiment reproducibility
 
 
 Status:
-
 
 
 Completed
 
 
 
+---
+
+# EXP-009 — Research Ranker V2
+
+
+Date:
+
+2026-07-29
+
+
+Objective:
+
+
+Improve Research Score calculation and move from simple bonus scoring toward multi-factor ranking.
+
+
+Previous approach:
+
+
+Research Score was calculated using:
+
+
+- Rank Score
+
+- Strategy bonuses
+
+- Sector bonuses
+
+- Risk reward bonuses
+
+- RSI bonus
+
+
+Problems discovered:
+
+
+- Score compression
+
+- Limited separation between candidates
+
+- Several features behaved like constants
+
+
+Changes:
+
+
+Updated:
+
+
+app/research_ranker.py
+
+
+New ranking factors:
+
+
+- Rank Score
+
+- Momentum Score
+
+- Trend Score
+
+- Relative Strength
+
+- Risk Reward
+
+- Strategy classification
+
+
+Result:
+
+
+Research ranking became more structured and transparent.
+
+
+Example:
+
+
+Previous Research Score range:
+
+
+75-88
+
+
+New system:
+
+
+More flexible multi-factor scoring framework.
+
+
+Decision:
+
+
+Continue improving with percentile normalization.
+
+
+
+---
+
+## EXP-010 — Research Feature Distribution Analysis
+
+
+Date:
+
+2026-07-29
+
+
+Objective:
+
+
+Analyze whether ranking features provide enough separation between trading candidates.
+
+
+Dataset:
+
+
+data/analysis/strategy_results.csv
+
+
+Sample size:
+
+
+68 candidates
+
+
+Findings:
+
+
+Rank Score:
+
+
+Mean:
+
+80.29
+
+
+Range:
+
+75-88
+
+
+Observation:
+
+
+Score distribution was compressed.
+
+
+Momentum Score:
+
+
+Mean:
+
+20.66
+
+
+Range:
+
+20-25
+
+
+Observation:
+
+
+Most candidates receive similar momentum scores.
+
+
+Trend Score:
+
+
+Mean:
+
+19.70
+
+
+Range:
+
+10-20
+
+
+Observation:
+
+
+Trend score provides limited differentiation.
+
+
+Relative Strength:
+
+
+Mean:
+
+16.90
+
+
+Range:
+
+10.18-28.75
+
+
+Observation:
+
+
+Relative Strength provides stronger candidate separation.
+
+
+Risk Reward:
+
+
+Mean:
+
+3.67
+
+
+Maximum:
+
+36.84
+
+
+Observation:
+
+
+Extreme values require normalization or capping.
+
+
+Decision:
+
+
+Research Score normalization is required before AI Final Score optimization.
+
+
+
+---
+
+# Future Experiments
+
+
+
+## EXP-011 — Research Score Normalization V3
+
+
+Status:
+
+Next Development
+
+
+Objective:
+
+
+Convert raw research factors into normalized percentile-based scores.
+
+
+Planned improvements:
+
+
+- percentile scaling
+
+- feature weighting
+
+- risk reward normalization
+
+- improved score distribution
+
+- validation against historical outcomes
+
+
+
+---
+
+## EXP-012 — Probability Calibration
+
+
+Status:
+
+Planned
+
+
+
+Objective:
+
+
+Improve confidence reliability so predicted probabilities better match historical success rates.
+
+
+
+---
+
+## EXP-013 — SHAP Explainability
+
+
+Status:
+
+Planned
+
+
+
+Objective:
+
+
+Add model explainability and feature contribution analysis.
+
+
+
+---
+
+## EXP-014 — Walk Forward Validation
+
+
+Status:
+
+Planned
+
+
+
+Objective:
+
+
+Create realistic out-of-sample testing using historical market periods.
+
+
+
+---
+
+# Experiment Rules
+
+
+Before accepting any major improvement:
+
+
+- Validate with historical data
+
+- Avoid data leakage
+
+- Compare against previous version
+
+- Record results
+
+- Update architecture documentation
+
+
+The platform prioritizes realistic research performance over artificially high metrics.
