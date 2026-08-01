@@ -213,7 +213,7 @@ def add_risk_management(
 
 
 
-    df["Trade_Status"] = trade_status
+    df["Risk_Status"] = trade_status
 
 
     df["Risk_Score"] = risk_scores

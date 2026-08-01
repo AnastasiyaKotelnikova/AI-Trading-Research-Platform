@@ -3,7 +3,6 @@ import pandas as pd
 
 # --------------------------------------------------
 # Input file
-# Final AI decisions contain complete analysis
 # --------------------------------------------------
 
 INPUT_FILE = "data/analysis/final_ai_signals.csv"
@@ -16,9 +15,9 @@ def generate_report():
 
 
     print("\n")
-    print("=" * 60)
+    print("=" * 70)
     print("AI TRADING RESEARCH REPORT")
-    print("=" * 60)
+    print("=" * 70)
 
 
 
@@ -29,39 +28,30 @@ def generate_report():
     print("\nMODEL INFORMATION:")
 
 
-    if "Model_Name" in df.columns:
+    model_columns = [
+        "Model_Name",
+        "Model_Accuracy",
+        "Model_F1",
+        "Model_Status"
+    ]
 
-        print(
-            "Active Model:",
-            df["Model_Name"].iloc[0]
-        )
+
+    found_model = False
 
 
-        if "Model_Accuracy" in df.columns:
+    for col in model_columns:
+
+        if col in df.columns:
+
+            found_model = True
 
             print(
-                "Model Accuracy:",
-                df["Model_Accuracy"].iloc[0]
+                f"{col}:",
+                df[col].iloc[0]
             )
 
 
-        if "Model_F1" in df.columns:
-
-            print(
-                "Model F1:",
-                df["Model_F1"].iloc[0]
-            )
-
-
-        if "Model_Status" in df.columns:
-
-            print(
-                "Model Status:",
-                df["Model_Status"].iloc[0]
-            )
-
-
-    else:
+    if not found_model:
 
         print(
             "Model information unavailable"
@@ -70,7 +60,7 @@ def generate_report():
 
 
     # --------------------------------------------------
-    # TOTAL SIGNALS
+    # SIGNAL COUNT
     # --------------------------------------------------
 
     print("\nTOTAL SIGNALS:")
@@ -82,7 +72,64 @@ def generate_report():
 
 
     # --------------------------------------------------
-    # FINAL AI CONVICTION RANKING
+    # AI STATUS SUMMARY
+    # --------------------------------------------------
+
+    if "Final_AI_Status" in df.columns:
+
+
+        print(
+            "\nFINAL AI STATUS DISTRIBUTION:\n"
+        )
+
+
+        print(
+            df["Final_AI_Status"]
+            .value_counts()
+        )
+
+
+
+    # --------------------------------------------------
+    # RISK ENGINE SUMMARY
+    # --------------------------------------------------
+
+    if "Trade_Status" in df.columns:
+
+
+        print(
+            "\nRISK ENGINE STATUS:\n"
+        )
+
+
+        print(
+            df["Trade_Status"]
+            .value_counts()
+        )
+
+
+
+    # --------------------------------------------------
+    # EXECUTION SUMMARY
+    # --------------------------------------------------
+
+    if "Trade_Execution_Status" in df.columns:
+
+
+        print(
+            "\nTRADE EXECUTION STATUS:\n"
+        )
+
+
+        print(
+            df["Trade_Execution_Status"]
+            .value_counts()
+        )
+
+
+
+    # --------------------------------------------------
+    # TOP AI RANKING
     # --------------------------------------------------
 
     if "Final_Conviction_Score" in df.columns:
@@ -93,26 +140,26 @@ def generate_report():
         )
 
 
-        conviction_columns = [
+        columns = [
 
             "Symbol",
-            "Strategy",
             "AI_Decision",
+            "Final_AI_Status",
             "Final_Conviction_Score",
             "Final_Conviction_Rating",
-            "Final_Action",
             "Trade_Grade",
-            "Trade_Score",
+            "Trade_Status",
+            "Trade_Execution_Status",
             "Reward_Risk",
             "Expected_Value"
 
         ]
 
 
-        available_columns = [
+        available = [
 
-            col for col in conviction_columns
-            if col in df.columns
+            c for c in columns
+            if c in df.columns
 
         ]
 
@@ -120,13 +167,11 @@ def generate_report():
         print(
 
             df[
-                available_columns
+                available
             ]
             .sort_values(
-
                 "Final_Conviction_Score",
                 ascending=False
-
             )
             .head(25)
 
@@ -135,69 +180,75 @@ def generate_report():
 
 
     # --------------------------------------------------
-    # TRADE MANAGEMENT RANKING
+    # APPROVED TRADE CANDIDATES
     # --------------------------------------------------
 
-    if "Trade_Score" in df.columns:
+    if "Final_AI_Status" in df.columns:
+
+
+        approved = df[
+
+            df["Final_AI_Status"]
+            ==
+            "APPROVED TRADE"
+
+        ]
 
 
         print(
-            "\nTOP TRADE MANAGEMENT RANKING:\n"
+            "\nAPPROVED TRADE CANDIDATES:\n"
         )
 
 
-        trade_columns = [
+        if len(approved):
 
-            "Symbol",
-            "AI_Decision",
-            "Trade_Score",
-            "Trade_Grade",
-            "Reward_Risk",
-            "Expected_Value",
-            "Recommended_Shares",
-            "Capital_Required"
+            cols = [
 
-        ]
+                "Symbol",
+                "Final_Conviction_Score",
+                "Expected_Value",
+                "Trade_Grade",
+                "Trade_Status",
+                "Trade_Execution_Status",
+                "Recommended_Shares"
 
-
-        available_trade_columns = [
-
-            col for col in trade_columns
-            if col in df.columns
-
-        ]
-
-
-        print(
-
-            df[
-                available_trade_columns
             ]
-            .sort_values(
 
-                "Trade_Score",
-                ascending=False
 
+            cols = [
+
+                c for c in cols
+                if c in approved.columns
+
+            ]
+
+
+            print(
+                approved[cols]
             )
-            .head(25)
 
-        )
+
+        else:
+
+            print(
+                "No approved trades"
+            )
 
 
 
     # --------------------------------------------------
-    # BEST AI ANALYST PICK
+    # BEST AI CANDIDATE
     # --------------------------------------------------
 
     if "Final_Conviction_Score" in df.columns:
 
 
         print(
-            "\nBEST CURRENT AI TRADE CANDIDATE:\n"
+            "\nBEST AI CANDIDATE:\n"
         )
 
 
-        best_trade = (
+        best = (
 
             df
             .sort_values(
@@ -209,82 +260,30 @@ def generate_report():
         )
 
 
-        print(
-            "Symbol:",
-            best_trade["Symbol"]
-        )
+        fields = [
+
+            "Symbol",
+            "AI_Decision",
+            "Final_AI_Status",
+            "Final_Conviction_Score",
+            "Expected_Value",
+            "Reward_Risk",
+            "Trade_Grade",
+            "Trade_Status",
+            "Trade_Execution_Status",
+            "Recommended_Shares"
+
+        ]
 
 
-        print(
-            "AI Decision:",
-            best_trade.get(
-                "AI_Decision",
-                "N/A"
-            )
-        )
+        for field in fields:
 
+            if field in best.index:
 
-        print(
-            "Conviction Score:",
-            best_trade.get(
-                "Final_Conviction_Score",
-                "N/A"
-            )
-        )
-
-
-        print(
-            "Conviction Rating:",
-            best_trade.get(
-                "Final_Conviction_Rating",
-                "N/A"
-            )
-        )
-
-
-        print(
-            "Action:",
-            best_trade.get(
-                "Final_Action",
-                "N/A"
-            )
-        )
-
-
-        print(
-            "Trade Grade:",
-            best_trade.get(
-                "Trade_Grade",
-                "N/A"
-            )
-        )
-
-
-        print(
-            "Expected Value:",
-            best_trade.get(
-                "Expected_Value",
-                "N/A"
-            )
-        )
-
-
-        print(
-            "Reward/Risk:",
-            best_trade.get(
-                "Reward_Risk",
-                "N/A"
-            )
-        )
-
-
-        print(
-            "Recommended Shares:",
-            best_trade.get(
-                "Recommended_Shares",
-                "N/A"
-            )
-        )
+                print(
+                    f"{field}:",
+                    best[field]
+                )
 
 
 
@@ -301,31 +300,8 @@ def generate_report():
 
 
         print(
-
             df["AI_Decision"]
             .value_counts()
-
-        )
-
-
-
-    # --------------------------------------------------
-    # FINAL ACTION DISTRIBUTION
-    # --------------------------------------------------
-
-    if "Final_Action" in df.columns:
-
-
-        print(
-            "\nFINAL AI ACTION DISTRIBUTION:\n"
-        )
-
-
-        print(
-
-            df["Final_Action"]
-            .value_counts()
-
         )
 
 
@@ -343,16 +319,14 @@ def generate_report():
 
 
         print(
-
             df["Strategy"]
             .value_counts()
-
         )
 
 
 
     # --------------------------------------------------
-    # AVERAGE CONVICTION BY STRATEGY
+    # STRATEGY PERFORMANCE
     # --------------------------------------------------
 
     if (
@@ -367,14 +341,18 @@ def generate_report():
 
 
         print(
-            "\nAVERAGE CONVICTION SCORE BY STRATEGY:\n"
+            "\nAVERAGE CONVICTION BY STRATEGY:\n"
         )
 
 
         print(
 
-            df.groupby("Strategy")
-            ["Final_Conviction_Score"]
+            df.groupby(
+                "Strategy"
+            )
+            [
+                "Final_Conviction_Score"
+            ]
             .mean()
             .sort_values(
                 ascending=False
@@ -385,13 +363,13 @@ def generate_report():
 
 
     # --------------------------------------------------
-    # REPORT COMPLETE
+    # COMPLETE
     # --------------------------------------------------
 
     print("\n")
-    print("=" * 60)
+    print("=" * 70)
     print("REPORT COMPLETE")
-    print("=" * 60)
+    print("=" * 70)
 
 
 

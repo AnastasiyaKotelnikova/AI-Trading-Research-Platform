@@ -10,21 +10,25 @@ def add_trade_management(
     df = df.copy()
 
 
-    entry_prices = []
-    stop_losses = []
-    targets_1 = []
-    targets_2 = []
+    entries = []
+    stops = []
+    targets1 = []
+    targets2 = []
 
-    risk_per_shares = []
-    recommended_shares = []
-    capital_allocations = []
+    risk_per_share_list = []
+    shares_list = []
+    capital_list = []
 
-    trade_grades = []
-    trade_statuses = []
+    grades = []
+    statuses = []
 
 
     for _, row in df.iterrows():
 
+
+        # =========================
+        # Inputs
+        # =========================
 
         close = row.get(
             "Close",
@@ -60,13 +64,11 @@ def add_trade_management(
 
 
 
-        # ==========================
-        # Calculate setup ALWAYS
-        # ==========================
-
+        # =========================
+        # Trade Setup
+        # =========================
 
         entry = round(close,2)
-
 
 
         if atr > 0:
@@ -78,50 +80,143 @@ def add_trade_management(
             stop = entry * 0.95
 
 
-
-        stop = max(
-            stop,
-            0
-        )
+        stop = max(stop,0)
 
 
-        risk_share = entry - stop
+        risk = entry - stop
 
 
 
         if conviction >= 50:
 
-            multiplier1 = 5
-            multiplier2 = 8
-
+            m1,m2 = 5,8
 
         elif conviction >=40:
 
-            multiplier1 = 4
-            multiplier2 = 6
-
+            m1,m2 = 4,6
 
         else:
 
-            multiplier1 = 3
-            multiplier2 = 5
+            m1,m2 = 3,5
 
 
 
         if atr > 0:
 
-            target1 = entry + atr * multiplier1
+            target1 = entry + atr*m1
+            target2 = entry + atr*m2
 
-            target2 = entry + atr * multiplier2
+        else:
+
+            target1 = entry + risk*2
+            target2 = entry + risk*3
+
+
+
+        # =========================
+        # Approval Logic
+        # =========================
+
+        final_status = row.get(
+            "Final_AI_Status",
+            ""
+        )
+
+
+        portfolio_action = row.get(
+            "Portfolio_Action",
+            ""
+        )
+
+
+        risk_status = row.get(
+            "Risk_Status",
+            ""
+        )
+
+
+        approved = row.get(
+            "Portfolio_Approved",
+            False
+        )
+
+
+        if isinstance(approved,str):
+
+            approved = approved.lower() in [
+                "true",
+                "1",
+                "yes"
+            ]
+
+        else:
+
+            approved = bool(approved)
+
+
+
+        tradable = (
+
+            final_status == "APPROVED TRADE"
+
+            and
+
+            portfolio_action == "ALLOW ENTRY"
+
+            and
+
+            risk_status == "RISK APPROVED"
+
+            and
+
+            approved
+
+        )
+
+
+        print(
+            "DEBUG:",
+            row.get("Symbol"),
+            portfolio_action,
+            risk_status,
+            approved,
+            tradable
+        )
+
+
+
+        # =========================
+        # Trade Grade
+        # =========================
+
+        if tradable:
+
+            grade = "A"
+            status = "READY"
+
+
+        elif final_status == "WATCHLIST":
+
+            grade = "B"
+            status = "WATCH"
+
+
+        elif final_status == "MONITOR":
+
+            grade = "C"
+            status = "MONITOR"
 
 
         else:
 
-            target1 = entry + risk_share * 2
+            grade = "Avoid"
+            status = "BLOCKED"
 
-            target2 = entry + risk_share * 3
 
 
+        # =========================
+        # Position Sizing
+        # =========================
 
         capital = (
             account_size *
@@ -137,11 +232,11 @@ def add_trade_management(
         )
 
 
-        if risk_share > 0:
+        if risk > 0:
 
             shares = int(
                 max_loss /
-                risk_share
+                risk
             )
 
         else:
@@ -164,110 +259,81 @@ def add_trade_management(
 
 
 
-        # ==========================
-        # Execution approval
-        # ==========================
-
-        final_status = row.get(
-            "Final_AI_Status",
-            ""
-        )
-
-
-        portfolio_action = row.get(
-            "Portfolio_Action",
-            ""
-        )
-
-
-        approved = row.get(
-            "Portfolio_Approved",
-            False
-        )
-
-
-        tradable = (
-
-            final_status == "APPROVED TRADE"
-            and
-            portfolio_action == "ALLOW ENTRY"
-            and
-            bool(approved)
-
-        )
-
-
-
-        if tradable:
-
-            trade_grade = "A"
-            trade_status = "READY"
-
-
-        else:
-
-            trade_grade = "Avoid"
-            trade_status = "BLOCKED"
+        if grade == "Avoid":
 
             shares = 0
             capital = 0
 
+        elif grade == "A":
+
+            pass
 
 
-        entry_prices.append(entry)
-        stop_losses.append(round(stop,2))
-        targets_1.append(round(target1,2))
-        targets_2.append(round(target2,2))
+        entries.append(entry)
 
-        risk_per_shares.append(
-            round(risk_share,2)
+        stops.append(round(stop,2))
+
+        targets1.append(round(target1,2))
+
+        targets2.append(round(target2,2))
+
+
+        risk_per_share_list.append(
+            round(risk,2)
         )
 
-        recommended_shares.append(
+
+        shares_list.append(
             shares
         )
 
-        capital_allocations.append(
+
+        capital_list.append(
             round(capital,2)
         )
 
 
-        trade_grades.append(
-            trade_grade
-        )
-
-        trade_statuses.append(
-            trade_status
+        grades.append(
+            grade
         )
 
 
-
-    # ==========================
-    # Output columns
-    # ==========================
-
-
-    df["Entry_Price"] = entry_prices
-    df["Stop_Loss"] = stop_losses
-    df["Target_1"] = targets_1
-    df["Target_2"] = targets_2
-
-    df["Risk_Per_Share"] = risk_per_shares
-
-    df["Recommended_Shares"] = recommended_shares
-
-    df["Capital_Allocation_$"] = capital_allocations
-
-
-    df["Trade_Grade"] = trade_grades
-
-    df["Trade_Status"] = trade_statuses
+        statuses.append(
+            status
+        )
 
 
 
-    # ==========================
-    # Reward Risk
-    # ==========================
+    # =========================
+    # Output
+    # =========================
+
+
+    df["Entry_Price"] = entries
+
+    df["Stop_Loss"] = stops
+
+    df["Target_1"] = targets1
+
+    df["Target_2"] = targets2
+
+
+    df["Risk_Per_Share"] = risk_per_share_list
+
+    df["Recommended_Shares"] = shares_list
+
+    df["Capital_Allocation_$"] = capital_list
+
+
+    df["Trade_Grade"] = grades
+
+    df["Trade_Execution_Status"] = statuses
+
+
+
+    # =========================
+    # Reward / Risk
+    # =========================
 
 
     risk_distance = (
@@ -297,48 +363,45 @@ def add_trade_management(
 
 
 
-    # ==========================
+    # =========================
     # Expected Value
-    # ==========================
-
+    # =========================
 
     if "Combined_ML_Probability" in df.columns:
 
-        win_probability = df[
+        probability = df[
             "Combined_ML_Probability"
         ]
 
-
     elif "ML_Probability" in df.columns:
 
-        win_probability = df[
+        probability = df[
             "ML_Probability"
         ]
 
-
     else:
 
-        win_probability = pd.Series(
+        probability = pd.Series(
             0.5,
             index=df.index
         )
 
 
 
-    win_probability = pd.to_numeric(
-        win_probability,
+    probability = pd.to_numeric(
+        probability,
         errors="coerce"
     ).fillna(0.5)
 
 
 
-    if win_probability.max() > 1:
+    if probability.max() > 1:
 
-        win_probability /= 100
+        probability = probability / 100
 
 
 
-    win_probability = win_probability.clip(
+    probability = probability.clip(
         0,
         1
     )
@@ -347,17 +410,12 @@ def add_trade_management(
 
     df["Expected_Value"] = (
 
-        (
-            win_probability *
-            df["Reward_Risk"]
-        )
+        probability *
+        df["Reward_Risk"]
 
         -
 
-        (
-            1 -
-            win_probability
-        )
+        (1 - probability)
 
     ).round(3)
 

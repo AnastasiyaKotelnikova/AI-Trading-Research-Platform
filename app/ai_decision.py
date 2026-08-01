@@ -134,12 +134,10 @@ def add_ai_decisions(df):
 def add_final_ai_status(df):
 
     final_status = []
-
     final_reasons = []
 
 
     for _, row in df.iterrows():
-
 
         portfolio_action = row.get(
             "Portfolio_Action",
@@ -147,17 +145,16 @@ def add_final_ai_status(df):
         )
 
 
-        trade_status = row.get(
-            "Trade_Status",
+        risk_status = row.get(
+            "Risk_Status",
             ""
         )
-
 
 
         if (
             portfolio_action == "ALLOW ENTRY"
             and
-            trade_status == "RISK APPROVED"
+            risk_status == "RISK APPROVED"
         ):
 
             status = "APPROVED TRADE"
@@ -169,11 +166,10 @@ def add_final_ai_status(df):
             )
 
 
-
         elif (
             portfolio_action == "WATCH ENTRY"
             and
-            trade_status == "WATCH RISK"
+            risk_status == "WATCH RISK"
         ):
 
             status = "WATCHLIST"
@@ -182,7 +178,6 @@ def add_final_ai_status(df):
                 "Promising setup but "
                 "requires additional confirmation"
             )
-
 
 
         elif portfolio_action == "MONITOR":
@@ -194,7 +189,6 @@ def add_final_ai_status(df):
                 "conviction or risk profile "
                 "needs improvement"
             )
-
 
 
         else:
@@ -213,17 +207,12 @@ def add_final_ai_status(df):
         final_reasons.append(reason)
 
 
-
     df["Final_AI_Status"] = final_status
 
     df["Final_AI_Reason"] = final_reasons
 
 
-
     return df
-
-
-
 
 # =====================================================
 # Complete Pipeline
@@ -255,6 +244,15 @@ def add_complete_ai_pipeline(df):
     # 6
     df = add_risk_management(df)
 
+    print(
+    df[
+        [
+            "Symbol",
+            "Portfolio_Action",
+            "Risk_Status"
+        ]
+    ]
+)
 
     # 7 Create final AI decision BEFORE execution
     df = add_final_ai_status(df)
