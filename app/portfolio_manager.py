@@ -6,7 +6,6 @@ from app.regime_controller import (
 )
 
 
-
 def add_portfolio_management(
     df,
     account_size=10000,
@@ -14,9 +13,12 @@ def add_portfolio_management(
     risk_per_trade=0.01
 ):
 
-    # ------------------------------------
+    df = df.copy()
+
+
+    # =====================================
     # Market Regime
-    # ------------------------------------
+    # =====================================
 
     market_regime = get_current_regime()
 
@@ -42,9 +44,9 @@ def add_portfolio_management(
 
 
 
-    # ------------------------------------
-    # Rank by conviction
-    # ------------------------------------
+    # =====================================
+    # Rank
+    # =====================================
 
     df = df.sort_values(
         "Final_Conviction_Score",
@@ -53,15 +55,21 @@ def add_portfolio_management(
 
 
 
+    # =====================================
+    # Process Stocks
+    # =====================================
+
     for index, row in df.iterrows():
 
 
-        # --------------------------------
-        # Base values
-        # --------------------------------
-
         conviction = row.get(
             "Final_Conviction_Score",
+            0
+        )
+
+
+        expected_value = row.get(
+            "Expected_Value",
             0
         )
 
@@ -72,33 +80,20 @@ def add_portfolio_management(
         )
 
 
-        expected_value = row.get(
-            "Expected_Value",
-            0
-        )
-
-
-        reward_risk = row.get(
-            "Reward_Risk",
-            0
-        )
-
-
         trade_grade = row.get(
             "Trade_Grade",
             "C"
         )
 
 
+        final_status = row.get(
+            "Final_AI_Status",
+            ""
+        )
+
 
         if pd.isna(expected_value):
-
             expected_value = 0
-
-
-        if pd.isna(reward_risk):
-
-            reward_risk = 0
 
 
 
@@ -108,9 +103,35 @@ def add_portfolio_management(
 
 
 
-        # --------------------------------
-        # Position Allocation
-        # --------------------------------
+        # =====================================
+        # HARD AI FILTER
+        # =====================================
+
+        if final_status == "NO TRADE":
+
+            portfolio_scores.append(
+                conviction
+            )
+
+            portfolio_actions.append(
+                "REJECT"
+            )
+
+            position_allocations.append(
+                0
+            )
+
+            risk_amounts.append(
+                0
+            )
+
+            continue
+
+
+
+        # =====================================
+        # Allocation
+        # =====================================
 
         allocation = 0
 
@@ -131,8 +152,6 @@ def add_portfolio_management(
 
 
 
-        # Grade adjustment
-
         if trade_grade == "A":
 
             allocation += 5
@@ -144,60 +163,34 @@ def add_portfolio_management(
 
 
 
-        # Expected Value adjustment
+        if expected_value >= 0.25:
 
-        if expected_value < -0.25:
+            allocation += 5
+
+
+        elif expected_value < -0.25:
 
             allocation -= 10
 
 
-        elif expected_value >= 0.25:
-
-            allocation += 5
-
-
-
-        # Reward/Risk adjustment
-
-        if reward_risk >= 2:
-
-            allocation += 5
-
-
 
         allocation = max(
-            allocation,
-            0
-        )
-
-
-        allocation = min(
-            allocation,
-            50
+            0,
+            min(allocation,50)
         )
 
 
 
-        # --------------------------------
-        # Market regime adjustment
-        # --------------------------------
-
-        adjusted_allocation = apply_regime_adjustment(
+        allocation = apply_regime_adjustment(
             allocation,
             market_regime
         )
 
 
 
-        # --------------------------------
-        # Risk calculation
-        # --------------------------------
-
-        allowed_risk = (
-            account_size *
-            risk_per_trade
-        )
-
+        # =====================================
+        # Risk
+        # =====================================
 
         shares = row.get(
             "Recommended_Shares",
@@ -212,12 +205,10 @@ def add_portfolio_management(
 
 
         if pd.isna(shares):
-
             shares = 0
 
 
         if pd.isna(risk_per_share):
-
             risk_per_share = 0
 
 
@@ -229,9 +220,16 @@ def add_portfolio_management(
 
 
 
-        # --------------------------------
+        allowed_risk = (
+            account_size *
+            risk_per_trade
+        )
+
+
+
+        # =====================================
         # Portfolio Score
-        # --------------------------------
+        # =====================================
 
         portfolio_score = conviction
 
@@ -247,14 +245,9 @@ def add_portfolio_management(
             portfolio_score += 3
 
 
-        elif expected_value > -0.15:
+        elif expected_value < -0.15:
 
-            portfolio_score -= 3
-
-
-        else:
-
-            portfolio_score -= 7
+            portfolio_score -= 5
 
 
 
@@ -265,64 +258,48 @@ def add_portfolio_management(
 
 
         portfolio_score = max(
-            portfolio_score,
-            0
-        )
-
-
-        portfolio_score = round(
-            portfolio_score,
-            2
+            0,
+            round(portfolio_score,2)
         )
 
 
 
-        # --------------------------------
-        # Market regime thresholds
-        # --------------------------------
+        # =====================================
+        # Entry Threshold
+        # =====================================
 
         regime = market_regime["Market_Regime"]
 
 
         if regime == "STRONG_BULL":
 
-            min_entry_score = 45
-
+            threshold = 45
 
         elif regime == "BULL":
 
-            min_entry_score = 50
-
+            threshold = 50
 
         elif regime == "NEUTRAL":
 
-            min_entry_score = 55
-
+            threshold = 55
 
         else:
 
-            min_entry_score = 65
+            threshold = 65
 
 
 
-        # --------------------------------
-        # Portfolio Decision Engine
-        # --------------------------------
+        # =====================================
+        # Decision
+        # =====================================
 
         if expected_value < -0.25:
 
             action = "REJECT"
 
 
-
-        elif expected_value < -0.15:
-
-            action = "MONITOR"
-
-
-
         elif (
-            portfolio_score >= min_entry_score
+            portfolio_score >= threshold
             and
             tier in [
                 "TIER 1",
@@ -335,7 +312,6 @@ def add_portfolio_management(
             action = "ALLOW ENTRY"
 
 
-
         elif (
             portfolio_score >= 40
             and
@@ -343,18 +319,14 @@ def add_portfolio_management(
                 "TIER 2",
                 "TIER 3"
             ]
-            and
-            allocation > 0
         ):
 
             action = "WATCH ENTRY"
 
 
-
         elif portfolio_score >= 35:
 
             action = "MONITOR"
-
 
 
         else:
@@ -374,55 +346,39 @@ def add_portfolio_management(
 
 
         position_allocations.append(
-            round(
-                adjusted_allocation,
-                2
-            )
+            round(allocation,2)
         )
 
 
         risk_amounts.append(
-            round(
-                total_risk,
-                2
-            )
+            round(total_risk,2)
         )
 
 
 
-    # ------------------------------------
-    # Output Columns
-    # ------------------------------------
+    # =====================================
+    # Output
+    # =====================================
 
     df["Portfolio_Rank"] = portfolio_ranks
 
-
     df["Portfolio_Score"] = portfolio_scores
-
 
     df["Portfolio_Action"] = portfolio_actions
 
-
     df["Portfolio_Allocation_%"] = position_allocations
-
 
     df["Market_Regime"] = (
         market_regime["Market_Regime"]
     )
 
-
     df["Market_Exposure_%"] = (
         market_regime["Exposure"]
     )
 
-
     df["Portfolio_Risk_$"] = risk_amounts
 
 
-
-    # ------------------------------------
-    # Approval Status
-    # ------------------------------------
 
     df["Portfolio_Approved"] = (
         df["Portfolio_Action"]
@@ -431,14 +387,15 @@ def add_portfolio_management(
     )
 
 
+
     df["Portfolio_Status"] = (
         df["Portfolio_Action"]
         .map(
             {
-                "ALLOW ENTRY": "APPROVED",
-                "WATCH ENTRY": "WATCH",
-                "MONITOR": "MONITOR",
-                "REJECT": "REJECTED"
+                "ALLOW ENTRY":"APPROVED",
+                "WATCH ENTRY":"WATCH",
+                "MONITOR":"MONITOR",
+                "REJECT":"REJECTED"
             }
         )
     )
