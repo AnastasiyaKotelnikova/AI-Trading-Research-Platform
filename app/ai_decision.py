@@ -1,12 +1,15 @@
 import os
 import pandas as pd
 
-from app.trade_management import add_trade_management
+
 from app.final_conviction import add_final_conviction
 from app.portfolio_manager import add_portfolio_management
+from app.trade_management import add_trade_management
 from app.risk_engine import add_risk_management
 from app.ai_score_engine import add_ai_analyst_score
 from app.ai_investment_analyst import analyze_stocks
+
+
 
 INPUT_FILE = "data/analysis/ai_ranked_signals.csv"
 
@@ -14,22 +17,21 @@ OUTPUT_FILE = "data/analysis/final_ai_signals.csv"
 
 
 
-def generate_ai_decisions():
+# =====================================================
+# Initial AI Classification
+# =====================================================
+
+def add_ai_decisions(df):
 
     print("\nGenerating AI Decisions\n")
 
 
-    df = pd.read_csv(INPUT_FILE)
+    df = df.copy()
 
-
-
-    # ==========================================
-    # AI DECISION LOGIC
-    # ==========================================
 
     decisions = []
-
     reasons = []
+
 
 
     for _, row in df.iterrows():
@@ -55,9 +57,10 @@ def generate_ai_decisions():
             ml_prob = 0
 
 
+
         if ml_prob <= 1:
 
-            ml_prob = ml_prob * 100
+            ml_prob *= 100
 
 
 
@@ -71,9 +74,10 @@ def generate_ai_decisions():
 
             reason = (
                 "Strong technical setup, "
-                "high AI ranking, "
-                "ML confirmation"
+                "AI score confirmation, "
+                "ML probability support"
             )
+
 
 
         elif score >= 40:
@@ -81,9 +85,10 @@ def generate_ai_decisions():
             decision = "STRONG CANDIDATE"
 
             reason = (
-                "Strong technical setup, "
-                "high ranking"
+                "Good technical setup "
+                "with positive ranking"
             )
+
 
 
         elif score >= 30:
@@ -91,9 +96,10 @@ def generate_ai_decisions():
             decision = "WATCHLIST"
 
             reason = (
-                "Positive setup but "
+                "Promising setup but "
                 "requires confirmation"
             )
+
 
 
         else:
@@ -103,6 +109,7 @@ def generate_ai_decisions():
             reason = (
                 "Insufficient confirmation"
             )
+
 
 
         decisions.append(decision)
@@ -117,45 +124,88 @@ def generate_ai_decisions():
 
 
 
-    # ==========================================
-    # MODEL INFORMATION
-    # ==========================================
+    # Model information
 
-    df["Model_Name"] = "model_v27"
+    from app.model_info import get_current_model_info
 
-    df["Model_F1"] = 96.1
 
-    df["Model_Status"] = "Champion"
+    model_info = get_current_model_info()
 
 
 
-    # ==========================================
-    # COMPLETE TRADE PIPELINE
-    # ==========================================
+    df["Model_Name"] = (
+        model_info["Model"]
+    )
 
 
-    df = add_trade_management(df)
+    df["Model_F1"] = (
+        model_info["F1"]
+    )
 
 
-    df = add_final_conviction(df)
+    df["Model_Status"] = (
+        "Champion"
+    )
 
 
-    df = add_portfolio_management(df)
+    return df
 
 
-    df = add_risk_management(df)
+
+
+
+# =====================================================
+# Complete AI Pipeline
+# =====================================================
+
+def add_complete_ai_pipeline(df):
+
+
+    # 1. AI classification
+
+    df = add_ai_decisions(df)
+
+
+
+    # 2. AI analyst score
 
     df = add_ai_analyst_score(df)
 
 
-    # ==========================================
-    # FINAL TRADE DECISION ENGINE
-    # ==========================================
 
-    final_decisions = []
+    # 3. Conviction engine
+
+    df = add_final_conviction(df)
+
+
+
+    # 4. Portfolio management
+
+    df = add_portfolio_management(df)
+
+
+
+    # 5. Trade setup
+
+    df = add_trade_management(df)
+
+
+
+    # 6. Risk approval
+
+    df = add_risk_management(df)
+
+
+
+
+    final_status = []
+
+    final_reasons = []
+
 
 
     for _, row in df.iterrows():
+
 
 
         portfolio_action = row.get(
@@ -170,6 +220,23 @@ def generate_ai_decisions():
         )
 
 
+        expected_value = row.get(
+            "Expected_Value",
+            0
+        )
+
+
+        conviction = row.get(
+            "Final_Conviction_Score",
+            0
+        )
+
+
+
+        # -----------------------------
+        # Final Decision Logic
+        # -----------------------------
+
 
         if (
             portfolio_action == "ALLOW ENTRY"
@@ -177,49 +244,78 @@ def generate_ai_decisions():
             trade_status == "RISK APPROVED"
         ):
 
-            decision = "APPROVED TRADE"
+            status = "APPROVED TRADE"
+
+            reason = (
+                "High conviction setup, "
+                "positive expected value, "
+                "risk approved"
+            )
 
 
 
         elif (
-            portfolio_action == "ALLOW ENTRY"
+            portfolio_action == "WATCH ENTRY"
             and
-            trade_status == "REVIEW RISK"
+            trade_status == "WATCH RISK"
         ):
 
-            decision = "REVIEW"
+            status = "WATCHLIST"
+
+            reason = (
+                "Promising setup but "
+                "requires additional confirmation"
+            )
 
 
 
         elif portfolio_action == "MONITOR":
 
-            decision = "WATCH"
+            status = "MONITOR"
+
+            reason = (
+                "Valid setup but "
+                "conviction or risk profile "
+                "needs improvement"
+            )
 
 
 
         else:
 
-            decision = "NO TRADE"
+            status = "NO TRADE"
+
+            reason = (
+                "Rejected due to risk, "
+                "low conviction, "
+                "or poor expected value"
+            )
 
 
 
-        final_decisions.append(
-            decision
-        )
+        final_status.append(status)
+
+        final_reasons.append(reason)
 
 
 
-    df["Final_Trade_Decision"] = final_decisions
+
+    df["Final_AI_Status"] = final_status
+
+
+    df["Final_AI_Reason"] = final_reasons
+
+
+
+
+    # AI Investment Analyst Layer
 
     df = analyze_stocks(df)
 
 
 
-    # ==========================================
-    # FINAL SORTING
-    # ==========================================
-
     if "Final_Conviction_Score" in df.columns:
+
 
         df = df.sort_values(
             "Final_Conviction_Score",
@@ -228,14 +324,64 @@ def generate_ai_decisions():
 
 
 
-    # ==========================================
-    # SAVE OUTPUT
-    # ==========================================
+    return df
+
+
+
+
+
+# =====================================================
+# Main Generator
+# =====================================================
+
+def generate_ai_decisions(df=None):
+
+
+    if df is None:
+
+        df = pd.read_csv(
+            INPUT_FILE
+        )
+
+
+
+    required_columns = [
+
+        "Symbol",
+
+        "AI_Final_Score"
+
+    ]
+
+
+
+    missing = [
+
+        c for c in required_columns
+
+        if c not in df.columns
+
+    ]
+
+
+
+    if missing:
+
+        raise ValueError(
+            f"Missing required columns: {missing}"
+        )
+
+
+
+    df = add_complete_ai_pipeline(df)
+
+
 
     os.makedirs(
         "data/analysis",
         exist_ok=True
     )
+
 
 
     df.to_csv(
@@ -246,7 +392,7 @@ def generate_ai_decisions():
 
 
     print(
-        "AI Decision Engine Complete"
+        "\nAI Decision Engine Complete"
     )
 
 
@@ -256,7 +402,9 @@ def generate_ai_decisions():
 
 
 
-    print("\nDecision Summary:\n")
+    print(
+        "\nAI Classification:\n"
+    )
 
 
     print(
@@ -266,29 +414,75 @@ def generate_ai_decisions():
 
 
 
-    print("\nFINAL TRADE SUMMARY:\n")
+    print(
+        "\nFinal AI Status:\n"
+    )
+
+
+    print(
+        df["Final_AI_Status"]
+        .value_counts()
+    )
+
+
+
+    print(
+        "\nTrade Summary:\n"
+    )
+
+
+
+    summary_columns = [
+
+        "Symbol",
+
+        "AI_Decision",
+
+        "Final_Conviction_Score",
+
+        "Expected_Value",
+
+        "Portfolio_Action",
+
+        "Trade_Status",
+
+        "Final_AI_Status",
+
+        "Final_AI_Reason"
+
+    ]
+
+
+
+    existing_columns = [
+
+        c for c in summary_columns
+
+        if c in df.columns
+
+    ]
+
 
 
     print(
 
-        df[
-            [
-                "Symbol",
-                "Final_Conviction_Score",
-                "Portfolio_Action",
-                "Portfolio_Approved",
-                "Risk_Level",
-                "Risk_Grade",
-                "Trade_Status",
-                "Final_Trade_Decision"
-            ]
-        ]
+        df[existing_columns]
+
         .head(15)
+
+        .to_string(index=False)
 
     )
 
 
 
+    return df
+
+
+
+
+
 if __name__ == "__main__":
+
 
     generate_ai_decisions()

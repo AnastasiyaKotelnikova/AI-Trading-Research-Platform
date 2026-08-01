@@ -3,19 +3,12 @@ import pandas as pd
 
 def add_ai_analyst_score(df):
 
-
     analyst_scores = []
     analyst_ratings = []
     analyst_confidence = []
 
 
-
     for _, row in df.iterrows():
-
-
-        # =====================================
-        # INPUT VALUES
-        # =====================================
 
         conviction = row.get(
             "Final_Conviction_Score",
@@ -24,8 +17,11 @@ def add_ai_analyst_score(df):
 
 
         ml_probability = row.get(
-            "ML_Probability",
-            0
+            "Combined_ML_Probability",
+            row.get(
+                "ML_Probability",
+                0
+            )
         )
 
 
@@ -37,18 +33,9 @@ def add_ai_analyst_score(df):
 
         risk_grade = row.get(
             "Risk_Grade",
-            "D"
+            "C"
         )
 
-
-        final_decision = row.get(
-            "Final_Trade_Decision",
-            "NO TRADE"
-        )
-
-
-
-        # Safety checks
 
         values = [
             conviction,
@@ -63,21 +50,17 @@ def add_ai_analyst_score(df):
         ]
 
 
-        (
-            conviction,
-            ml_probability,
-            expected_value
-        ) = values
+        conviction, ml_probability, expected_value = values
 
 
 
-        # =====================================
-        # NORMALIZE ML SCORE
-        # =====================================
+        # -------------------------------
+        # ML normalization
+        # -------------------------------
 
         if ml_probability <= 1:
 
-            ml_probability = ml_probability * 100
+            ml_probability *= 100
 
 
         ml_score = min(
@@ -87,62 +70,71 @@ def add_ai_analyst_score(df):
 
 
 
-        # =====================================
-        # EXPECTED VALUE SCORE
-        # =====================================
+        # -------------------------------
+        # Expected value score
+        # -------------------------------
 
-        if expected_value >= 0.5:
+        if expected_value >= 0.30:
 
             ev_score = 100
 
+
         elif expected_value >= 0:
 
-            ev_score = 70
+            ev_score = 75
 
-        elif expected_value >= -0.5:
 
-            ev_score = 40
+        elif expected_value >= -0.20:
+
+            ev_score = 55
+
 
         else:
 
-            ev_score = 20
+            ev_score = 25
 
 
 
-        # =====================================
-        # RISK SCORE
-        # =====================================
+        # -------------------------------
+        # Risk score
+        # -------------------------------
 
         risk_scores = {
 
-            "A": 100,
-            "B": 80,
-            "C": 55,
-            "D": 25
+            "A":100,
+            "B":85,
+            "C":65,
+            "D":40
 
         }
 
 
         risk_score = risk_scores.get(
             risk_grade,
-            25
+            65
         )
 
 
 
-        # =====================================
-        # FINAL AI SCORE
-        # =====================================
+        # -------------------------------
+        # AI Analyst Score
+        # -------------------------------
 
         score = (
 
-            conviction * 0.40
+            conviction * 0.60
+
             +
-            ml_score * 0.25
+
+            ml_score * 0.20
+
             +
-            ev_score * 0.20
+
+            ev_score * 0.15
+
             +
-            risk_score * 0.15
+
+            risk_score * 0.05
 
         )
 
@@ -159,21 +151,21 @@ def add_ai_analyst_score(df):
 
 
 
-        # =====================================
-        # RATING
-        # =====================================
+        # -------------------------------
+        # Rating
+        # -------------------------------
 
-        if score >= 80:
+        if score >= 75:
 
             rating = "STRONG BUY SETUP"
 
 
-        elif score >= 65:
+        elif score >= 60:
 
             rating = "QUALITY SETUP"
 
 
-        elif score >= 50:
+        elif score >= 45:
 
             rating = "WATCH"
 
@@ -183,23 +175,22 @@ def add_ai_analyst_score(df):
             rating = "AVOID"
 
 
-
         analyst_ratings.append(
             rating
         )
 
 
 
-        # =====================================
-        # CONFIDENCE
-        # =====================================
+        # -------------------------------
+        # Confidence
+        # -------------------------------
 
-        if score >= 80:
+        if score >= 75:
 
             confidence = "HIGH"
 
 
-        elif score >= 60:
+        elif score >= 55:
 
             confidence = "MEDIUM"
 

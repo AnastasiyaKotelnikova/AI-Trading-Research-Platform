@@ -205,23 +205,23 @@ def create_action(row):
 
 
 
-def main():
+# ==================================================
+# REUSABLE PORTFOLIO PIPELINE FUNCTION
+# ==================================================
 
-    print(
-        "\n=============================="
-    )
+def add_portfolio_decisions(df):
 
-    print(
-        "Portfolio Decision Engine v1.5"
-    )
+    """
+    Applies portfolio intelligence layer.
 
-    print(
-        "==============================\n"
-    )
+    Input:
+        dataframe containing AI strategy decisions
 
+    Output:
+        dataframe with portfolio decisions
+    """
 
-    df = load_data()
-
+    df = df.copy()
 
     df = calculate_portfolio_score(
         df
@@ -263,6 +263,35 @@ def main():
                 "REJECT": "REJECTED"
             }
         )
+    )
+
+
+    return df
+
+
+
+def main():
+
+    print(
+        "\n=============================="
+    )
+
+    print(
+        "Portfolio Decision Engine v1.5"
+    )
+
+    print(
+        "==============================\n"
+    )
+
+
+    df = load_data()
+
+
+    # Use reusable pipeline
+
+    df = add_portfolio_decisions(
+        df
     )
 
 

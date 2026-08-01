@@ -1,262 +1,191 @@
 import pandas as pd
 
 
+
 def add_risk_management(
     df,
-    account_size=10000
+    account_size=10000,
+    max_risk_percent=1
 ):
 
-    risk_levels = []
-    risk_grades = []
-    risk_percentages = []
+    df = df.copy()
+
+
     trade_status = []
+    risk_scores = []
+    risk_reasons = []
+
 
 
     for _, row in df.iterrows():
 
 
-        # =====================================
-        # INPUT VALUES
-        # =====================================
-
-        portfolio_risk = row.get(
-            "Portfolio_Risk_$",
-            0
+        portfolio_action = row.get(
+            "Portfolio_Action",
+            "REJECT"
         )
 
-        allocation = row.get(
-            "Portfolio_Allocation_%",
-            0
-        )
-
-        conviction = row.get(
-            "Final_Conviction_Score",
-            0
-        )
-
-        reward_risk = row.get(
-            "Reward_Risk",
-            0
-        )
 
         expected_value = row.get(
             "Expected_Value",
             0
         )
 
-        approved = row.get(
-            "Portfolio_Approved",
-            False
+
+        reward_risk = row.get(
+            "Reward_Risk",
+            0
         )
 
 
-        # =====================================
-        # SAFETY CLEANING
-        # =====================================
-
-        values = [
-            portfolio_risk,
-            allocation,
-            conviction,
-            reward_risk,
-            expected_value
-        ]
+        conviction = row.get(
+            "Final_Conviction_Score",
+            0
+        )
 
 
-        values = [
-            0 if pd.isna(x) else x
-            for x in values
-        ]
+        risk_amount = row.get(
+            "Portfolio_Risk_$",
+            0
+        )
 
 
-        (
-            portfolio_risk,
-            allocation,
-            conviction,
-            reward_risk,
-            expected_value
-        ) = values
+        if pd.isna(expected_value):
+            expected_value = 0
 
 
+        if pd.isna(reward_risk):
+            reward_risk = 0
 
-        # =====================================
-        # BASE RISK CALCULATION
-        # =====================================
 
-        stop_loss_risk_percent = (
+        if pd.isna(conviction):
+            conviction = 0
 
-            portfolio_risk /
-            account_size
 
-        ) * 100
+        if pd.isna(risk_amount):
+            risk_amount = 0
 
 
 
-        risk_score = 0
+        # --------------------------------
+        # Risk score
+        # --------------------------------
+
+        risk_score = 100
+
+        reasons = []
 
 
 
-        # -------------------------------------
-        # Position concentration
-        # -------------------------------------
+        # Expected value filter
 
-        if allocation > 25:
+        if expected_value < -0.25:
 
-            risk_score += 3
+            risk_score -= 50
 
-        elif allocation > 15:
-
-            risk_score += 2
-
-        elif allocation > 10:
-
-            risk_score += 1
+            reasons.append(
+                "Negative expected value"
+            )
 
 
+        elif expected_value < 0:
 
-        # -------------------------------------
-        # Stop-loss exposure
-        # -------------------------------------
+            risk_score -= 15
 
-        if stop_loss_risk_percent > 3:
-
-            risk_score += 3
-
-        elif stop_loss_risk_percent > 2:
-
-            risk_score += 2
-
-        elif stop_loss_risk_percent > 1:
-
-            risk_score += 1
+            reasons.append(
+                "Weak expected value"
+            )
 
 
 
-        # -------------------------------------
-        # Reward/Risk quality
-        # -------------------------------------
+        # Reward/Risk
 
-        if reward_risk < 1:
+        if reward_risk < 1.5:
 
-            risk_score += 3
+            risk_score -= 25
 
-        elif reward_risk < 1.5:
-
-            risk_score += 2
+            reasons.append(
+                "Poor reward risk ratio"
+            )
 
 
 
-        # -------------------------------------
-        # Expected value
-        # -------------------------------------
-
-        if expected_value < 0:
-
-            risk_score += 2
-
-
-
-        # -------------------------------------
-        # Conviction penalty
-        # -------------------------------------
+        # Conviction
 
         if conviction < 35:
 
-            risk_score += 2
+            risk_score -= 20
+
+            reasons.append(
+                "Low conviction"
+            )
 
 
 
-        # =====================================
-        # FINAL RISK %
-        # =====================================
+        # Position risk
 
-        final_risk_percent = round(
-
-            stop_loss_risk_percent +
-            (risk_score * 0.5),
-
-            2
+        max_allowed_risk = (
+            account_size *
+            max_risk_percent /
+            100
         )
 
 
-        risk_percentages.append(
-            final_risk_percent
+        if risk_amount > max_allowed_risk:
+
+            risk_score -= 25
+
+            reasons.append(
+                "Risk exceeds limit"
+            )
+
+
+
+        risk_score = max(
+            risk_score,
+            0
         )
 
 
 
-        # =====================================
-        # RISK GRADE
-        # =====================================
+        # --------------------------------
+        # Final risk approval
+        # --------------------------------
 
-        if risk_score <= 1:
-
-            level = "LOW"
-            grade = "A"
+        if portfolio_action == "ALLOW ENTRY":
 
 
-        elif risk_score <= 3:
+            if risk_score >= 70:
 
-            level = "MODERATE"
-            grade = "B"
-
-
-        elif risk_score <= 5:
-
-            level = "HIGH"
-            grade = "C"
+                status = "RISK APPROVED"
 
 
-        else:
+            elif risk_score >= 45:
 
-            level = "EXTREME"
-            grade = "D"
+                status = "WATCH RISK"
+
+
+            else:
+
+                status = "BLOCKED"
 
 
 
-        risk_levels.append(level)
+        elif portfolio_action == "WATCH ENTRY":
 
-        risk_grades.append(grade)
-
-
-
-        # =====================================
-        # TRADE STATUS
-        # =====================================
-
-        if (
-            approved
-            and
-            grade in ["A", "B"]
-            and
-            conviction >= 45
-            and
-            expected_value >= 0
-        ):
-
-            status = "RISK APPROVED"
+            status = "WATCH RISK"
 
 
 
-        elif (
-            approved
-            and
-            grade in ["A", "B"]
-        ):
+        elif portfolio_action == "MONITOR":
 
-            status = "REVIEW RISK"
-
-
-
-        elif approved:
-
-            status = "HIGH RISK REVIEW"
+            status = "MONITOR"
 
 
 
         else:
 
-            status = "NOT APPROVED"
+            status = "BLOCKED"
 
 
 
@@ -265,18 +194,33 @@ def add_risk_management(
         )
 
 
+        risk_scores.append(
+            risk_score
+        )
 
-    # =====================================
-    # OUTPUT COLUMNS
-    # =====================================
 
-    df["Risk_Level"] = risk_levels
+        if reasons:
 
-    df["Risk_Grade"] = risk_grades
+            risk_reasons.append(
+                "; ".join(reasons)
+            )
 
-    df["Risk_Percentage"] = risk_percentages
+        else:
+
+            risk_reasons.append(
+                "Risk acceptable"
+            )
+
+
 
     df["Trade_Status"] = trade_status
+
+
+    df["Risk_Score"] = risk_scores
+
+
+    df["Risk_Reason"] = risk_reasons
+
 
 
     return df
