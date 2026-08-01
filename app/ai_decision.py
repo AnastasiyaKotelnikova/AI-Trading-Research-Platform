@@ -8,6 +8,7 @@ from app.trade_management import add_trade_management
 from app.risk_engine import add_risk_management
 from app.ai_score_engine import add_ai_analyst_score
 from app.ai_investment_analyst import analyze_stocks
+from app.execution_engine import add_execution_analysis
 
 
 
@@ -25,17 +26,13 @@ def add_ai_decisions(df):
 
     print("\nGenerating AI Decisions\n")
 
-
     df = df.copy()
-
 
     decisions = []
     reasons = []
 
 
-
     for _, row in df.iterrows():
-
 
         score = row.get(
             "AI_Final_Score",
@@ -53,22 +50,15 @@ def add_ai_decisions(df):
 
 
         if pd.isna(ml_prob):
-
             ml_prob = 0
 
 
-
         if ml_prob <= 1:
-
             ml_prob *= 100
 
 
 
-        if (
-            score >= 45
-            and
-            ml_prob >= 10
-        ):
+        if score >= 45 and ml_prob >= 10:
 
             decision = "HIGH CONVICTION"
 
@@ -77,7 +67,6 @@ def add_ai_decisions(df):
                 "AI score confirmation, "
                 "ML probability support"
             )
-
 
 
         elif score >= 40:
@@ -90,7 +79,6 @@ def add_ai_decisions(df):
             )
 
 
-
         elif score >= 30:
 
             decision = "WATCHLIST"
@@ -99,7 +87,6 @@ def add_ai_decisions(df):
                 "Promising setup but "
                 "requires confirmation"
             )
-
 
 
         else:
@@ -111,9 +98,7 @@ def add_ai_decisions(df):
             )
 
 
-
         decisions.append(decision)
-
         reasons.append(reason)
 
 
@@ -124,28 +109,17 @@ def add_ai_decisions(df):
 
 
 
-    # Model information
-
     from app.model_info import get_current_model_info
 
 
     model_info = get_current_model_info()
 
 
+    df["Model_Name"] = model_info["Model"]
 
-    df["Model_Name"] = (
-        model_info["Model"]
-    )
+    df["Model_F1"] = model_info["F1"]
 
-
-    df["Model_F1"] = (
-        model_info["F1"]
-    )
-
-
-    df["Model_Status"] = (
-        "Champion"
-    )
+    df["Model_Status"] = "Champion"
 
 
     return df
@@ -153,59 +127,18 @@ def add_ai_decisions(df):
 
 
 
-
 # =====================================================
-# Complete AI Pipeline
+# Final AI Status Controller
 # =====================================================
 
-def add_complete_ai_pipeline(df):
-
-
-    # 1. AI classification
-
-    df = add_ai_decisions(df)
-
-
-
-    # 2. AI analyst score
-
-    df = add_ai_analyst_score(df)
-
-
-
-    # 3. Conviction engine
-
-    df = add_final_conviction(df)
-
-
-
-    # 4. Portfolio management
-
-    df = add_portfolio_management(df)
-
-
-
-    # 5. Trade setup
-
-    df = add_trade_management(df)
-
-
-
-    # 6. Risk approval
-
-    df = add_risk_management(df)
-
-
-
+def add_final_ai_status(df):
 
     final_status = []
 
     final_reasons = []
 
 
-
     for _, row in df.iterrows():
-
 
 
         portfolio_action = row.get(
@@ -219,23 +152,6 @@ def add_complete_ai_pipeline(df):
             ""
         )
 
-
-        expected_value = row.get(
-            "Expected_Value",
-            0
-        )
-
-
-        conviction = row.get(
-            "Final_Conviction_Score",
-            0
-        )
-
-
-
-        # -----------------------------
-        # Final Decision Logic
-        # -----------------------------
 
 
         if (
@@ -292,30 +208,68 @@ def add_complete_ai_pipeline(df):
             )
 
 
-
         final_status.append(status)
 
         final_reasons.append(reason)
 
 
 
-
     df["Final_AI_Status"] = final_status
-
 
     df["Final_AI_Reason"] = final_reasons
 
 
 
+    return df
 
-    # AI Investment Analyst Layer
 
+
+
+# =====================================================
+# Complete Pipeline
+# =====================================================
+
+def add_complete_ai_pipeline(df):
+
+
+    # 1
+    df = add_ai_decisions(df)
+
+
+    # 2
+    df = add_ai_analyst_score(df)
+
+
+    # 3
+    df = add_final_conviction(df)
+
+
+    # 4
+    df = add_portfolio_management(df)
+
+
+    # 5
+    df = add_trade_management(df)
+
+
+    # 6
+    df = add_risk_management(df)
+
+
+    # 7 Create final AI decision BEFORE execution
+    df = add_final_ai_status(df)
+
+
+    # 8 Execution engine
+    df = add_execution_analysis(df)
+
+
+    # 9 Analyst explanation
     df = analyze_stocks(df)
 
 
 
     if "Final_Conviction_Score" in df.columns:
-
 
         df = df.sort_values(
             "Final_Conviction_Score",
@@ -329,9 +283,8 @@ def add_complete_ai_pipeline(df):
 
 
 
-
 # =====================================================
-# Main Generator
+# Generator
 # =====================================================
 
 def generate_ai_decisions(df=None):
@@ -448,6 +401,12 @@ def generate_ai_decisions(df=None):
 
         "Final_AI_Status",
 
+        "Execution_Score",
+
+        "Execution_Grade",
+
+        "Execution_Action",
+
         "Final_AI_Reason"
 
     ]
@@ -475,7 +434,6 @@ def generate_ai_decisions(df=None):
     )
 
 
-
     return df
 
 
@@ -483,6 +441,5 @@ def generate_ai_decisions(df=None):
 
 
 if __name__ == "__main__":
-
 
     generate_ai_decisions()
