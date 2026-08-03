@@ -1,30 +1,38 @@
 # AI Trading Research Platform — Experiment Log
 
 
-## Purpose
+Last Updated:
+
+2026-08-03
 
 
-This document tracks important engineering experiments,
 
-changes, tests, and their outcomes.
+# Purpose
 
 
-Each experiment should record:
+This document tracks important engineering experiments, model changes, system improvements, validation tests, and architecture decisions.
+
+
+Each experiment records:
 
 
 - Date
-
 - Objective
-
 - Files changed
-
 - Dataset/model impact
-
 - Result
-
 - Decision
-
 - Next action
+
+
+
+The purpose is to maintain:
+
+
+- reproducibility
+- transparency
+- experiment history
+- controlled development
 
 
 
@@ -34,7 +42,7 @@ Each experiment should record:
 
 
 
-## EXP-001 — Initial Scanner Development
+# EXP-001 — Initial Scanner Development
 
 
 Date:
@@ -42,36 +50,41 @@ Date:
 2026-07
 
 
+
 Objective:
 
-Build first automated stock scanning pipeline.
+
+Build the first automated stock scanning pipeline.
+
 
 
 Changes:
 
+
 - Created stock universe builder
-
 - Added Yahoo price collection
-
 - Added technical indicators
-
 - Created scanner pipeline
+
 
 
 Result:
 
+
 Successfully generated technical stock signals.
+
 
 
 Decision:
 
-Continue expanding into ML prediction system.
+
+Continue expanding into ML prediction and AI research.
 
 
 
 ---
 
-## EXP-002 — Historical Feature Dataset Creation
+# EXP-002 — Historical Feature Dataset Creation
 
 
 Date:
@@ -79,18 +92,21 @@ Date:
 2026-07
 
 
+
 Objective:
+
 
 Create historical training data for machine learning.
 
 
+
 Changes:
 
-- Built feature_history_builder.py
 
+- Built historical feature pipeline
 - Generated historical feature files
-
 - Created historical_ml_dataset.csv
+
 
 
 Dataset:
@@ -101,40 +117,42 @@ Stocks:
 ~4,000
 
 
+
 Rows:
 
 220,849+
 
 
+
 Features:
 
+
 - Returns
-
 - RSI
-
 - SMA
-
 - Volume metrics
-
 - Volatility
-
 - Momentum
+
 
 
 Result:
 
-Created foundation ML dataset.
+
+Created the foundation for supervised learning.
+
 
 
 Decision:
 
-Proceed with supervised learning.
+
+Proceed with ML development.
 
 
 
 ---
 
-## EXP-003 — First ML Models
+# EXP-003 — Initial ML Models
 
 
 Date:
@@ -142,49 +160,50 @@ Date:
 2026-07
 
 
+
 Objective:
 
-Train prediction models for successful trades.
+
+Train first ML prediction models.
+
 
 
 Models tested:
 
 
 - Logistic Regression
-
 - Random Forest
 
-
-Evaluation:
 
 
 Metrics:
 
+
 - Accuracy
-
 - Precision
-
 - Recall
-
 - F1
-
 - ROC-AUC
+
 
 
 Result:
 
-Random Forest performed better for trade recall.
+
+Random Forest showed better trade classification performance.
+
 
 
 Decision:
 
-Use champion/challenger system.
+
+Create champion/challenger model system.
 
 
 
 ---
 
-## EXP-004 — Model v27 Investigation
+# EXP-004 — model_v27 Investigation and Retirement
 
 
 Date:
@@ -192,17 +211,22 @@ Date:
 2026-07
 
 
+
 Objective:
 
-Review previous champion model.
+
+Review previous champion model performance.
+
 
 
 Model:
 
+
 model_v27
 
 
-Original metrics:
+
+Reported metrics:
 
 
 Accuracy:
@@ -210,53 +234,47 @@ Accuracy:
 98.3%
 
 
+
 F1:
 
 96.1%
 
 
+
 Finding:
 
 
-Model likely affected by:
+The results were considered unreliable.
 
 
-- Small dataset
 
-- Data leakage
+Problems discovered:
 
-- Biased historical representation
 
-- Unrealistic validation
+- insufficient dataset size
+- possible data leakage
+- unrealistic validation
+- biased historical representation
+
 
 
 Decision:
 
 
-Retire model_v27 as unreliable.
+Retire model_v27.
 
 
-New models must be trained using:
+
+Important lesson:
 
 
-- Larger historical dataset
-
-- Improved features
-
-- Leakage prevention
-
-- Realistic validation
-
-
-Status:
-
-Completed
+High ML metrics do not guarantee useful trading performance.
 
 
 
 ---
 
-## EXP-005 — Expanded Dataset Retraining
+# EXP-005 — Expanded Dataset Retraining
 
 
 Date:
@@ -264,10 +282,12 @@ Date:
 2026-07
 
 
+
 Objective:
 
 
-Retrain models using improved dataset.
+Retrain models using improved historical data.
+
 
 
 Changes:
@@ -277,14 +297,11 @@ Added:
 
 
 - ATR
-
 - ATR_Percent
-
 - Range_Position
-
 - Distance_From_52W_High
-
 - Volume_Trend
+
 
 
 Dataset:
@@ -295,25 +312,90 @@ Training records:
 3,504,289
 
 
+
 Testing records:
 
 98,034
 
 
+
+Validation:
+
+
+Chronological split.
+
+
+
+Result:
+
+
+Created more realistic ML evaluation framework.
+
+
+
+Decision:
+
+
+Continue model comparison using realistic metrics.
+
+
+
+---
+
+# EXP-006 — model_v33 Champion Selection
+
+
+Date:
+
+2026-07-28
+
+
+
+Objective:
+
+
+Select a reliable champion model using expanded data.
+
+
+
+Model:
+
+
+model_v33
+
+
+
+Algorithm:
+
+
+Random Forest
+
+
+
+Configuration:
+
+
+- n_estimators: 500
+- max_depth: 20
+- min_samples_leaf: 10
+- max_features: sqrt
+- class_weight: balanced
+
+
+
 Results:
 
 
-Random Forest:
+ROC-AUC:
+
+0.669
+
 
 
 F1:
 
 0.467
 
-
-ROC-AUC:
-
-0.669
 
 
 Backtest:
@@ -324,100 +406,36 @@ Trades:
 210
 
 
+
+Win Rate:
+
+46.7%
+
+
+
 Average Return:
 
 0.448%
 
 
-Decision:
-
-
-Accepted as new champion because previous model was unreliable.
-
-
-
----
-
-# AI Research Engine Experiments
-
-
-
-## EXP-006 — Automatic Threshold Optimization
-
-
-Date:
-
-2026-07
-
-
-Status:
-
-Completed / Improving
-
-
-Objective:
-
-
-Replace manually selected filters with data-driven optimization.
-
-
-Previous manual filters:
-
-
-- AI_Confidence > 40
-
-- ML Probability > 25
-
-- Rank > 50
-
-
-Files:
-
-
-app/historical_threshold_optimizer.py
-
-
-Goal:
-
-
-Create:
-
-
-data/models/optimal_thresholds.json
-
-
-Implemented:
-
-
-- Historical threshold evaluation
-
-- Multiple optimization profiles
-
-- Risk-adjusted scoring
-
-- Expectancy calculation
-
-- Drawdown consideration
-
-
-Result:
-
-
-Optimizer successfully evaluates historical filtering performance.
-
 
 Decision:
 
 
-Continue improving threshold selection before automatic deployment.
+Accepted as current historical ML champion.
+
+
+
+Reason:
+
+
+Improved reliability compared with retired model_v27.
 
 
 
 ---
 
----
-
-## EXP-007 — Research Score Normalization V3
+# EXP-007 — Research Score Normalization V3
 
 
 Date:
@@ -425,36 +443,28 @@ Date:
 2026-07-29
 
 
+
 Objective:
 
-Improve Research Score quality by removing score inflation and creating a normalized research ranking system.
+
+Improve Research Score quality.
+
 
 
 Problem:
 
-Previous Research Score calculation:
 
-- directly added Rank Score
-- strategy bonuses
-- sector bonuses
-- risk reward bonuses
-- RSI bonuses
+Previous scoring allowed inflated scores above expected ranges.
 
 
-Result:
 
-Scores exceeded expected range:
+Issues:
 
-Examples:
-
-Research_Score > 100
-
-
-Problems:
 
 - poor comparability
-- threshold optimization distortion
 - ranking saturation
+- threshold optimization problems
+
 
 
 Changes:
@@ -462,229 +472,38 @@ Changes:
 
 Updated:
 
+
 app/research_ranker.py
+
 
 
 Implemented:
 
-- normalized Research Score calculation
+
+- normalized scoring
 - improved factor weighting
-- controlled scoring range
-- better distribution
+- controlled score range
+- better ranking separation
 
-
-New Distribution:
-
-
-Minimum:
-
-35.04
-
-
-Maximum:
-
-77.15
-
-
-Average:
-
-53.98
-
-
-
-Impact:
-
-
-Improved:
-
-✓ score interpretability
-
-✓ ranking separation
-
-✓ threshold optimization readiness
-
-✓ historical validation compatibility
-
-
-Decision:
-
-Accept Research Ranker V3.
-
-
-Next action:
-
-
-Continue optimizing:
-
-- AI Final Score weighting
-- Confidence calibration
-- historical score validation
-
-
-Status:
-
-Completed
-
----
-
-
-
----
-
-EXP-008 — Research Score Calibration Validation
-
-Date:
-2026-07-29
-
-Objective:
-Validate whether Research_Score ranking correlates with future trade performance.
-
-Dataset:
-data/trade_database.csv
-
-Rows:
-20,420 trades
-
-Method:
-Quartile bucket analysis
-
-Results:
-
-Research Score buckets:
-
-Top:
-944 trades
-Average Return:
-+7.98%
-
-High:
-767 trades
-Average Return:
-+3.48%
-
-Medium:
-1003 trades
-Average Return:
--0.92%
-
-Low:
-1298 trades
-Average Return:
-+1.05%
-
-
-Finding:
-
-Research_Score demonstrates meaningful ranking ability.
-Higher Research Scores produced significantly higher average returns.
-
-Decision:
-
-Accept Research_Score V3 as improved ranking model.
-
-Next:
-
-Validate AI_Final_Score using historical trade database after adding score persistence.
-
----
-
-# EXP-009 — Research Ranker V2
-
-
-Date:
-
-2026-07-29
-
-
-Objective:
-
-
-Improve Research Score calculation and move from simple bonus scoring toward multi-factor ranking.
-
-
-Previous approach:
-
-
-Research Score was calculated using:
-
-
-- Rank Score
-
-- Strategy bonuses
-
-- Sector bonuses
-
-- Risk reward bonuses
-
-- RSI bonus
-
-
-Problems discovered:
-
-
-- Score compression
-
-- Limited separation between candidates
-
-- Several features behaved like constants
-
-
-Changes:
-
-
-Updated:
-
-
-app/research_ranker.py
-
-
-New ranking factors:
-
-
-- Rank Score
-
-- Momentum Score
-
-- Trend Score
-
-- Relative Strength
-
-- Risk Reward
-
-- Strategy classification
 
 
 Result:
 
 
-Research ranking became more structured and transparent.
+Research Score became more interpretable.
 
-
-Example:
-
-
-Previous Research Score range:
-
-
-75-88
-
-
-New system:
-
-
-More flexible multi-factor scoring framework.
 
 
 Decision:
 
 
-Continue improving with percentile normalization.
+Accept Research Ranker V3.
 
 
 
 ---
 
-## EXP-010 — Research Feature Distribution Analysis
+# EXP-008 — Research Score Validation
 
 
 Date:
@@ -692,126 +511,373 @@ Date:
 2026-07-29
 
 
+
 Objective:
 
 
-Analyze whether ranking features provide enough separation between trading candidates.
+Validate whether Research Score correlates with future performance.
+
 
 
 Dataset:
 
 
-data/analysis/strategy_results.csv
+data/trade_database.csv
 
 
-Sample size:
 
+Method:
 
-68 candidates
 
+Quartile analysis.
 
-Findings:
 
 
-Rank Score:
+Finding:
 
 
-Mean:
+Higher Research Scores produced stronger average historical returns.
 
-80.29
-
-
-Range:
-
-75-88
-
-
-Observation:
-
-
-Score distribution was compressed.
-
-
-Momentum Score:
-
-
-Mean:
-
-20.66
-
-
-Range:
-
-20-25
-
-
-Observation:
-
-
-Most candidates receive similar momentum scores.
-
-
-Trend Score:
-
-
-Mean:
-
-19.70
-
-
-Range:
-
-10-20
-
-
-Observation:
-
-
-Trend score provides limited differentiation.
-
-
-Relative Strength:
-
-
-Mean:
-
-16.90
-
-
-Range:
-
-10.18-28.75
-
-
-Observation:
-
-
-Relative Strength provides stronger candidate separation.
-
-
-Risk Reward:
-
-
-Mean:
-
-3.67
-
-
-Maximum:
-
-36.84
-
-
-Observation:
-
-
-Extreme values require normalization or capping.
 
 
 Decision:
 
 
-Research Score normalization is required before AI Final Score optimization.
+Accept normalized Research Score system.
+
+
+
+---
+
+# EXP-009 — Two ML Path Architecture Separation
+
+
+Date:
+
+2026-08-03
+
+
+
+Objective:
+
+
+Clarify separation between historical ML research and scanner ML prediction.
+
+
+
+Problem:
+
+
+Previous documentation did not clearly distinguish the two systems.
+
+
+
+Changes:
+
+
+Documented:
+
+
+## Historical ML Path
+
+
+Module:
+
+
+app/train_model.py
+
+
+
+Purpose:
+
+
+Historical pattern prediction using expanded ML dataset.
+
+
+
+Output:
+
+
+Historical ML probability.
+
+
+
+---
+
+
+## Scanner ML Path
+
+
+Modules:
+
+
+app/ml_predictor.py
+
+app/model_loader.py
+
+
+
+Purpose:
+
+
+Current opportunity confirmation inside scanner pipeline.
+
+
+
+Output:
+
+
+- ML_Probability
+- ML_Prediction
+- ML_Model
+
+
+
+Result:
+
+
+Clear separation between training research and scanner intelligence.
+
+
+
+Decision:
+
+
+Maintain two independent ML paths.
+
+
+
+---
+
+# EXP-010 — AI Final Decision Controller
+
+
+Date:
+
+2026-08-03
+
+
+
+Objective:
+
+
+Create final AI approval layer combining ranking, ML confidence, and risk.
+
+
+
+Module:
+
+
+app/ai_final_decision_controller.py
+
+
+
+Changes:
+
+
+Added:
+
+
+- multi-layer scoring
+- risk integration
+- ML confidence integration
+- final BUY/WATCH/REJECT decision
+
+
+
+Scoring:
+
+
+Risk:
+
+25%
+
+
+
+Ranking:
+
+45%
+
+
+
+ML Confidence:
+
+20%
+
+
+
+Strategy:
+
+10%
+
+
+
+Result:
+
+
+Created final conviction-based decision framework.
+
+
+
+Decision:
+
+
+Accept AI Final Decision Controller.
+
+
+
+---
+
+# EXP-011 — Trade Management Integration
+
+
+Date:
+
+2026-08-03
+
+
+
+Objective:
+
+
+Convert approved AI decisions into structured trade plans.
+
+
+
+Module:
+
+
+app/trade_management.py
+
+
+
+Added:
+
+
+- entry price
+- ATR stop loss
+- target calculation
+- position sizing
+- reward/risk calculation
+- expected value calculation
+
+
+
+Result:
+
+
+Research signals can now generate structured trade plans.
+
+
+
+Decision:
+
+
+Accept trade management layer.
+
+
+
+---
+
+# EXP-012 — Trade Intelligence Foundation
+
+
+Date:
+
+2026-08-03
+
+
+
+Objective:
+
+
+Create foundation for learning from trade outcomes.
+
+
+
+Added modules:
+
+
+- trade_history.py
+- trade_history_manager.py
+- trade_feedback.py
+- trade_performance.py
+- trade_performance_tracker.py
+- trade_exit_manager.py
+- live_trade_monitor.py
+- ai_learning_engine.py
+
+
+
+Purpose:
+
+
+Track:
+
+
+- decisions
+- outcomes
+- performance
+- future improvement signals
+
+
+
+Decision:
+
+
+Foundation accepted.
+
+
+
+Next:
+
+
+Connect feedback into model monitoring and optimization.
+
+
+
+---
+
+# EXP-013 — Risk-Aware AI Pipeline Update
+
+
+Date:
+
+2026-08-03
+
+
+
+Objective:
+
+
+Improve decision quality by integrating portfolio risk controls.
+
+
+
+Changes:
+
+
+Connected:
+
+
+- AI ranking
+- portfolio risk
+- final conviction scoring
+- trade approval logic
+
+
+
+Result:
+
+
+Weak opportunities can now be rejected before trade planning.
+
+
+
+Decision:
+
+
+Accept risk-aware decision pipeline.
 
 
 
@@ -821,41 +887,11 @@ Research Score normalization is required before AI Final Score optimization.
 
 
 
-## EXP-011 — Research Score Normalization V3
+# EXP-014 — Probability Calibration
 
 
 Status:
 
-Next Development
-
-
-Objective:
-
-
-Convert raw research factors into normalized percentile-based scores.
-
-
-Planned improvements:
-
-
-- percentile scaling
-
-- feature weighting
-
-- risk reward normalization
-
-- improved score distribution
-
-- validation against historical outcomes
-
-
-
----
-
-## EXP-012 — Probability Calibration
-
-
-Status:
 
 Planned
 
@@ -864,16 +900,24 @@ Planned
 Objective:
 
 
-Improve confidence reliability so predicted probabilities better match historical success rates.
+Improve confidence reliability.
+
+
+
+Goal:
+
+
+Predicted probabilities should better match actual success frequency.
 
 
 
 ---
 
-## EXP-013 — SHAP Explainability
+# EXP-015 — Walk Forward Validation
 
 
 Status:
+
 
 Planned
 
@@ -882,16 +926,24 @@ Planned
 Objective:
 
 
-Add model explainability and feature contribution analysis.
+Create professional out-of-sample testing.
+
+
+
+Method:
+
+
+Rolling historical validation.
 
 
 
 ---
 
-## EXP-014 — Walk Forward Validation
+# EXP-016 — SHAP Explainability
 
 
 Status:
+
 
 Planned
 
@@ -900,7 +952,31 @@ Planned
 Objective:
 
 
-Create realistic out-of-sample testing using historical market periods.
+Understand feature contribution and AI reasoning.
+
+
+
+---
+
+# EXP-017 — Professional Backtesting
+
+
+Status:
+
+
+Planned
+
+
+
+Add:
+
+
+- transaction costs
+- benchmark comparison
+- equity curves
+- drawdown analysis
+- Sharpe ratio
+- Sortino ratio
 
 
 
@@ -909,18 +985,21 @@ Create realistic out-of-sample testing using historical market periods.
 # Experiment Rules
 
 
-Before accepting any major improvement:
+Before accepting improvements:
 
 
-- Validate with historical data
-
-- Avoid data leakage
-
-- Compare against previous version
-
-- Record results
-
-- Update architecture documentation
+Required:
 
 
-The platform prioritizes realistic research performance over artificially high metrics.
+- validate with historical data
+- avoid leakage
+- compare against previous version
+- document results
+- update architecture documentation
+
+
+
+The platform prioritizes:
+
+
+realistic research performance over artificially high metrics.
