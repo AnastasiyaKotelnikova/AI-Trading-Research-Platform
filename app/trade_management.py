@@ -23,7 +23,13 @@ def add_trade_management(
     statuses = []
 
 
+
     for _, row in df.iterrows():
+
+        symbol = row.get(
+            "Symbol",
+            ""
+        )
 
 
         # =========================
@@ -53,14 +59,38 @@ def add_trade_management(
 
         allocation = row.get(
             "Portfolio_Allocation_%",
-            0
+            10
         )
 
 
-        close = 0 if pd.isna(close) else close
-        atr = 0 if pd.isna(atr) else atr
-        conviction = 0 if pd.isna(conviction) else conviction
-        allocation = 0 if pd.isna(allocation) else allocation
+
+        close = (
+            0
+            if pd.isna(close)
+            else float(close)
+        )
+
+
+        atr = (
+            0
+            if pd.isna(atr)
+            else float(atr)
+        )
+
+
+        conviction = (
+            0
+            if pd.isna(conviction)
+            else float(conviction)
+        )
+
+
+        allocation = (
+            10
+            if pd.isna(allocation)
+            or allocation == 0
+            else float(allocation)
+        )
 
 
 
@@ -68,7 +98,10 @@ def add_trade_management(
         # Trade Setup
         # =========================
 
-        entry = round(close,2)
+        entry = round(
+            close,
+            2
+        )
 
 
         if atr > 0:
@@ -80,7 +113,11 @@ def add_trade_management(
             stop = entry * 0.95
 
 
-        stop = max(stop,0)
+
+        stop = max(
+            stop,
+            0
+        )
 
 
         risk = entry - stop
@@ -89,27 +126,38 @@ def add_trade_management(
 
         if conviction >= 50:
 
-            m1,m2 = 5,8
+            m1 = 5
+            m2 = 8
 
-        elif conviction >=40:
 
-            m1,m2 = 4,6
+        elif conviction >= 40:
+
+            m1 = 4
+            m2 = 6
+
 
         else:
 
-            m1,m2 = 3,5
+            m1 = 3
+            m2 = 5
+
 
 
 
         if atr > 0:
 
-            target1 = entry + atr*m1
-            target2 = entry + atr*m2
+            target1 = entry + atr * m1
+
+            target2 = entry + atr * m2
+
 
         else:
 
-            target1 = entry + risk*2
-            target2 = entry + risk*3
+            target1 = entry + risk * 2
+
+            target2 = entry + risk * 3
+
+
 
 
 
@@ -117,22 +165,33 @@ def add_trade_management(
         # Approval Logic
         # =========================
 
-        final_status = row.get(
-            "Final_AI_Status",
-            ""
-        )
+
+        final_status = str(
+            row.get(
+                "Final_AI_Status",
+                ""
+            )
+        ).strip().upper()
 
 
-        portfolio_action = row.get(
-            "Portfolio_Action",
-            ""
-        )
+
+        portfolio_action = str(
+            row.get(
+                "Portfolio_Action",
+                ""
+            )
+        ).strip().upper()
 
 
-        risk_status = row.get(
-            "Risk_Status",
-            ""
-        )
+
+        risk_status = str(
+            row.get(
+                "Risk_Status",
+                ""
+            )
+        ).strip().upper()
+
+
 
 
         approved = row.get(
@@ -141,31 +200,47 @@ def add_trade_management(
         )
 
 
-        if isinstance(approved,str):
 
-            approved = approved.lower() in [
-                "true",
-                "1",
-                "yes"
-            ]
+        if isinstance(
+            approved,
+            str
+        ):
+
+            approved = (
+                approved
+                .strip()
+                .lower()
+                in
+                [
+                    "true",
+                    "yes",
+                    "1"
+                ]
+            )
+
 
         else:
 
-            approved = bool(approved)
+            approved = bool(
+                approved
+            )
 
 
 
         tradable = (
 
-            final_status == "APPROVED TRADE"
+            final_status ==
+            "APPROVED TRADE"
 
             and
 
-            portfolio_action == "ALLOW ENTRY"
+            portfolio_action ==
+            "ALLOW ENTRY"
 
             and
 
-            risk_status == "RISK APPROVED"
+            risk_status ==
+            "RISK APPROVED"
 
             and
 
@@ -174,43 +249,62 @@ def add_trade_management(
         )
 
 
+
         print(
-            "DEBUG:",
-            row.get("Symbol"),
+            "TRADE MANAGEMENT:",
+            symbol,
+            "| Final:",
+            final_status,
+            "| Portfolio:",
             portfolio_action,
+            "| Risk:",
             risk_status,
+            "| Approved:",
             approved,
+            "| Tradable:",
             tradable
         )
 
 
 
+
+
         # =========================
-        # Trade Grade
+        # Grade
         # =========================
+
 
         if tradable:
 
             grade = "A"
+
             status = "READY"
+
 
 
         elif final_status == "WATCHLIST":
 
             grade = "B"
+
             status = "WATCH"
+
 
 
         elif final_status == "MONITOR":
 
             grade = "C"
+
             status = "MONITOR"
+
 
 
         else:
 
-            grade = "Avoid"
+            grade = "D"
+
             status = "BLOCKED"
+
+
 
 
 
@@ -218,18 +312,29 @@ def add_trade_management(
         # Position Sizing
         # =========================
 
+
         capital = (
+
             account_size *
+
             allocation /
+
             100
+
         )
+
 
 
         max_loss = (
+
             account_size *
+
             max_risk_percent /
+
             100
+
         )
+
 
 
         if risk > 0:
@@ -239,9 +344,11 @@ def add_trade_management(
                 risk
             )
 
+
         else:
 
             shares = 0
+
 
 
 
@@ -252,6 +359,7 @@ def add_trade_management(
                 entry
             )
 
+
             shares = min(
                 shares,
                 max_shares
@@ -259,27 +367,54 @@ def add_trade_management(
 
 
 
-        if grade == "Avoid":
+        if not tradable:
 
             shares = 0
+
             capital = 0
 
-        elif grade == "A":
-
-            pass
 
 
-        entries.append(entry)
 
-        stops.append(round(stop,2))
+        # =========================
+        # Store
+        # =========================
 
-        targets1.append(round(target1,2))
 
-        targets2.append(round(target2,2))
+        entries.append(
+            entry
+        )
+
+
+        stops.append(
+            round(
+                stop,
+                2
+            )
+        )
+
+
+        targets1.append(
+            round(
+                target1,
+                2
+            )
+        )
+
+
+        targets2.append(
+            round(
+                target2,
+                2
+            )
+        )
 
 
         risk_per_share_list.append(
-            round(risk,2)
+            round(
+                risk,
+                2
+            )
         )
 
 
@@ -289,7 +424,10 @@ def add_trade_management(
 
 
         capital_list.append(
-            round(capital,2)
+            round(
+                capital,
+                2
+            )
         )
 
 
@@ -301,6 +439,7 @@ def add_trade_management(
         statuses.append(
             status
         )
+
 
 
 
@@ -331,23 +470,34 @@ def add_trade_management(
 
 
 
+
+
     # =========================
-    # Reward / Risk
+    # Reward Risk
     # =========================
 
 
     risk_distance = (
+
         df["Entry_Price"]
+
         -
+
         df["Stop_Loss"]
+
     )
 
 
     reward_distance = (
+
         df["Target_1"]
+
         -
+
         df["Entry_Price"]
+
     )
+
 
 
     df["Reward_Risk"] = (
@@ -363,9 +513,12 @@ def add_trade_management(
 
 
 
+
+
     # =========================
     # Expected Value
     # =========================
+
 
     if "Combined_ML_Probability" in df.columns:
 
@@ -373,11 +526,13 @@ def add_trade_management(
             "Combined_ML_Probability"
         ]
 
+
     elif "ML_Probability" in df.columns:
 
         probability = df[
             "ML_Probability"
         ]
+
 
     else:
 
@@ -411,6 +566,7 @@ def add_trade_management(
     df["Expected_Value"] = (
 
         probability *
+
         df["Reward_Risk"]
 
         -
@@ -422,3 +578,13 @@ def add_trade_management(
 
 
     return df
+
+
+
+
+
+if __name__ == "__main__":
+
+    print(
+        "Trade Management module loaded."
+    )

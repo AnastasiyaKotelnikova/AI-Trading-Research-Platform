@@ -11,7 +11,7 @@ from app.historical_model_loader import (
 
 
 # ==================================================
-# v27 Scanner ML Features
+# Scanner ML Features
 # ==================================================
 
 FEATURE_COLUMNS = [
@@ -107,7 +107,7 @@ _HISTORICAL_MODEL = None
 
 
 # ==================================================
-# Load Scanner ML Model (model_v27)
+# Load Active Scanner ML Model
 # ==================================================
 
 def load_model():
@@ -149,7 +149,6 @@ def load_historical_ml_model():
 
     if _HISTORICAL_MODEL is None:
 
-
         _HISTORICAL_MODEL = load_historical_model()
 
 
@@ -178,10 +177,6 @@ def add_ml_predictions(df):
 
 
 
-    # -----------------------------
-    # Validate features
-    # -----------------------------
-
     missing = (
 
         set(FEATURE_COLUMNS)
@@ -201,19 +196,9 @@ def add_ml_predictions(df):
 
 
 
-    # -----------------------------
-    # Prepare input
-    # -----------------------------
-
-    X = df[
-        FEATURE_COLUMNS
-    ]
+    X = df[FEATURE_COLUMNS]
 
 
-
-    # -----------------------------
-    # Probability
-    # -----------------------------
 
     probabilities = (
 
@@ -230,10 +215,6 @@ def add_ml_predictions(df):
 
 
 
-    # -----------------------------
-    # Prediction
-    # -----------------------------
-
     df["ML_Prediction"] = (
 
         model.predict(X)
@@ -241,10 +222,6 @@ def add_ml_predictions(df):
     )
 
 
-
-    # -----------------------------
-    # Metadata
-    # -----------------------------
 
     df["ML_Model"] = (
 
@@ -274,7 +251,6 @@ def add_ml_predictions(df):
     )
 
 
-
     return df
 
 
@@ -295,10 +271,6 @@ def add_historical_ml_predictions(df):
 
 
 
-    # -----------------------------
-    # Validate features
-    # -----------------------------
-
     missing = (
 
         set(HISTORICAL_FEATURE_COLUMNS)
@@ -318,19 +290,9 @@ def add_historical_ml_predictions(df):
 
 
 
-    # -----------------------------
-    # Prepare input
-    # -----------------------------
-
-    X = df[
-        HISTORICAL_FEATURE_COLUMNS
-    ]
+    X = df[HISTORICAL_FEATURE_COLUMNS]
 
 
-
-    # -----------------------------
-    # Probability
-    # -----------------------------
 
     probabilities = (
 

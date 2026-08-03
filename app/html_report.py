@@ -1,33 +1,14 @@
 import pandas as pd
-from datetime import datetime
 from pathlib import Path
 
 
 REPORT_DIR = Path("data/reports")
 
-
-RESEARCH_FILE = Path(
-    "data/analysis/research_ranked.csv"
-)
-
-CONFIDENCE_FILE = Path(
-    "data/analysis/confidence_scores.csv"
-)
-
-SECTOR_FILE = Path(
-    "data/analysis/strategy_sector_results.csv"
-)
-
-MARKET_FILE = Path(
-    "data/cache/market_snapshot.csv"
-)
-
-CONFIDENCE_FILE = Path(
-    "data/analysis/confidence_scores.csv"
+AI_SIGNALS_FILE = Path(
+    "data/analysis/final_ai_signals.csv"
 )
 
 OUTPUT_FILE = REPORT_DIR / "daily_dashboard.html"
-
 
 
 def create_dashboard():
@@ -37,38 +18,27 @@ def create_dashboard():
         exist_ok=True
     )
 
-
-    research_df = pd.read_csv(
-        RESEARCH_FILE
-    )
- 
-    
-    confidence_df = pd.read_csv(
-        CONFIDENCE_FILE
-    )
-
-    sector_df = pd.read_csv(
-        SECTOR_FILE
-    )
-
-    market_df = pd.read_csv(
-        MARKET_FILE
+    # Load current AI signals
+    ai_df = pd.read_csv(
+        AI_SIGNALS_FILE
     )
 
 
+    # Sort current AI opportunities
     top_candidates = (
-        confidence_df
+        ai_df
         .sort_values(
-            by="Confidence_Score",
+            by="AI_Final_Score_Adjusted",
             ascending=False
         )
         .head(10)
     )
 
 
+    # Sector summary
     sector_summary = (
-        sector_df
-        .groupby("Sector")["Return_%"]
+        ai_df
+        .groupby("Sector")["AI_Final_Score_Adjusted"]
         .mean()
         .sort_values(
             ascending=False
@@ -77,19 +47,20 @@ def create_dashboard():
     )
 
 
+    # Strategy distribution
     strategy_counts = (
-        research_df["Strategy"]
+        ai_df["Strategy"]
         .value_counts()
     )
 
 
     stocks_scanned = len(
-        market_df
+        ai_df
     )
 
 
     avg_change = round(
-        market_df["Change_%"].mean(),
+        ai_df["Change_%"].mean(),
         2
     )
 
@@ -113,7 +84,7 @@ def create_dashboard():
         reasons = []
 
 
-        if row["Risk_Reward"] >= 3:
+        if row["Risk_Reward"] >= 2:
             reasons.append(
                 "Strong risk/reward profile"
             )
@@ -125,18 +96,27 @@ def create_dashboard():
             )
 
 
-        if row["Sector"] in sector_summary.index[:3]:
+        if row["Above_SMA20"]:
             reasons.append(
-                "Strong sector momentum"
+                "Price above 20-day moving average"
             )
 
 
-        if row["Strategy"] in [
-            "STRONG PULLBACK",
-            "QUALITY SETUP"
-        ]:
+        if row["Above_SMA50"]:
             reasons.append(
-                "Historically favorable setup"
+                "Price above 50-day moving average"
+            )
+
+
+        if row["Historical_ML_Probability"] >= 60:
+            reasons.append(
+                "Strong historical ML confirmation"
+            )
+
+
+        if len(reasons) == 0:
+            reasons.append(
+                "AI ranked based on combined model scoring"
             )
 
 
@@ -166,13 +146,11 @@ background:#f5f7fb;
 color:#222;
 }}
 
-
 .metrics {{
 display:flex;
 gap:20px;
 flex-wrap:wrap;
 }}
-
 
 .metric {{
 background:white;
@@ -182,17 +160,14 @@ border-radius:15px;
 box-shadow:0 4px 12px rgba(0,0,0,0.08);
 }}
 
-
 .metric-title {{
 color:#666;
 }}
-
 
 .metric-value {{
 font-size:28px;
 font-weight:bold;
 }}
-
 
 .card {{
 background:white;
@@ -202,7 +177,6 @@ border-radius:15px;
 box-shadow:0 4px 12px rgba(0,0,0,0.08);
 }}
 
-
 .pick-card {{
 background:white;
 padding:25px;
@@ -210,7 +184,6 @@ margin-bottom:20px;
 border-radius:15px;
 box-shadow:0 4px 12px rgba(0,0,0,0.08);
 }}
-
 
 .pick-title {{
 font-size:26px;
@@ -232,13 +205,11 @@ width:100%;
 border-collapse:collapse;
 }}
 
-
 th {{
 background:#222;
 color:white;
 padding:10px;
 }}
-
 
 td {{
 padding:10px;
@@ -264,41 +235,52 @@ AI Trading Research Dashboard
 
 <div class="metric">
 <div class="metric-title">
-Stocks Scanned
+AI Candidates
 </div>
+
 <div class="metric-value">
 {stocks_scanned}
 </div>
+
 </div>
+
 
 
 <div class="metric">
 <div class="metric-title">
-Market Change
+Average Daily Change
 </div>
+
 <div class="metric-value">
 {avg_change}%
 </div>
+
 </div>
+
 
 
 <div class="metric">
 <div class="metric-title">
 Top Sector
 </div>
+
 <div class="metric-value">
 {top_sector}
 </div>
+
 </div>
+
 
 
 <div class="metric">
 <div class="metric-title">
 Top Strategy
 </div>
+
 <div class="metric-value">
 {top_strategy}
 </div>
+
 </div>
 
 
@@ -321,8 +303,9 @@ Sector
 </th>
 
 <th>
-Average Return %
+Average AI Score
 </th>
+
 </tr>
 
 """
@@ -339,7 +322,7 @@ Average Return %
 </td>
 
 <td>
-{round(value,2)}%
+{round(value,2)}
 </td>
 
 </tr>
@@ -352,6 +335,9 @@ Average Return %
 </table>
 
 </div>
+
+
+
 
 
 <div class="card">
@@ -405,10 +391,12 @@ Count
 
 
 
+
+
 <div class="card">
 
 <h2>
-Top AI Research Picks
+Top AI Trading Candidates
 </h2>
 
 """
@@ -416,18 +404,26 @@ Top AI Research Picks
 
     for _, row in top_candidates.iterrows():
 
-        reasons = generate_reason(row)
 
-        confidence = row["Confidence_Score"]
+        confidence = row["AI_Confidence"]
 
-        if confidence >= 90:
+
+        if confidence >= 70:
+
             confidence_label = "🟢 HIGH CONFIDENCE"
 
-        elif confidence >= 70:
-            confidence_label = "🟡 GOOD SETUP"
+        elif confidence >= 40:
+
+            confidence_label = "🟡 MODERATE"
 
         else:
-            confidence_label = "🔴 WATCH"
+
+            confidence_label = "🔴 LOW"
+
+
+
+        reasons = generate_reason(row)
+
 
 
         html += f"""
@@ -442,52 +438,78 @@ Top AI Research Picks
 </div>
 
 
+
 <a class="button"
+
 href="stocks/{row['Symbol']}.html">
 
 View Full Analysis
 
 </a>
 
-<p>
-<b>Strategy:</b>
-{row['Strategy']}
-</p>
 
 
 <p>
 
 <b>Sector:</b>
 {row['Sector']}
+
 </p>
+
 
 
 <p>
-<b>Research Score:</b>
-{row['Research_Score']}
+
+<b>Strategy:</b>
+{row['Strategy']}
+
 </p>
+
+
+
+<p>
+
+<b>AI Score:</b>
+{round(row['AI_Final_Score_Adjusted'],2)}
+
+</p>
+
+
 
 <p>
 
 <b>AI Confidence:</b>
-
-{row['Confidence_Score']}/100
+{round(confidence,2)}/100
 
 </p>
 
+
+
 <p>
 
-<b>AI Rating:</b>
-
+<b>Status:</b>
 {confidence_label}
 
 </p>
 
 
+
 <p>
+
+<b>Research Score:</b>
+{round(row['Research_Score'],2)}
+
+</p>
+
+
+
+<p>
+
 <b>Risk Reward:</b>
 {row['Risk_Reward']}
+
 </p>
+
 
 
 <p>

@@ -1,0 +1,2 @@
+Trade_ID,Symbol,Entry_Date,Entry_Price,Current_Price,Stop_Loss,Target_1,Target_2,Strategy,AI_Decision,Final_AI_Status,Final_Conviction_Score,Combined_ML_Probability,Expected_Value,Portfolio_Action,Portfolio_Allocation_%,Risk_Status,Recommended_Shares,Capital_Allocation_$,Status,Exit_Date,Exit_Price,Return_%,Profit_$,Days_Held,Outcome,Last_Updated
+KOD_2026-08-01,KOD,2026-08-01,42.42,42.41999816894531,36.56,57.07,65.86,QUALITY SETUP,HIGH CONVICTION,APPROVED TRADE,53.99,41.03,0.436,ALLOW ENTRY,35.0,RISK APPROVED,0,0,OPEN,,0,0,0,0,,2026-08-01

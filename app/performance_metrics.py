@@ -2,125 +2,234 @@ import pandas as pd
 import os
 
 
-def get_latest_result():
 
-    folder = "data/backtest_results"
+BACKTEST_FOLDER = "data/backtest_results"
 
-    files = [
-        f for f in os.listdir(folder)
-        if f.endswith(".csv")
-    ]
 
-    latest = sorted(files)[-1]
 
-    return os.path.join(folder, latest)
+def get_trade_file():
+
+    file = os.path.join(
+        BACKTEST_FOLDER,
+        "realistic_completed_trades.csv"
+    )
+
+
+    if not os.path.exists(file):
+
+        raise FileNotFoundError(
+            "realistic_completed_trades.csv not found"
+        )
+
+
+    return file
+
+
 
 
 
 def analyze():
 
-    file = get_latest_result()
+
+    file = get_trade_file()
+
+
+    print("\nLoading:")
+    print(file)
+
+
 
     df = pd.read_csv(file)
 
-
-    closed = df[
-        df["Result"] != "OPEN"
-    ]
-
-
-    wins = closed[
-        closed["Result"].str.contains("TARGET")
-    ]
-
-
-    losses = closed[
-        closed["Result"] == "STOP HIT"
-    ]
 
 
     print("\n===== PERFORMANCE METRICS =====")
 
 
-    print("\nClosed Trades:")
-    print(len(closed))
 
+    total_trades = len(df)
 
-    print("\nWins:")
-    print(len(wins))
-
-
-    print("\nLosses:")
-    print(len(losses))
-
-
-    if len(closed):
-
-        win_rate = (
-            len(wins) / len(closed)
-        ) * 100
-
-        print("\nWin Rate:")
-        print(round(win_rate,2), "%")
-
-
-    print("\nAverage Winning Trade:")
 
     print(
-        round(
-            wins["Return_%"].mean(),
-            2
-        ),
+        "\nTotal Trades:",
+        total_trades
+    )
+
+
+
+    if total_trades == 0:
+
+        print(
+            "No trades available."
+        )
+
+        return
+
+
+
+
+    # -------------------------------
+    # WIN / LOSS
+    # -------------------------------
+
+
+    wins = df[
+        df["Return_%"] > 0
+    ]
+
+
+    losses = df[
+        df["Return_%"] < 0
+    ]
+
+
+
+    print(
+        "\nWinning Trades:",
+        len(wins)
+    )
+
+
+    print(
+        "Losing Trades:",
+        len(losses)
+    )
+
+
+
+    win_rate = (
+
+        len(wins)
+
+        /
+
+        total_trades
+
+    ) * 100
+
+
+
+    print(
+        "\nWin Rate:",
+        round(win_rate,2),
         "%"
     )
 
 
-    print("\nAverage Losing Trade:")
+
+    # -------------------------------
+    # AVERAGES
+    # -------------------------------
+
+
+    if len(wins):
+
+        print(
+            "\nAverage Winning Trade:",
+            round(
+                wins["Return_%"].mean(),
+                2
+            ),
+            "%"
+        )
+
+
+    if len(losses):
+
+        print(
+            "\nAverage Losing Trade:",
+            round(
+                losses["Return_%"].mean(),
+                2
+            ),
+            "%"
+        )
+
+
+
+    # -------------------------------
+    # BEST / WORST
+    # -------------------------------
+
+
+    best = df.loc[
+        df["Return_%"].idxmax()
+    ]
+
+
+    worst = df.loc[
+        df["Return_%"].idxmin()
+    ]
+
+
 
     print(
-        round(
-            losses["Return_%"].mean(),
-            2
-        ),
-        "%"
+        "\nBest Trade:"
     )
 
 
-    print("\nBest Trade:")
-
     print(
-        closed.loc[
-            closed["Return_%"].idxmax()
+        best[
+            [
+                "Symbol",
+                "Return_%"
+            ]
         ]
-        [["Symbol","Return_%"]]
     )
 
 
-    print("\nWorst Trade:")
 
     print(
-        closed.loc[
-            closed["Return_%"].idxmin()
+        "\nWorst Trade:"
+    )
+
+
+    print(
+        worst[
+            [
+                "Symbol",
+                "Return_%"
+            ]
         ]
-        [["Symbol","Return_%"]]
     )
 
 
-    total_wins = wins["Return_%"].sum()
 
-    total_losses = abs(
-        losses["Return_%"].sum()
+    # -------------------------------
+    # PROFIT FACTOR
+    # -------------------------------
+
+
+    gross_profit = wins[
+        "Return_%"
+    ].sum()
+
+
+
+    gross_loss = abs(
+        losses[
+            "Return_%"
+        ].sum()
     )
 
 
-    profit_factor = (
-        total_wins / total_losses
-    )
+
+    if gross_loss == 0:
+
+        profit_factor = float("inf")
 
 
-    print("\nProfit Factor:")
+    else:
+
+        profit_factor = (
+            gross_profit /
+            gross_loss
+        )
+
+
 
     print(
+        "\nProfit Factor:",
         round(
             profit_factor,
             2
@@ -128,26 +237,89 @@ def analyze():
     )
 
 
+
+    # -------------------------------
+    # EXPECTED VALUE
+    # -------------------------------
+
+
     expected_value = (
-        (len(wins)/len(closed))
+
+        (
+
+            len(wins)
+
+            /
+
+            total_trades
+
+        )
+
         *
+
         wins["Return_%"].mean()
+
+
         -
-        (len(losses)/len(closed))
+
+        (
+
+            len(losses)
+
+            /
+
+            total_trades
+
+        )
+
         *
-        abs(losses["Return_%"].mean())
+
+        abs(
+            losses["Return_%"].mean()
+        )
+
     )
 
 
-    print("\nExpected Value per Trade:")
 
     print(
+        "\nExpected Value per Trade:",
         round(
             expected_value,
             2
         ),
         "%"
     )
+
+
+
+    # -------------------------------
+    # TOTAL RETURN
+    # -------------------------------
+
+
+    total_return = df[
+        "Return_%"
+    ].sum()
+
+
+
+    print(
+        "\nTotal Strategy Return:",
+        round(
+            total_return,
+            2
+        ),
+        "%"
+    )
+
+
+
+    print(
+        "\n===== ANALYSIS COMPLETE ====="
+    )
+
+
 
 
 

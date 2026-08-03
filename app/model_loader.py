@@ -5,8 +5,9 @@ import joblib
 
 MODEL_FOLDER = "data/models"
 
-METRICS_FILE = (
-    "data/models/model_metrics.csv"
+
+CHAMPION_STATUS_FILE = (
+    "data/models/model_champion_status.csv"
 )
 
 
@@ -16,70 +17,68 @@ OPTIMIZED_MODEL = (
 
 
 
+# ==================================================
+# Load Active Scanner Champion Model
+# ==================================================
+
 def get_best_model():
 
-    # --------------------------------
-    # 1. Prefer champion model system
-    # --------------------------------
-
-    if os.path.exists(METRICS_FILE):
-
-        df = pd.read_csv(
-            METRICS_FILE
-        )
+    status = load_champion_status()
 
 
-        if "Status" in df.columns:
+    if status is not None:
 
 
-            champions = df[
-                df["Status"] == "Champion"
-            ]
+        champion = status[
+            status["Status"].str.upper() == "CHAMPION"
+        ]
 
 
-            if not champions.empty:
-
-                best = champions.sort_values(
-                    by="F1",
-                    ascending=False
-                ).iloc[0]
+        if not champion.empty:
 
 
-                model_file = (
-                    f"{MODEL_FOLDER}/{best['Model']}.pkl"
+            # newest champion record
+            champion = champion.sort_values(
+                by="Evaluation_Date",
+                ascending=False
+            )
+
+
+            model_name = (
+                champion.iloc[0]["Active_Model"]
+            )
+
+
+            model_file = (
+                f"{MODEL_FOLDER}/{model_name}.pkl"
+            )
+
+
+            if os.path.exists(model_file):
+
+
+                print(
+                    "\nLoading Active Scanner Champion Model:"
+                )
+
+                print(
+                    model_file
                 )
 
 
-                if os.path.exists(model_file):
-
-                    print(
-                        "\nLoading Champion model:"
-                    )
-
-                    print(
-                        model_file
-                    )
-
-
-                    return joblib.load(
-                        model_file
-                    )
+                return joblib.load(
+                    model_file
+                )
 
 
 
-    # --------------------------------
-    # 2. Use optimized model fallback
-    # --------------------------------
+    # fallback historical model
 
     if os.path.exists(OPTIMIZED_MODEL):
 
 
         print(
-            "\nLoading Optimized model:"
-        )
-
-        print(
-            OPTIMIZED_MODEL
+            "\nLoading Optimized Historical Model:"
         )
 
 
@@ -90,138 +89,154 @@ def get_best_model():
 
 
     raise FileNotFoundError(
-        "No valid trading model found."
+        "No active scanner champion model found."
     )
 
 
 
 
 
+# ==================================================
+# Get Active Model Information
+# ==================================================
+
 def get_best_model_info():
 
 
-    # --------------------------------
-    # Champion information
-    # --------------------------------
-
-    if os.path.exists(METRICS_FILE):
+    status = load_champion_status()
 
 
-        df = pd.read_csv(
-            METRICS_FILE
-        )
+    if status is not None:
 
 
-        if (
-            "Status" in df.columns
-            and
-            not df[df["Status"]=="Champion"].empty
-        ):
+        champion = status[
+            status["Status"].str.upper() == "CHAMPION"
+        ]
 
 
-            best = (
-                df[df["Status"]=="Champion"]
-                .sort_values(
-                    by="F1",
-                    ascending=False
-                )
-                .iloc[0]
+        if not champion.empty:
+
+
+            champion = champion.sort_values(
+                by="Evaluation_Date",
+                ascending=False
             )
+
+
+            row = champion.iloc[0]
 
 
             return {
 
+
                 "Model":
-                    best["Model"],
+                    row["Active_Model"],
+
 
                 "Accuracy":
-                    round(
-                        best["Accuracy"] * 100,
-                        2
+                    row.get(
+                        "Accuracy",
+                        0
                     ),
+
 
                 "F1":
-                    round(
-                        best["F1"] * 100,
-                        2
+                    row.get(
+                        "F1",
+                        0
                     ),
 
+
+                "Completed_Trades":
+                    row.get(
+                        "Completed_Trades",
+                        0
+                    ),
+
+
+                "Win_Rate":
+                    row.get(
+                        "Win_Rate",
+                        0
+                    ),
+
+
+                "Average_Return":
+                    row.get(
+                        "Average_Return",
+                        0
+                    ),
+
+
                 "Status":
-                    best["Status"],
+                    row["Status"],
+
 
                 "Date":
-                    best["Date"]
+                    row["Evaluation_Date"]
 
             }
 
 
 
-    # --------------------------------
-    # Optimized model info
-    # --------------------------------
-
-
-    optimization_file = (
-        "data/models/model_optimization_results.csv"
-    )
-
-
-    if os.path.exists(optimization_file):
-
-
-        df = pd.read_csv(
-            optimization_file
-        )
-
-
-        best = df.sort_values(
-            by="F1",
-            ascending=False
-        ).iloc[0]
-
-
-        return {
-
-            "Model":
-                "optimized_trading_model",
-
-            "Accuracy":
-                round(
-                    best["Accuracy"] * 100,
-                    2
-                ),
-
-            "F1":
-                round(
-                    best["F1"] * 100,
-                    2
-                ),
-
-            "Status":
-                "Optimized",
-
-            "Date":
-                best["Date"]
-
-        }
-
-
-
     return {
+
 
         "Model":
             "Unknown",
 
+
         "Accuracy":
             0,
+
 
         "F1":
             0,
 
+
+        "Completed_Trades":
+            0,
+
+
+        "Win_Rate":
+            0,
+
+
+        "Average_Return":
+            0,
+
+
         "Status":
             "Missing",
+
 
         "Date":
             None
 
     }
+
+
+
+
+
+# ==================================================
+# Load Champion Status History
+# ==================================================
+
+def load_champion_status():
+
+
+    if not os.path.exists(
+        CHAMPION_STATUS_FILE
+    ):
+
+        return None
+
+
+
+    df = pd.read_csv(
+        CHAMPION_STATUS_FILE
+    )
+
+
+    return df

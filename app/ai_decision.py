@@ -238,42 +238,42 @@ def add_complete_ai_pipeline(df):
 
 
     # 5
-    df = add_trade_management(df)
+    df = add_risk_management(df)
 
 
     # 6
-    df = add_risk_management(df)
+    df = add_final_ai_status(df)
 
     print(
-    df[
-        [
-            "Symbol",
+    "BEFORE TRADE MANAGEMENT COLUMNS:",
+    [
+        c for c in [
+            "Final_AI_Status",
             "Portfolio_Action",
-            "Risk_Status"
+            "Risk_Status",
+            "Portfolio_Approved"
         ]
+        if c in df.columns
     ]
 )
 
-    # 7 Create final AI decision BEFORE execution
-    df = add_final_ai_status(df)
+    # 7
+    df = add_trade_management(df)
 
 
-    # 8 Execution engine
-    df = add_execution_analysis(df)
-
-
-    # 9 Analyst explanation
-    df = analyze_stocks(df)
-
-
-
-    if "Final_Conviction_Score" in df.columns:
-
-        df = df.sort_values(
-            "Final_Conviction_Score",
-            ascending=False
-        )
-
+    print(
+        df[
+            [
+                "Symbol",
+                "Final_AI_Status",
+                "Portfolio_Action",
+                "Risk_Status",
+                "Portfolio_Approved",
+                "Trade_Grade",
+                "Trade_Execution_Status"
+            ]
+        ]
+    )
 
 
     return df

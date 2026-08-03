@@ -1,197 +1,126 @@
 {
-    "timestamp": "2026-07-13 20:24:45.279906",
+    "timestamp": "2026-08-02 01:27:26.858218",
     "mode": "SAFE",
     "top_movers": [
         {
-            "Symbol": "QTTB",
-            "Price": 21.38,
-            "Change_%": 16.77,
-            "Volume": 27564473,
-            "RVOL": 14.67,
-            "Dollar_Volume": 589328409.61,
-            "Avg_Dollar_Volume": 40160802.96,
-            "Breakout": true,
-            "Above_SMA20": true,
-            "Above_SMA50": true,
-            "Distance_From_High_%": -42.34,
-            "Relative_Strength": 66.8,
-            "Scanner_Score": 95,
-            "Reasons": [
-                "Strong momentum (+16.77%)",
-                "Very high RVOL (14.67)",
-                "Good liquidity",
-                "20-day breakout",
-                "Above SMA20",
-                "Above SMA50",
-                "Outperforming SPY"
-            ],
-            "Risks": []
+            "symbol": "AMPGZ",
+            "price": 0.69,
+            "change": 24.71,
+            "score": 24.709083281666942
         },
         {
-            "Symbol": "VEEE",
-            "Price": 24.86,
-            "Change_%": 103.76,
-            "Volume": 69813683,
-            "RVOL": 18.86,
-            "Dollar_Volume": 1735568201.99,
-            "Avg_Dollar_Volume": 92036673.13,
-            "Breakout": true,
-            "Above_SMA20": true,
-            "Above_SMA50": true,
-            "Distance_From_High_%": -243.13,
-            "Relative_Strength": 279.16,
-            "Scanner_Score": 95,
-            "Reasons": [
-                "Strong momentum (+103.76%)",
-                "Very high RVOL (18.86)",
-                "Good liquidity",
-                "20-day breakout",
-                "Above SMA20",
-                "Above SMA50",
-                "Outperforming SPY"
-            ],
-            "Risks": [
-                "Very large one-day move"
-            ]
+            "symbol": "AEMD",
+            "price": 0.66,
+            "change": 24.53,
+            "score": 24.52831355733585
         },
         {
-            "Symbol": "CNMD",
-            "Price": 42.41,
-            "Change_%": 6.96,
-            "Volume": 2181739,
-            "RVOL": 2.83,
-            "Dollar_Volume": 92527550.66,
-            "Avg_Dollar_Volume": 32693103.38,
-            "Breakout": true,
-            "Above_SMA20": true,
-            "Above_SMA50": true,
-            "Distance_From_High_%": -9.22,
-            "Relative_Strength": 21.7,
-            "Scanner_Score": 75,
-            "Reasons": [
-                "Good momentum (+6.96%)",
-                "High RVOL (2.83)",
-                "Good liquidity",
-                "20-day breakout",
-                "Above SMA20",
-                "Above SMA50",
-                "Outperforming SPY"
-            ],
-            "Risks": []
+            "symbol": "ADVB",
+            "price": 8.0,
+            "change": -17.1,
+            "score": 17.098442318711445
         },
         {
-            "Symbol": "TCBK",
-            "Price": 60.07,
-            "Change_%": 6.98,
-            "Volume": 3190894,
-            "RVOL": 9.0,
-            "Dollar_Volume": 191677001.61,
-            "Avg_Dollar_Volume": 21291793.37,
-            "Breakout": true,
-            "Above_SMA20": true,
-            "Above_SMA50": true,
-            "Distance_From_High_%": -8.59,
-            "Relative_Strength": 13.88,
-            "Scanner_Score": 75,
-            "Reasons": [
-                "Good momentum (+6.98%)",
-                "Very high RVOL (9.00)",
-                "20-day breakout",
-                "Above SMA20",
-                "Above SMA50",
-                "Outperforming SPY"
-            ],
-            "Risks": []
+            "symbol": "AKAN",
+            "price": 5.31,
+            "change": -12.66,
+            "score": 12.66447352942007
         },
         {
-            "Symbol": "PSNL",
-            "Price": 15.04,
-            "Change_%": 8.75,
-            "Volume": 10631455,
-            "RVOL": 2.46,
-            "Dollar_Volume": 159897082.79,
-            "Avg_Dollar_Volume": 64892226.8,
-            "Breakout": false,
-            "Above_SMA20": true,
-            "Above_SMA50": true,
-            "Distance_From_High_%": 2.08,
-            "Relative_Strength": 58.11,
-            "Scanner_Score": 70,
-            "Reasons": [
-                "Good momentum (+8.75%)",
-                "High RVOL (2.46)",
-                "Good liquidity",
-                "Above SMA20",
-                "Above SMA50",
-                "Outperforming SPY"
-            ],
-            "Risks": []
+            "symbol": "AIBZ",
+            "price": 6.42,
+            "change": -10.71,
+            "score": 10.709318147407409
         },
         {
-            "Symbol": "ANRO",
-            "Price": 28.03,
-            "Change_%": 5.97,
-            "Volume": 2079405,
-            "RVOL": 2.82,
-            "Dollar_Volume": 58285723.58,
-            "Avg_Dollar_Volume": 20632470.06,
-            "Breakout": false,
-            "Above_SMA20": true,
-            "Above_SMA50": true,
-            "Distance_From_High_%": 0.95,
-            "Relative_Strength": 29.25,
-            "Scanner_Score": 65,
-            "Reasons": [
-                "Good momentum (+5.97%)",
-                "High RVOL (2.82)",
-                "Above SMA20",
-                "Above SMA50",
-                "Outperforming SPY"
-            ],
-            "Risks": []
+            "symbol": "AHMA",
+            "price": 1.31,
+            "change": -7.09,
+            "score": 7.092200440364199
         },
         {
-            "Symbol": "WBD",
-            "Price": 27.09,
-            "Change_%": 2.89,
-            "Volume": 45321575,
-            "RVOL": 2.09,
-            "Dollar_Volume": 1227761473.67,
-            "Avg_Dollar_Volume": 588505567.55,
-            "Breakout": false,
-            "Above_SMA20": true,
-            "Above_SMA50": true,
-            "Distance_From_High_%": 0.77,
-            "Relative_Strength": -0.69,
-            "Scanner_Score": 45,
-            "Reasons": [
-                "High RVOL (2.09)",
-                "Excellent liquidity",
-                "Above SMA20",
-                "Above SMA50"
-            ],
-            "Risks": []
+            "symbol": "AIOS",
+            "price": 11.85,
+            "change": -6.77,
+            "score": 6.766323006263562
         },
         {
-            "Symbol": "FHB",
-            "Price": 29.14,
-            "Change_%": 3.89,
-            "Volume": 10386649,
-            "RVOL": 4.59,
-            "Dollar_Volume": 302666945.52,
-            "Avg_Dollar_Volume": 65989348.41,
-            "Breakout": false,
-            "Above_SMA20": false,
-            "Above_SMA50": true,
-            "Distance_From_High_%": 4.71,
-            "Relative_Strength": 1.97,
-            "Scanner_Score": 43,
-            "Reasons": [
-                "High RVOL (4.59)",
-                "Good liquidity",
-                "Above SMA50"
-            ],
-            "Risks": []
+            "symbol": "AHG",
+            "price": 1.57,
+            "change": 6.44,
+            "score": 6.4406798016713065
+        },
+        {
+            "symbol": "AIFF",
+            "price": 1.07,
+            "change": 5.94,
+            "score": 5.940600253006966
+        },
+        {
+            "symbol": "AIFA",
+            "price": 1.62,
+            "change": 5.88,
+            "score": 5.882355232781465
+        },
+        {
+            "symbol": "AIRJ",
+            "price": 4.23,
+            "change": -5.37,
+            "score": 5.369122648389971
+        },
+        {
+            "symbol": "AKTS",
+            "price": 22.07,
+            "change": -4.21,
+            "score": 4.210074575341758
+        },
+        {
+            "symbol": "AIM",
+            "price": 0.25,
+            "change": 4.17,
+            "score": 4.166668994973155
+        },
+        {
+            "symbol": "AIMD",
+            "price": 1.33,
+            "change": -3.62,
+            "score": 3.6231849629747175
+        },
+        {
+            "symbol": "AIRE",
+            "price": 1.37,
+            "change": -3.52,
+            "score": 3.521123508970877
+        },
+        {
+            "symbol": "AKA",
+            "price": 11.42,
+            "change": 3.35,
+            "score": 3.3484151961311026
+        },
+        {
+            "symbol": "AIP",
+            "price": 29.88,
+            "change": -3.14,
+            "score": 3.1442502713412064
+        },
+        {
+            "symbol": "AIIO",
+            "price": 2.81,
+            "change": -3.1,
+            "score": 3.1034534354554064
+        },
+        {
+            "symbol": "AIRO",
+            "price": 6.74,
+            "change": 2.74,
+            "score": 2.743899846169133
+        },
+        {
+            "symbol": "AIAI",
+            "price": 4.99,
+            "change": -2.73,
+            "score": 2.7290514658791882
         }
     ]
 }
