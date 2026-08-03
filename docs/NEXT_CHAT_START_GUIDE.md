@@ -1,610 +1,964 @@
-\# AI Trading Research Platform — Next Chat Start Guide
+# AI Trading Research Platform — Next Chat Start Guide
+
+
+Repository:
+
+AI-Trading-Research-Platform
+
+
+GitHub:
+
+https://github.com/AnastasiyaKotelnikova/AI-Trading-Research-Platform
+
+
+Local Path:
+
+C:\Users\anast\scanner-project
 
 
 
+Last Updated:
 
-
-\## How to Continue Work in a New Chat
-
-
-
-
-
-Before making recommendations or code changes:
+2026-08-03
 
 
 
-Read these project documents first:
+# How to Continue Work in a New Chat
 
 
+Before making recommendations, architecture changes, or code modifications:
 
 
-
-docs/AI\_PROJECT\_MEMORY.md
-
+Read these documents first:
 
 
-docs/MODEL\_HISTORY.md
+```
+docs/AI_PROJECT_MEMORY.md
 
+docs/MODEL_HISTORY.md
 
-
-docs/EXPERIMENT\_LOG.md
-
-
+docs/EXPERIMENT_LOG.md
 
 docs/ARCHITECTURE.md
 
-
-
 docs/ROADMAP.md
 
+docs/DEVELOPMENT_RULES.md
 
-
-docs/DEVELOPMENT\_RULES.md
-
-
-
-
+docs/CHANGELOG.md
+```
 
 
 
 These files contain:
 
 
+- current project status
 
-\- current project status
+- completed phases
 
-\- completed phases
+- architecture decisions
 
-\- previous decisions
+- model history
 
-\- model history
+- experiments
 
-\- experiments
+- development rules
 
-\- architecture
-
-\- development rules
-
+- recent changes
 
 
 
+These documents are the source of truth.
 
 
 
-\# Current Project State
+---
 
 
-
+# Current Project State
 
 
 Project:
-
 
 
 AI Trading Research Platform
 
 
 
+Purpose:
+
+
+Build an AI-assisted quantitative stock research system.
+
+
+
+The platform is designed to:
+
+
+- collect market data
+
+- generate technical features
+
+- train machine learning models
+
+- rank opportunities
+
+- evaluate historical performance
+
+- analyze risk
+
+- generate AI decisions
+
+- track trade outcomes
+
+- improve through feedback
+
+
+
+The system is a research assistant.
+
+
+It is not a guaranteed prediction engine.
+
+
+
+---
+
+
+# Development Environment
 
 
 Location:
 
 
-
-C:\\Users\\anast\\scanner-project
-
-
+```
+C:\Users\anast\scanner-project
+```
 
 
 
 Environment:
 
 
-
+```
 Python 3.11.9
 
-
-
-Virtual environment:
-
-
-
 venv
-
-
+```
 
 
 
 Run modules:
 
 
+```
+python -m app.module_name
+```
 
-python -m app.module\_name
 
 
+Example:
 
 
+```
+python -m app.train_model
+```
 
 
 
-\# Current Development Phase
+---
 
 
+# Current Development Phase
 
 
+## Phase 3 — AI Research Engine
 
-Phase 3 — AI Research Engine
 
+Status:
 
 
+Advanced / Near Completion
 
 
-Progress:
 
+Current objective:
 
 
-\~75% complete
+Improve research quality before production-level features.
 
 
 
+Current priorities:
 
 
+1. Improve AI decision quality
 
+2. Validate ranking performance
 
-Current priority:
+3. Add probability calibration
 
+4. Improve backtesting
 
+5. Build feedback learning loop
 
-Improve AI research quality before expanding into production features.
 
 
+---
 
 
+# Important Architecture Update
 
 
+The platform now contains two separate ML paths.
 
-Current focus:
 
 
+They must remain separated.
 
-1\. Historical threshold optimization
 
 
+---
 
-2\. Research score normalization
 
+# ML Path 1 — Historical ML
 
 
-3\. AI final score optimization
+Purpose:
 
 
+Learn from historical market behavior.
 
-4\. Confidence calibration
 
 
+Training source:
 
-5\. Explainable AI
 
+```
+data/historical_ml_dataset.csv
+```
 
 
 
+Features:
 
 
+- returns
 
-\# Important Previous Decisions
+- RSI
 
+- SMA indicators
 
+- volume features
 
+- volatility
 
+- ATR
 
-\## Model v27
+- momentum
 
+- range position
 
 
 
+Used by:
 
-Retired.
 
+```
+load_historical_ml_model()
+```
 
+
+
+Output:
+
+
+```
+Historical_ML_Probability
+```
+
+
+
+Purpose:
+
+
+Measure historical pattern similarity.
+
+
+
+---
+
+
+# ML Path 2 — Scanner ML
+
+
+Purpose:
+
+
+Evaluate current market candidates.
+
+
+
+Features:
+
+
+- RSI
+
+- returns
+
+- technical ranking
+
+- momentum
+
+- trend
+
+- relative strength
+
+- risk/reward
+
+
+
+Used by:
+
+
+```
+load_model()
+```
+
+
+
+Output:
+
+
+```
+ML_Probability
+```
+
+
+
+Purpose:
+
+
+Current opportunity confirmation.
+
+
+
+Do not merge these paths without architectural review.
+
+
+
+---
+
+
+# Current ML Model Status
+
+
+## model_v27
+
+
+Status:
+
+
+RETIRED ❌
+
+
+
+Previous:
+
+
+Accuracy:
+
+98.3%
+
+
+
+F1:
+
+96.1%
 
 
 
 Reason:
 
 
+- small dataset
 
-\- trained on smaller dataset
+- possible leakage
 
-\- possible data leakage
+- unrealistic validation
 
-\- unrealistic metrics
-
-\- biased historical representation
-
+- misleading performance
 
 
 
-
-Do not use model\_v27 as a benchmark.
-
+Rule:
 
 
-
+Never use model_v27 as benchmark.
 
 
 
-\## Current ML System
+---
+
+
+# Current Champion Model
+
+
+## model_v33
+
+
+Status:
+
+
+Current Champion ✅
 
 
 
+Algorithm:
 
 
-Latest accepted model:
-
-
-
-model\_v33
+Random Forest
 
 
 
+Evaluation:
 
 
-Evaluation considers:
+- F1 Score
 
+- ROC-AUC
 
+- Average Return
 
-\- F1
-
-\- ROC-AUC
-
-\- Average Return
-
-\- Win Rate
+- Win Rate
 
 
 
+Current results:
 
 
-Do not optimize only for accuracy.
+ROC-AUC:
 
-
-
-
-
-
-
-\# Development Rules
+0.669
 
 
 
+F1:
+
+0.467
+
+
+
+Backtest:
+
+
+Trades:
+
+210
+
+
+
+Win Rate:
+
+46.7%
+
+
+
+Average Return:
+
+0.448%
+
+
+
+The project does not optimize only for accuracy.
+
+
+
+---
+
+
+# Current AI Decision Pipeline
+
+
+Current flow:
+
+
+
+Market Data
+
+↓
+
+Feature Engineering
+
+↓
+
+Scanner ML Probability
+
+↓
+
+Historical ML Probability
+
+↓
+
+Research Ranking
+
+↓
+
+AI Final Score
+
+↓
+
+Risk Evaluation
+
+↓
+
+AI Final Decision Controller
+
+↓
+
+Trade Management
+
+↓
+
+Performance Tracking
+
+
+
+---
+
+
+# Current Important Modules
+
+
+Machine Learning:
+
+
+```
+app/train_model.py
+
+app/ml_predictor.py
+
+app/model_loader.py
+
+app/model_registry.py
+```
+
+
+
+AI Decision:
+
+
+```
+app/ai_decision.py
+
+app/ai_final_decision_controller.py
+
+app/ai_decision_engine.py
+```
+
+
+
+Ranking:
+
+
+```
+app/research_ranker.py
+
+app/ai_ranker.py
+```
+
+
+
+Risk / Trade:
+
+
+```
+app/trade_management.py
+
+app/trade_exit_manager.py
+
+app/trade_history_manager.py
+
+app/trade_performance_tracker.py
+```
+
+
+
+Learning:
+
+
+```
+app/ai_learning_engine.py
+
+app/trade_feedback.py
+```
+
+
+
+---
+
+
+# Important Development Rules
 
 
 Before changing code:
 
 
+1. Read existing architecture.
 
-1\. Understand existing architecture.
+2. Check related modules.
 
+3. Avoid duplicate systems.
 
+4. Preserve working pipeline.
 
-2\. Check related files.
-
-
-
-3\. Avoid creating duplicate systems.
-
-
-
-4\. Preserve working pipeline.
+5. Explain why the change improves the platform.
 
 
 
-5\. Explain why a change improves the system.
+---
 
 
+# ML Development Rules
 
 
+Every model experiment must record:
 
 
+- dataset
 
-When modifying ML:
+- features
 
+- algorithm
 
+- hyperparameters
 
-Update:
+- metrics
 
+- backtest results
 
-
-docs/MODEL\_HISTORY.md
-
-
-
-
-
-When testing experiments:
+- acceptance decision
 
 
 
 Update:
 
 
-
-docs/EXPERIMENT\_LOG.md
-
-
-
-
-
-When completing phases:
+```
+docs/MODEL_HISTORY.md
+```
 
 
 
-Update:
+---
+
+
+# Experiment Rules
+
+
+Every major experiment must update:
+
+
+```
+docs/EXPERIMENT_LOG.md
+```
 
 
 
-docs/ROADMAP.md
+Include:
+
+
+- objective
+
+- files changed
+
+- result
+
+- decision
+
+- next action
 
 
 
+---
 
 
-When changing architecture:
+# Documentation Rules
 
 
-
-Update:
-
+After major changes update:
 
 
-docs/ARCHITECTURE.md
+```
+AI_PROJECT_MEMORY.md
 
+MODEL_HISTORY.md
 
+EXPERIMENT_LOG.md
 
+ARCHITECTURE.md
 
+ROADMAP.md
 
+DEVELOPMENT_RULES.md
 
-
-\# Git Workflow
-
-
-
-
-
-Git commands must be run in:
-
-
-
-C:\\Users\\anast\\scanner-project
+CHANGELOG.md
+```
 
 
 
+---
 
 
-with virtual environment active:
+# Git Workflow
 
 
-
-(venv)
-
+Always work from:
 
 
-
-
-
-
-\## Check status
+```
+C:\Users\anast\scanner-project
+```
 
 
 
+Check:
 
 
-PowerShell:
-
-
-
+```
 git status
+```
 
 
 
+Review changes before committing.
 
 
 
-
-\## Save meaningful progress
-
+Commit format:
 
 
-
-
-Example:
-
-
-
-
-
+```
 git add .
 
-
-
-git commit -m "Improve historical threshold optimizer"
-
-
+git commit -m "Describe meaningful change"
 
 git push
+```
 
 
 
+Good examples:
+
+
+```
+Improve AI decision risk filtering
+
+Add trade feedback tracking
+
+Improve historical ML validation
+```
 
 
 
-
-\## Good commit examples:
-
+Avoid:
 
 
+```
+update
 
+changes
 
-"Add ROC-AUC evaluation"
-
-
-
-"Improve champion model scoring"
+test
+```
 
 
 
-"Fix ML data leakage issue"
+---
 
 
-
-"Complete Phase 3 threshold optimization"
-
-
-
-
-
-
-
-Avoid meaningless commits:
-
-
-
-
-
-"changes"
-
-
-
-"update"
-
-
-
-"test"
-
-
-
-
-
-
-
-\# Before Starting Coding
-
-
-
-
-
-First check:
-
-
-
-
-
-git status
-
-
-
+# Before Coding
 
 
 Confirm:
 
 
+- current architecture
 
-nothing to commit
+- existing modules
 
+- previous decisions
 
-
-or review existing changes.
-
-
-
+- experiment history
 
 
 
-
-\# After Completing Work
-
+Do not redesign the system unless necessary.
 
 
+
+---
+
+
+# After Coding
 
 
 Always:
 
 
+1. Run tests.
+
+2. Validate output.
+
+3. Update documentation.
+
+4. Commit changes.
+
+5. Push to GitHub.
 
 
 
-1\. Test code
+---
+
+
+# Current Recommended Next Tasks
+
+
+Priority order:
 
 
 
-Example:
+## 1. Professional Backtesting
+
+
+Develop:
+
+
+- walk-forward validation
+
+- benchmark comparison
+
+- equity curve
+
+- drawdown analysis
+
+- Sharpe ratio
+
+- Sortino ratio
 
 
 
-python -m app.module\_name
+---
+
+
+## 2. Probability Calibration
+
+
+Improve:
+
+
+- ML confidence reliability
+
+- probability interpretation
+
+- confidence thresholds
 
 
 
+---
 
 
-2\. Update documentation
+## 3. AI Decision Validation
 
 
-
-3\. Commit changes
-
+Analyze:
 
 
-4\. Push to GitHub
+- BUY decisions
 
+- false positives
 
+- successful patterns
 
-
-
-
-
-\# New Chat Opening Message
+- failed setups
 
 
 
+---
+
+
+## 4. Feedback Learning System
+
+
+Develop:
+
+
+- trade outcome tracking
+
+- model feedback
+
+- strategy improvement
+
+
+
+---
+
+
+# New Chat Opening Message
 
 
 Copy this:
 
 
-
-
-
-"I am continuing my AI Trading Research Platform project.
-
-
+```
+I am continuing my AI Trading Research Platform project.
 
 First read:
 
+docs/AI_PROJECT_MEMORY.md
 
+docs/MODEL_HISTORY.md
 
-docs/AI\_PROJECT\_MEMORY.md
-
-docs/MODEL\_HISTORY.md
-
-docs/EXPERIMENT\_LOG.md
+docs/EXPERIMENT_LOG.md
 
 docs/ARCHITECTURE.md
 
 docs/ROADMAP.md
 
-docs/DEVELOPMENT\_RULES.md
+docs/DEVELOPMENT_RULES.md
 
+docs/CHANGELOG.md
 
+Use these documents as the source of truth.
 
-Use these as the source of truth.
+Current repository:
 
+AI-Trading-Research-Platform
 
+Local path:
 
-My current phase is Phase 3 — AI Research Engine.
+C:\Users\anast\scanner-project
 
+Current phase:
 
+Phase 3 — AI Research Engine
 
-Continue from the last completed task. Do not redesign the architecture unless necessary."
+Important:
 
+model_v27 is retired.
+Do not use it as a benchmark.
+
+Current accepted model:
+
+model_v33
+
+The platform has two separate ML paths:
+
+1. Historical ML probability
+2. Scanner ML probability
+
+Continue from the last completed task.
+
+Do not redesign architecture unless necessary.
+```
