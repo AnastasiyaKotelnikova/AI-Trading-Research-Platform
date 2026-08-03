@@ -2,1375 +2,798 @@
 
 Last Updated:
 
-2026-07-29
+2026-08-03
 
+# Repository Information
 
 Repository:
 
 AI-Trading-Research-Platform
 
-
 GitHub:
 
 https://github.com/AnastasiyaKotelnikova/AI-Trading-Research-Platform
 
-
-Local Path:
+Local Development Path:
 
 C:\Users\anast\scanner-project
 
-
-
-# 1. Project Mission
-
-
-This project is a personal AI-assisted stock trading research platform.
-
-
-The goal is not to create a guaranteed prediction system.
-
-
-The goal is to build a quantitative research assistant that:
-
-
-- collects market data
-- generates technical features
-- learns historical market patterns
-- evaluates trade quality
-- ranks trading opportunities
-- explains AI decisions
-- manages portfolio research
-- monitors model performance
-- improves through historical feedback and retraining
-
-
-Long-term vision:
-
-
-Market Data
-
-↓
-
-Feature Engineering
-
-↓
-
-Scanner Signals
-
-↓
-
-Machine Learning Models
-
-↓
-
-Historical Pattern Analysis
-
-↓
-
-AI Research Ranking
-
-↓
-
-Trade Quality Filtering
-
-↓
-
-AI Decision Engine
-
-↓
-
-Portfolio Intelligence
-
-↓
-
-Performance Monitoring
-
-↓
-
-Model Improvement
-
-
-
-The platform is designed as a quantitative research system rather than a simple stock scanner.
-
-
-
-# 2. Development Environment
-
-
-Operating System:
-
-Windows
-
+Development Environment:
 
 Python:
 
 3.11.9
 
-
 Virtual Environment:
 
 venv
 
+Operating System:
 
-Run modules:
+Windows PowerShell
+
+Run modules using:
 
 python -m app.module_name
 
+Repository Purpose:
 
-Main project folder:
+This repository contains the complete AI Trading Research Platform codebase.
 
-C:\Users\anast\scanner-project
+It includes:
 
+* market data collection
 
-Development Tools:
+* feature engineering
 
-- VS Code
-- Git
-- GitHub
-- Jupyter
-- Pandas
-- NumPy
-- Scikit-learn
-- PyTorch
-- Matplotlib
+* historical ML training
 
+* scanner prediction pipeline
 
+* AI research ranking
 
-# 3. Current Development Phase
+* decision engines
 
+* risk evaluation
+
+* trade management
+
+* backtesting
+
+* performance monitoring
+
+* experiment documentation
+
+The GitHub repository is the version-controlled source of truth for project history and documentation.
+
+---
+
+# Project Goal
+
+The AI Trading Research Platform is an AI-assisted quantitative stock research system.
+
+The goal is not perfect market prediction.
+
+The goal is to create a research assistant that improves trading decisions through:
+
+* historical evidence
+
+* machine learning
+
+* technical analysis
+
+* risk evaluation
+
+* quantitative validation
+
+* continuous improvement
+
+The system is designed to:
+
+* collect market data
+
+* generate technical features
+
+* train ML models
+
+* rank opportunities
+
+* evaluate historical performance
+
+* explain decisions
+
+* monitor outcomes
+
+* prepare for future paper trading
+
+The platform is not approved for automatic real-money trading.
+
+---
+
+# Current Development Phase
 
 Current Phase:
 
 Phase 3 — AI Research Engine
 
+Overall Progress:
 
-Estimated Completion:
+Approximately 95% complete
 
-~90%
+Recent completed improvements:
 
+✓ Research Score normalization
 
-Overall Platform Completion:
+✓ AI Final Decision Controller
 
-Approximately 70%
+✓ Risk-aware trade management
 
+✓ Two-path ML architecture
 
-Current Focus:
+✓ Trade history foundation
 
+✓ Trade feedback foundation
 
-- AI ranking improvement
-- confidence calibration
-- research score normalization
-- historical validation
-- risk adjustment
-- threshold optimization
-- professional backtesting
-- model monitoring
+✓ Performance tracking foundation
 
+Current priorities:
 
-Current development direction:
+1. Improve validation quality
 
+2. Improve confidence calibration
 
-The project has evolved beyond a scanner.
+3. Reduce false positives
 
-It is becoming a quantitative research platform containing:
+4. Build professional backtesting
 
+5. Prepare paper trading infrastructure
 
-- machine learning prediction
-- historical intelligence
-- AI analysis
-- portfolio decision support
-- automated research reports
-- continuous optimization
+---
 
+# Current Architecture Overview
 
-
-# 4. Completed Development
-
-
-
-# Phase 1 — Data Engineering
-
+## Layer 1 — Data Engineering
 
 Status:
 
-COMPLETE
+COMPLETE ✅
 
+Responsibilities:
 
-Completed:
+* market data collection
 
+* historical price storage
 
-✓ Historical market data collection
+* technical feature generation
 
-✓ Price history storage
+* ML dataset creation
 
-✓ Feature generation
-
-✓ Feature history database
-
-✓ ML dataset builder
-
-✓ Daily pipeline automation
-
-✓ Historical dataset expansion
-
+* daily pipeline automation
 
 Main components:
 
+* price_history_collector.py
 
-app/price_history_collector.py
+* feature_history_builder.py
 
-app/feature_history_builder.py
+* historical_ml_builder.py
 
-app/historical_ml_builder.py
+* daily_pipeline.py
 
-app/daily_pipeline.py
+---
 
-
-
-
-# Phase 2 — Machine Learning Foundation
-
+# Layer 2 — Machine Learning System
 
 Status:
 
-COMPLETE
+ACTIVE ✅
 
+The ML system contains two separate paths.
 
-Completed:
+IMPORTANT:
 
+The two ML paths serve different purposes and must not be merged without a documented experiment.
 
-✓ ML training pipeline
+---
 
-✓ Feature selection
+# ML Path 1 — Historical ML Research Model
 
-✓ Model evaluation
+Purpose:
 
-✓ Model versioning
+Train and evaluate historical market pattern recognition.
 
-✓ Champion model system
-
-✓ ML prediction pipeline
-
-✓ Backtesting integration
-
-✓ ROC-AUC evaluation
-
-✓ Chronological validation
-
-✓ Improved model comparison logic
-
-✓ Historical return evaluation
-
-
-Main components:
-
+Training file:
 
 app/train_model.py
 
-app/model_registry.py
+Dataset:
 
-app/ml_predictor.py
+data/historical_ml_dataset.csv
 
-app/ml_backtest.py
+Purpose:
 
+Predict whether historical market conditions resemble successful trade setups.
 
+Historical features include:
 
+* Return_5D
 
-# 5. Machine Learning Evolution
+* Return_10D
 
+* Return_20D
 
+* RSI
 
-## Retired Model
+* RSI_Change
 
+* SMA20
 
-Model:
+* SMA50
+
+* Above_SMA20
+
+* Above_SMA50
+
+* SMA_Gap
+
+* Momentum_Acceleration
+
+* Average_Volume
+
+* RVOL
+
+* Volatility_20D
+
+* ATR
+
+* ATR_Percent
+
+* Range_Position
+
+* Distance_From_52W_High
+
+* Volume_Trend
+
+Validation:
+
+Chronological train/test split.
+
+Training:
+
+Before:
+
+2026-05-15
+
+Testing:
+
+After:
+
+2026-05-15
+
+Purpose:
+
+Simulate future prediction instead of random historical validation.
+
+---
+
+# Model v27 Retirement
+
+Previous Champion:
 
 model_v27
 
-
 Status:
 
-RETIRED
+RETIRED ❌
 
-
-Reason:
-
-
-The model showed unrealistic performance:
-
+Reported metrics:
 
 Accuracy:
 
 98.3%
 
-
 F1:
 
 96.1%
 
+Reason retired:
 
-Problems discovered:
+The performance was considered unreliable.
 
+Problems identified:
 
-- trained on smaller dataset
-- possible data leakage
-- biased historical representation
-- unrealistic validation results
+1. Training dataset was too small.
 
+2. Possible data leakage existed.
+
+3. Validation was not realistic enough.
+
+4. Metrics did not represent expected market difficulty.
 
 Decision:
 
+model_v27 is no longer used as a benchmark.
 
-model_v27 is not used as a performance benchmark.
+Lesson:
 
+High classification metrics do not automatically create a useful trading model.
 
+---
 
-The project now prioritizes realistic validation over artificially high metrics.
+# Current Historical ML Champion
 
-
-
-
-# Current ML Approach
-
-
-Dataset:
-
-
-data/historical_ml_dataset.csv
-
-
-Validation method:
-
-
-Chronological split
-
-
-Purpose:
-
-
-Reduce future information leakage and simulate realistic market conditions.
-
-
-Models are evaluated using:
-
-
-- classification performance
-- trading performance
-- historical returns
-- win rate
-- risk-adjusted results
-
-
-
-# 6. Current Champion Model
-
-
-
-Latest Accepted Model:
-
+Model:
 
 model_v33
 
+Status:
 
+CURRENT CHAMPION
+
+Storage:
+
+data/models/champion_model.pkl
 
 Algorithm:
 
-
 Random Forest
-
-
 
 Configuration:
 
+* n_estimators: 500
 
-n_estimators:
+* max_depth: 20
 
-500
+* min_samples_leaf: 10
 
+* max_features: sqrt
 
-max_depth:
+* class_weight: balanced
 
-20
+Dataset:
 
+Expanded historical ML dataset
 
-min_samples_leaf:
-
-10
-
-
-max_features:
-
-sqrt
-
-
-class_weight:
-
-balanced
-
-
-
-Performance:
-
+Validation Metrics:
 
 ROC-AUC:
 
 0.669
 
-
 F1:
 
 0.467
 
-
-Accuracy:
-
-0.551
-
-
-
-Backtest:
-
+Trading Backtest:
 
 Trades:
 
 210
 
-
 Win Rate:
 
 46.7%
-
 
 Average Return:
 
 0.448%
 
-
-
 Champion selection considers:
 
+* F1
 
-- F1 score
-- ROC-AUC
-- average return
-- win rate
-- reliability
+* ROC-AUC
 
+* historical return
 
-Models are no longer accepted only because of classification metrics.
+* win rate
 
+* reliability
 
+Models are not accepted based only on accuracy.
 
-# 7. Current Feature Set
+---
 
+# ML Path 2 — Scanner Prediction Model
 
+Purpose:
 
-## Volume Features
+Evaluate current market opportunities during scanning.
 
-- Volume
-- Average_Volume
-- RVOL
-- Volume_Trend
+Main files:
 
+* app/ml_predictor.py
 
-## Return Features
+* app/model_loader.py
 
-- Return_5D
-- Return_10D
-- Return_20D
+Output fields:
 
+* ML_Probability
 
-## Momentum Features
+* ML_Prediction
 
-- Momentum_Acceleration
+* ML_Model
 
+* ML_Accuracy
 
-## Technical Indicators
+* ML_F1
 
-- RSI
-- RSI_Change
-- SMA20
-- SMA50
-- Above_SMA20
-- Above_SMA50
-- SMA_Gap
+Used by:
 
+* scanner pipeline
 
-## Volatility Features
+* AI ranking
 
-- Volatility_20D
-- ATR
-- ATR_Percent
+* confidence scoring
 
+* final decision logic
 
-## Position Features
+This path focuses on current market candidates.
 
-- Range_Position
-- Distance_From_52W_High
+It is separate from the historical research model.
 
+---
 
-## Research Features
-
-- Research Score
-- Rank Score
-- Confidence Score
-- Risk Reward
-- Historical Trade Results
-- Strategy Classification
-
-
-
-# 8. AI Research Engine
-
-
+# Layer 3 — AI Research Engine
 
 Status:
 
-Advanced Development (~90% complete)
+IN PROGRESS 🚧
 
+Purpose:
 
-
-The AI Research Engine is the intelligence layer of the platform.
-
-
-
-It combines:
-
-
-- technical analysis
-- machine learning probability
-- historical trade outcomes
-- risk analysis
-- ranking systems
-- decision logic
-
-
-
-Goal:
-
-
-"Which stocks have the highest-quality historical setup characteristics?"
-
-
-
-The system evaluates probability, quality, and risk.
-
-It does not predict guaranteed winners.
-
-
-
-## Completed Components
-
-
-✓ AI ranking system
-
-✓ Research scoring engine
-
-✓ AI confidence system
-
-✓ Historical ML probability integration
-
-✓ Trade quality filtering
-
-✓ AI final decisions
-
-✓ Automated research reports
-
-✓ Trade explanations
-
-✓ Historical setup analysis
-
-
+Transform technical signals and ML predictions into research decisions.
 
 Main components:
 
+* research_ranker.py
 
-app/ai_ranker.py
+* ai_score_engine.py
 
-app/ai_score_engine.py
+* ai_decision.py
 
-app/ai_decision_engine.py
+* ai_final_decision_controller.py
 
-app/ai_final_decision_controller.py
+* ai_investment_analyst.py
 
-app/ai_investment_analyst.py
+* historical_threshold_optimizer.py
 
-app/ai_trade_explanation_engine.py
+Capabilities:
 
-app/trade_quality_filter.py
+✓ opportunity ranking
 
+✓ score normalization
 
+✓ confidence calculation
 
-## Current Research Ranking System
+✓ historical validation
 
+✓ decision explanations
 
-Evaluates:
+✓ automated reports
 
+---
 
-- Research Score
-- Rank Score
-- Strategy quality
-- Risk/Reward
-- RSI conditions
-- Historical performance
-- Momentum
-- Trend strength
+# AI Decision Pipeline
 
+Current architecture:
 
+Market Scanner
 
-Output:
+↓
 
+Technical Features
 
-data/analysis/research_ranked.csv
+↓
 
+Research Ranking
 
+↓
 
-Current capabilities:
+AI Final Score
 
+↓
 
-✓ ranks opportunities
+Current Scanner ML Probability
 
-✓ compares setups historically
+↓
 
-✓ identifies stronger candidates
+Historical ML Probability
 
-✓ provides research scores
+↓
 
+Risk Evaluation
 
+↓
 
-# 9. Historical Intelligence System
+Final Conviction Score
 
+↓
 
+BUY / WATCH / REJECT
 
-Status:
+↓
 
-Implemented
+Trade Management
 
+---
 
-
-The platform now stores historical trade outcomes and uses them as learning information.
-
-
+# AI Final Decision Controller
 
 File:
 
-
-data/historical_trade_database.csv
-
-
+app/ai_final_decision_controller.py
 
 Purpose:
 
+Final research approval layer before trade planning.
 
-Create a historical memory system that evaluates:
+Inputs:
 
+* optimized rankings
 
-- which setups work
-- which strategies fail
-- which scores predict successful trades
-- which filters improve results
+* portfolio risk decisions
 
+Final Conviction Score components:
 
-
-Current database:
-
-
-Records:
-
-1000+
-
-
-
-Stored information:
-
-
-- Symbol
-- Entry price
-- Exit price
-- Return %
-- Highest price
-- Lowest price
-- Target levels
-- Stop loss
-- Result
-- Sector
-- Signal
-- Strategy
-- Research Score
-- Confidence Score
-- Rank Score
-- Momentum Score
-- Trend Score
-- Relative Strength
-- Risk Reward
-- RSI
-- Return_5D
-- Return_20D
-- Distance from High
-- SMA position
-- Breakout status
-- Overextended status
-- Test date
-
-
-
-Main component:
-
-
-app/historical_trade_database.py
-
-
-
-Current status:
-
-
-Initial historical intelligence system completed.
-
-
-
-Future improvements:
-
-
-- larger historical dataset
-- multi-year testing
-- strategy performance tracking
-- market regime analysis
-- sector analysis
-
-
-
-# 10. Historical Threshold Optimizer
-
-
-
-Current module:
-
-
-app/historical_threshold_optimizer.py
-
-
-
-Purpose:
-
-
-Automatically search for better decision thresholds using historical outcomes.
-
-
-
-Optimization targets:
-
-
-- Rank Score
-- Confidence Score
-- Research Score
-- Risk Reward
-
-
-
-Evaluation metrics:
-
-
-- Win Rate
-- Average Return
-- Profit Factor
-- Expectancy
-- Maximum Drawdown
-- Sharpe-like score
-- Reliability Score
-- Consistency Score
-
-
-
-Optimization profiles:
-
-
-
-## AGGRESSIVE
-
-
-Purpose:
-
-
-More opportunities with lower filtering.
-
-
-Settings:
-
-
-Minimum trades:
-
-100
-
-
-Minimum symbols:
-
-10
-
-
-Minimum win rate:
+Risk Component:
 
 25%
 
-
-
-## BALANCED
-
-
-Purpose:
-
-
-Default research profile.
-
-
-Focus:
-
-
-- reasonable trade count
-- quality filtering
-- acceptable risk
-
-
-Settings:
-
-
-Minimum trades:
-
-125
-
-
-Minimum symbols:
-
-10
-
-
-Minimum win rate:
-
-30%
-
-
-
-## CONSERVATIVE
-
-
-Purpose:
-
-
-Higher confirmation requirements.
-
-
-Settings:
-
-
-Minimum trades:
-
-200
-
-
-Minimum symbols:
-
-25
-
-
-Minimum win rate:
+Ranking Component:
 
 45%
 
+ML Confidence Component:
 
+20%
 
-Current optimization results example:
+Strategy Component:
 
+10%
 
-Trades tested:
+Outputs:
 
-130
+* BUY
 
+* WATCH
 
-Symbols:
+* REJECT
 
-10
+---
 
+# Trade Management System
 
-Win Rate:
+File:
 
-30%
-
-
-Average Return:
-
-9.859%
-
-
-Profit Factor:
-
-4.917
-
-
-Sharpe-like:
-
-0.407
-
-
-Optimizer Score:
-
-111.92
-
-
-
-Current limitations:
-
-
-- dataset still limited
-- duplicate threshold combinations exist
-- thresholds not automatically deployed
-
-
-
-Future improvements:
-
-
-- percentile-based thresholds
-- decimal threshold support
-- automatic deployment
-- walk-forward validation
-
-
-
-# 11. Self Optimization System
-
-
-
-Status:
-
-Implemented
-
-
-
-Main components:
-
-
-app/self_optimization_engine.py
-
-app/adaptive_ranking_optimizer.py
-
-
+app/trade_management.py
 
 Purpose:
 
+Convert approved research opportunities into structured trade plans.
 
-Analyze historical performance and adjust ranking intelligence.
+Implemented:
 
+* entry price
 
+* ATR-based stop loss
 
-Capabilities:
+* profit targets
 
+* position sizing
 
-✓ strategy optimization weights
+* reward/risk calculation
 
-✓ optimization scoring
+* expected value
 
-✓ ranking adjustments
+* trade grading
 
-✓ optimization confidence
+Risk controls:
 
+* account size
 
+* maximum risk percentage
 
-Output:
+* allocation limits
 
+---
 
-data/models/self_optimization_weights.json
+# Trade Intelligence Foundation
 
+New modules added:
 
+* trade_history.py
 
-Future:
+* trade_history_manager.py
 
+* trade_feedback.py
 
-- automatic retraining triggers
-- Bayesian optimization
-- reinforcement learning experiments
-- adaptive market regime weighting
+* trade_performance.py
 
+* trade_performance_tracker.py
 
+* trade_exit_manager.py
 
-# 12. Portfolio Intelligence
+* live_trade_monitor.py
 
+* ai_learning_engine.py
 
+Purpose:
 
-Status:
+Create future capability for:
 
-Early Development
+* tracking trade outcomes
 
+* analyzing decisions
 
+* learning from results
 
-The platform has expanded from individual stock analysis into portfolio research.
+* improving future recommendations
 
+Current status:
 
+Foundation implemented.
 
-Main components:
+Future work:
 
+Connect outcomes to model monitoring and optimization.
 
-app/portfolio_memory_engine.py
+---
 
-app/ai_portfolio_rebalancer.py
+# Current Data Structure
 
-
-
-Capabilities:
-
-
-✓ portfolio research memory
-
-✓ candidate ranking
-
-✓ allocation recommendations
-
-✓ portfolio scoring
-
-
-
-Future development:
-
-
-- correlation analysis
-- sector exposure limits
-- risk budgeting
-- volatility targeting
-- portfolio optimization
-
-
-
-# 13. Trading Strategy Profiles
-
-
-
-The system supports multiple research profiles.
-
-
-
-Available profiles:
-
-
-## SCALP
-
-Short-term opportunities.
-
-
-
-## SWING
-
-Multi-day technical setups.
-
-
-
-## QUALITY
-
-Higher quality research candidates.
-
-
-
-## BREAKOUT
-
-Momentum breakout setups.
-
-
-
-## PREMARKET_SCALP
-
-Early market momentum opportunities.
-
-
-
-Profile management:
-
-
-app/profiles.py
-
-app/profile_manager.py
-
-app/profile_filters.py
-
-
-
-Profiles control:
-
-
-- liquidity requirements
-- price requirements
-- volume conditions
-- volatility conditions
-- breakout rules
-- risk filters
-
-
-
-# 14. Reporting and Dashboard System
-
-
-
-Status:
-
-Implemented
-
-
-
-Generated outputs:
-
-
-✓ AI research reports
-
-✓ HTML dashboards
-
-✓ performance charts
-
-✓ ranking summaries
-
-
-
-Main folders:
-
-
-data/reports/
-
-data/charts/
-
-data/analysis/
-
-
-
-Dashboard information:
-
-
-- market overview
-- ranked opportunities
-- AI decisions
-- sector analysis
-- performance information
-
-
-
-Future:
-
-
-- interactive Streamlit dashboard
-- portfolio dashboard
-- model monitoring dashboard
-
-
-
-# 15. Important Data Files
-
-
-
-Machine Learning Dataset:
-
-
-data/historical_ml_dataset.csv
-
-
-
-Trade Database:
-
-
-data/trade_database.csv
-
-
-
-Historical Trade Database:
-
-
-data/historical_trade_database.csv
-
-
+Important locations:
 
 Models:
 
-
 data/models/
-
-
 
 Contains:
 
+* champion_model.pkl
 
-- trained models
-- model registry
-- optimization weights
-- performance history
+* model_metrics.csv
 
+* feature_importance.csv
 
+* model_predictions.csv
 
-Research:
+* model_monitoring.csv
 
+Historical dataset:
+
+data/historical_ml_dataset.csv
+
+Research outputs:
+
+data/results/
+
+Analysis:
 
 data/analysis/
 
+Trade history:
 
+data/trade_history.csv
 
-Reports:
+---
 
+# Current Development Priorities
 
-data/reports/
+## 1. Professional Validation
 
+Develop:
 
+* walk-forward validation
 
-Charts:
+* benchmark comparison
 
+* transaction cost simulation
 
-data/charts/
+* equity curves
 
+* drawdown analysis
 
+* Sharpe ratio
 
-# 16. Immediate Development Roadmap
+* Sortino ratio
 
+---
 
+## 2. Probability Calibration
 
-## Priority 1 — AI Research Engine
+Improve:
 
+* ML probability reliability
 
-Tasks:
+* confidence accuracy
 
+* false positive reduction
 
-1. Normalize Research Score
+---
 
-2. Optimize AI Final Score weighting
+## 3. Explainable AI
 
-3. Calibrate confidence probabilities
+Add:
 
-4. Improve explainable AI
+* SHAP analysis
 
-5. Add historical score validation
+* feature contribution
 
+* decision explanations
 
+---
 
-## Priority 2 — Professional Backtesting
+## 4. Paper Trading Preparation
 
+Before live trading:
 
-Tasks:
+Required:
 
+* longer validation
 
-- walk-forward validation
-- SPY/QQQ benchmark comparison
-- equity curve generation
-- drawdown analysis
-- Sharpe ratio
-- Sortino ratio
-- CAGR calculation
+* stable performance
 
+* monitoring
 
+* risk controls
 
-## Priority 3 — Model Monitoring
+* execution tracking
 
+---
 
-Tasks:
+# Documentation Rules
 
+Every major change must update:
 
-- model performance tracking
-- feature drift detection
-- automatic retraining triggers
-- champion/challenger automation
-- model rollback system
+docs/AI_PROJECT_MEMORY.md
 
+docs/MODEL_HISTORY.md
 
+docs/EXPERIMENT_LOG.md
 
-## Priority 4 — Portfolio Intelligence
+docs/ARCHITECTURE.md
 
+docs/ROADMAP.md
 
-Tasks:
+Development principles:
 
+✓ preserve reproducibility
 
-- portfolio allocation
-- correlation analysis
-- sector exposure limits
-- risk budgeting
-- portfolio optimization
+✓ document experiments
 
+✓ avoid duplicate systems
 
+✓ avoid data leakage
 
-# 17. Professional Backtesting Status
+✓ prefer realistic validation
 
-
-
-Status:
-
-Early Development
-
-
-
-Completed:
-
-
-✓ Forward testing engine
-
-✓ Trade outcome tracking
-
-✓ Historical return evaluation
-
-✓ Win/loss analysis
-
-
-
-Remaining:
-
-
-- walk-forward validation
-- benchmark comparison
-- equity curve
-- drawdown analysis
-- Sharpe/Sortino metrics
-- CAGR calculation
-
-
-
-# 18. Model Monitoring Status
-
-
-
-Status:
-
-Planned / Early Framework
-
-
-
-Future components:
-
-
-- model registry improvements
-- performance monitoring
-- feature drift detection
-- automatic retraining triggers
-- champion/challenger automation
-- rollback system
-
-
-
-# 19. Development Philosophy
-
-
-
-The platform is being developed as a quantitative research system, not a prediction engine.
-
-
+✓ compare models fairly
 
 Avoid:
 
+✗ unrealistic accuracy
 
-- unrealistic accuracy metrics
-- data leakage
-- overfitting
-- curve fitting
-- accepting models only because of classification scores
+✗ overfitting
 
+✗ curve fitting
 
+✗ unsupported automation
 
-Prefer:
+---
 
+# Final Project Philosophy
 
-- realistic validation
-- historical testing
-- reproducible experiments
-- documented decisions
-- continuous improvement
+The objective is not to build a model that looks impressive.
 
+The objective is to build a reliable AI research assistant that improves decision quality through:
 
+* historical evidence
 
-The objective is to build an AI research assistant that helps analyze markets and improve decision quality through data-driven learning.
+* machine learning
+
+* risk analysis
+
+* transparent scoring
+
+* continuous improvement
