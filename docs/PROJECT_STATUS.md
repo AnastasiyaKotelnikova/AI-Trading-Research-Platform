@@ -1,15 +1,29 @@
-\# AI Trading Research Platform - Project Status
+# AI Trading Research Platform — Project Status
+
+
+Repository:
+
+AI-Trading-Research-Platform
+
+
+GitHub:
+
+https://github.com/AnastasiyaKotelnikova/AI-Trading-Research-Platform
+
+
+Local Path:
+
+C:\Users\anast\scanner-project
 
 
 
 Last Updated:
 
-2026-07-28
+2026-08-03
 
 
 
-\## Project Goal
-
+# Project Goal
 
 
 Build an AI-assisted quantitative stock research platform for personal trading research.
@@ -18,236 +32,358 @@ Build an AI-assisted quantitative stock research platform for personal trading r
 
 The system is designed to:
 
-\- collect market data
 
-\- generate technical features
+- collect market data
 
-\- train machine learning models
+- generate technical features
 
-\- rank trading candidates
+- train machine learning models
 
-\- evaluate strategies
+- evaluate historical patterns
 
-\- monitor model performance
+- rank trading opportunities
 
-\- eventually support paper trading and possible automation
+- analyze risk
 
+- generate AI decisions
 
+- manage trade simulations
 
-\---
-
-
-
-\# Current Architecture
+- learn from performance feedback
 
 
 
-\## Data Pipeline
+The platform is a research and decision-support system.
+
+
+It is not a guaranteed market prediction system.
 
 
 
-Status: COMPLETE ✅
+---
+
+
+# Current Overall Status
+
+
+Platform Completion:
+
+
+Approximately 75%
 
 
 
-Completed:
-
-\- Historical price collection
-
-\- Feature engineering
-
-\- Feature history storage
-
-\- ML dataset generation
-
-\- Daily pipeline automation
+Current Development Phase:
 
 
+## Phase 3 — AI Research Engine
 
-\---
+
+Status:
+
+
+Advanced / Near Completion 🚧
 
 
 
-\# Historical Dataset
+Main objective:
 
+
+Transform the platform from a stock scanner into a quantitative AI research decision system.
+
+
+
+---
+
+
+# Current Architecture Overview
+
+
+The platform now consists of multiple intelligence layers:
+
+
+
+```
+Market Data
+
+↓
+
+Feature Engineering
+
+↓
+
+Historical ML Analysis
+
++
+
+Scanner ML Analysis
+
+↓
+
+Research Ranking Engine
+
+↓
+
+AI Final Scoring
+
+↓
+
+Risk Evaluation
+
+↓
+
+AI Decision Controller
+
+↓
+
+Trade Management
+
+↓
+
+Performance Tracking
+
+↓
+
+Feedback Learning
+```
+
+
+
+---
+
+
+# Data Engineering Status
+
+
+## Phase 1 — Data Engineering
+
+
+Status:
+
+
+COMPLETE ✅
+
+
+
+Implemented:
+
+
+✓ Market data collection
+
+✓ Historical price storage
+
+✓ Stock universe management
+
+✓ Technical indicators
+
+✓ Feature generation
+
+✓ Historical feature storage
+
+✓ ML dataset generation
+
+✓ Daily pipeline automation
+
+
+
+Main components:
+
+
+```
+price_history_collector.py
+
+feature_history_builder.py
+
+historical_ml_builder.py
+
+daily_pipeline.py
+```
+
+
+
+---
+
+
+# Historical ML Dataset
 
 
 Current dataset:
 
 
+```
+data/historical_ml_dataset.csv
+```
 
-File:
 
-data/historical\_ml\_dataset.csv
+
+Purpose:
+
+
+Train historical market behavior models.
+
+
+
+Features include:
+
+
+- returns
+
+- RSI
+
+- SMA indicators
+
+- volume metrics
+
+- volatility
+
+- ATR
+
+- momentum
+
+- range position
+
+- trend information
 
 
 
 Important:
 
-\- Dataset was expanded significantly from initial version
 
-\- Previous model versions trained on smaller datasets are considered unreliable
-
-\- Earlier model\_v27 had possible data leakage and bias issues
-
-\- Do not treat old metrics as production quality
+Previous small datasets are considered unreliable.
 
 
 
-\---
+---
 
 
-
-\# Machine Learning Status
-
+# Machine Learning Status
 
 
-Current Phase:
-
-Phase 2 -> Phase 3 transition
-
-
-
-\## Previous Champion Model
-
-
-
-model\_v27
-
+## Phase 2 — ML Foundation
 
 
 Status:
+
+
+COMPLETE ✅
+
+
+
+Implemented:
+
+
+✓ ML training pipeline
+
+✓ Model versioning
+
+✓ Model registry
+
+✓ Feature tracking
+
+✓ Chronological validation
+
+✓ Backtest integration
+
+✓ Champion model selection
+
+
+
+---
+
+
+# Model History
+
+
+## model_v27
+
+
+Status:
+
 
 RETIRED ❌
 
 
 
-Reason:
+Previous reported performance:
 
-\- trained on insufficient data
 
-\- possible data leakage
+Accuracy:
 
-\- unrealistic metrics
-
-\- F1 score 0.961 considered unreliable
+98.3%
 
 
 
-Do not compare future models against v27.
+F1:
+
+96.1%
 
 
 
-\---
+Reason retired:
+
+
+- insufficient dataset
+
+- possible data leakage
+
+- unrealistic validation
+
+- misleading metrics
 
 
 
-\## Current Training System
+Rule:
+
+
+model_v27 must not be used as a benchmark.
 
 
 
-Training script:
+---
 
 
-
-app/train\_model.py
-
+# Current Champion Model
 
 
-Models tested:
-
-\- Logistic Regression
-
-\- Random Forest
-
-
-
-Current evaluation metrics:
-
-\- Accuracy
-
-\- Precision
-
-\- Recall
-
-\- F1
-
-\- ROC-AUC
-
-\- Backtest return
-
-\- Win rate
-
-
-
-Champion selection:
-
-app/model\_registry.py
-
-
-
-Current logic:
-
-Weighted score using:
-
-\- F1
-
-\- ROC-AUC
-
-\- Average Return
-
-\- Win Rate
-
-
-
-\---
-
-
-
-\# Current Model
-
-
-
-Latest trained model:
-
-
-
-model\_v33
-
+## model_v33
 
 
 Status:
 
-Champion candidate / current champion
+
+Current Champion ✅
 
 
 
-Training:
+Algorithm:
 
-\- Dataset: expanded historical dataset
 
-\- Features:
-
-&#x20; - Return features
-
-&#x20; - RSI
-
-&#x20; - SMA
-
-&#x20; - Volume
-
-&#x20; - ATR
-
-&#x20; - Volatility
-
-&#x20; - Momentum
-
-&#x20; - Range position
+Random Forest
 
 
 
-Latest metrics:
+Features:
 
+
+- return features
+
+- RSI
+
+- SMA
+
+- volume
+
+- volatility
+
+- ATR
+
+- momentum
+
+- range position
+
+
+
+Validation:
 
 
 ROC-AUC:
@@ -264,7 +400,10 @@ F1:
 
 Backtest:
 
-Trades: 210
+
+Trades:
+
+210
 
 
 
@@ -276,169 +415,564 @@ Win Rate:
 
 Average Return:
 
-0.448
+0.448%
 
 
 
-\---
+Champion selection considers:
+
+
+- predictive quality
+
+- trading performance
+
+- stability
 
 
 
-\# Current Problems To Fix
+---
+
+
+# ML Architecture — Two Separate Paths
+
+
+The platform now maintains two separate ML intelligence paths.
 
 
 
-\## 1. Model evaluation
+They serve different purposes.
 
+
+
+---
+
+
+# Historical ML Path
+
+
+Purpose:
+
+
+Analyze historical market patterns.
+
+
+
+Input:
+
+
+```
+data/historical_ml_dataset.csv
+```
+
+
+
+Output:
+
+
+```
+Historical_ML_Probability
+```
+
+
+
+Used for:
+
+
+- historical similarity
+
+- pattern confirmation
+
+- research confidence
+
+
+
+---
+
+
+# Scanner ML Path
+
+
+Purpose:
+
+
+Evaluate current market candidates.
+
+
+
+Output:
+
+
+```
+ML_Probability
+```
+
+
+
+Used for:
+
+
+- current opportunity evaluation
+
+- ranking support
+
+- AI scoring
+
+
+
+Important:
+
+
+These paths should remain separated.
+
+
+
+---
+
+
+# AI Research Engine Status
+
+
+## Phase 3 — AI Research Engine
+
+
+Status:
+
+
+Advanced 🚧
+
+
+
+Completed:
+
+
+✓ Research ranking engine
+
+✓ Research score normalization
+
+✓ AI final scoring framework
+
+✓ ML probability integration
+
+✓ Historical ML integration
+
+✓ Confidence scoring
+
+✓ AI decision logic
+
+✓ Risk-aware decision pipeline
+
+✓ Trade explanation system
+
+✓ Automated reports
+
+
+
+---
+
+
+# AI Decision Pipeline
+
+
+Current flow:
+
+
+
+```
+Research Ranking
+
+↓
+
+Optimized Final Score
+
+↓
+
+AI Confidence
+
+↓
+
+ML Probability
+
+↓
+
+Historical ML Probability
+
+↓
+
+Risk Evaluation
+
+↓
+
+AI Final Decision Controller
+
+↓
+
+Trade Management
+```
+
+
+
+Final outputs:
+
+
+- BUY
+
+- WATCH
+
+- REJECT
+
+
+
+With:
+
+
+- conviction score
+
+- confidence level
+
+- decision explanation
+
+
+
+---
+
+
+# Risk Management Status
+
+
+Implemented:
+
+
+✓ Risk scoring
+
+✓ Portfolio risk filtering
+
+✓ Position sizing
+
+✓ Stop loss calculation
+
+✓ Target calculation
+
+✓ Reward/risk analysis
+
+✓ Expected value calculation
+
+
+
+Trade approval now requires:
+
+
+- AI approval
+
+- portfolio approval
+
+- risk approval
+
+
+
+---
+
+
+# Trade Management Status
+
+
+Implemented:
+
+
+Trade setup generation:
+
+
+- entry price
+
+- stop loss
+
+- target 1
+
+- target 2
+
+- position size
+
+- capital allocation
+
+
+
+Trade grading:
+
+
+- A
+
+- B
+
+- C
+
+- D
+
+
+
+Execution states:
+
+
+- READY
+
+- WATCH
+
+- MONITOR
+
+- BLOCKED
+
+
+
+---
+
+
+# Feedback Learning Foundation
+
+
+Added foundation modules:
+
+
+```
+trade_history.py
+
+trade_history_manager.py
+
+trade_feedback.py
+
+trade_performance.py
+
+trade_performance_tracker.py
+
+ai_learning_engine.py
+
+trade_exit_manager.py
+
+live_trade_monitor.py
+```
+
+
+
+Purpose:
+
+
+Create future learning cycle:
+
+
+
+Trade Decision
+
+↓
+
+Outcome Tracking
+
+↓
+
+Performance Analysis
+
+↓
+
+Strategy Improvement
+
+
+
+---
+
+
+# Current Known Limitations
+
+
+## Model Validation
 
 
 Need:
 
-\- better validation methodology
 
-\- walk-forward testing
+- walk-forward validation
 
-\- avoid overfitting
+- longer testing periods
 
-
-
-\---
+- market regime testing
 
 
 
-\## 2. Probability calibration
+---
 
+
+## Probability Calibration
 
 
 Need:
 
-\- calibrated ML probabilities
 
-\- confidence score improvement
+- calibrated confidence
 
+- probability reliability analysis
 
 
-\---
 
+---
 
 
-\## 3. Research Engine
+## Backtesting
 
 
+Need:
 
-In progress:
 
+- professional equity curve
 
+- drawdown analysis
 
-Need improvement:
+- benchmark comparison
 
-\- AI ranking
+- transaction cost simulation
 
-\- score normalization
+- Sharpe ratio
 
-\- risk adjustment
+- Sortino ratio
 
-\- explanation engine
 
 
+---
 
-\---
 
+## Portfolio Intelligence
 
 
-\# Important Development Rules
+Need:
 
 
+- correlation analysis
 
-When continuing development:
+- sector exposure
 
+- risk budgeting
 
+- portfolio optimization
 
-1\. Do not trust model\_v27 metrics.
 
-2\. Prefer models trained on expanded datasets.
 
-3\. Always test with unseen future data.
+---
 
-4\. Avoid data leakage.
 
-5\. Compare models using:
+# Current Development Priorities
 
-&#x20;  - predictive quality
 
-&#x20;  - trading performance
+## Priority 1 — Professional Validation
 
-&#x20;  - stability
 
+Build:
 
 
-\---
+- walk-forward testing
 
+- benchmark comparison
 
+- risk-adjusted metrics
 
-\# Current Roadmap Position
 
 
+---
 
-Phase 1:
 
-Data Engineering
+## Priority 2 — AI Quality Improvement
 
-COMPLETE ✅
 
+Improve:
 
 
-Phase 2:
+- false positive reduction
 
-ML Foundation
+- confidence calibration
 
-\~95% COMPLETE
+- decision accuracy
 
+- historical validation
 
 
-Remaining:
 
-\- Champion refinement
+---
 
-\- Probability calibration
 
-\- Feature reports
+## Priority 3 — Learning System
 
 
+Develop:
 
-Phase 3:
 
-AI Research Engine
+- trade outcome feedback
 
-IN PROGRESS
+- performance analysis
 
+- automatic improvement suggestions
 
 
-Current focus:
 
-Improve model quality and research scoring.
+---
 
 
+# Development Philosophy
 
-\---
 
+The platform follows quantitative research principles.
 
 
-\# Next Recommended Tasks
 
+Optimize for:
 
 
-1\. Clean champion model history
+✓ realistic performance
 
-2\. Improve model registry
+✓ reproducibility
 
-3\. Add proper walk-forward validation
+✓ transparency
 
-4\. Add probability calibration
+✓ controlled risk
 
-5\. Improve AI ranking engine
+✓ continuous improvement
 
-6\. Build professional backtesting system
 
 
+Avoid:
 
+
+✗ unrealistic accuracy
+
+✗ overfitting
+
+✗ data leakage
+
+✗ curve fitting
+
+✗ unsupported automation
+
+
+
+---
+
+
+# Final Project Direction
+
+
+The goal is to build:
+
+
+An AI-powered quantitative research assistant.
+
+
+
+The system should help answer:
+
+
+- Which opportunities have historical support?
+
+- Which setups have favorable risk/reward?
+
+- Which decisions are supported by multiple intelligence layers?
+
+- How does performance improve over time?
+
+
+
+The platform evolves through:
+
+
+historical evidence + machine learning + risk analysis + feedback learning.
