@@ -2,146 +2,249 @@ import pandas as pd
 import os
 
 
-DATABASE_FILE = "data/trade_database.csv"
+TRADE_DB = "data/trade_database.csv"
+PREDICTION_DB = "data/models/model_predictions.csv"
 
-OUTPUT_FILE = (
-    "data/models/model_feedback_analytics.csv"
-)
+OUTPUT = "data/models/model_feedback_analytics.csv"
+
+
+
+def analyze_group(df, group_col, category, return_col):
+
+    results = []
+
+    if group_col not in df.columns:
+        return results
+
+
+    for name, group in df.groupby(group_col):
+
+
+        # Ignore small samples
+        if len(group) < 10:
+            continue
+
+
+        results.append({
+
+            "Category": category,
+
+            "Name": name,
+
+            "Trades": len(group),
+
+            "Average_Return":
+                round(
+                    group[return_col].mean(),
+                    3
+                ),
+
+            "Win_Rate":
+                round(
+                    (group[return_col] > 0).mean() * 100,
+                    2
+                )
+
+        })
+
+
+    return results
+
+
 
 
 def analyze_feedback():
 
-    print("\n========== MODEL FEEDBACK ANALYTICS ==========\n")
 
-
-    if not os.path.exists(DATABASE_FILE):
-
-        print("Trade database not found")
-        return
-
-
-    df = pd.read_csv(
-        DATABASE_FILE,
-        low_memory=False
+    print(
+        "\n========== MODEL FEEDBACK ANALYTICS ==========\n"
     )
 
 
+    reports=[]
+
+
+
     # ======================================
-    # Completed Trades
+    # STRATEGY ENGINE PERFORMANCE
     # ======================================
 
-    if "Result" in df.columns:
 
-        completed = df[
-            ~df["Result"].isin(
+    if os.path.exists(TRADE_DB):
+
+
+        trades = pd.read_csv(
+            TRADE_DB,
+            low_memory=False
+        )
+
+
+        completed = trades[
+            trades["Return_%"].notna()
+        ].copy()
+
+
+
+        print(
+            "Completed Strategy Trades:",
+            len(completed)
+        )
+
+
+
+        reports += analyze_group(
+            completed,
+            "Strategy",
+            "STRATEGY",
+            "Return_%"
+        )
+
+
+        reports += analyze_group(
+            completed,
+            "Model_Name",
+            "MODEL",
+            "Return_%"
+        )
+
+
+
+
+    # ======================================
+    # ML PREDICTION PERFORMANCE
+    # ======================================
+
+
+    if os.path.exists(PREDICTION_DB):
+
+
+        pred = pd.read_csv(
+            PREDICTION_DB,
+            low_memory=False
+        )
+
+
+
+        completed = pred[
+            pred["Prediction_Result"].isin(
                 [
-                    "OPEN",
-                    "OPEN POSITION"
+                    "SUCCESS",
+                    "FAILED", 
+                    "NEUTRAL"
                 ]
             )
         ].copy()
 
-    else:
-
-        completed = df[
-            df["Return_%"].notna()
-        ].copy()
 
 
-
-    print("Completed Trades:")
-    print(len(completed))
-
-
-    if len(completed) == 0:
-
-        print("No completed trades yet")
-        return
+        print(
+            "Completed ML Predictions:",
+            len(completed)
+        )
 
 
 
-    reports = []
+        # ------------------------------
+        # Overall ML Accuracy
+        # ------------------------------
 
 
+        accuracy = (
 
-    # ======================================
-    # MODEL PERFORMANCE
-    # ======================================
+            (
+                completed["Prediction_Result"]
+                ==
+                "SUCCESS"
+            )
+            .mean()
+            *
+            100
 
-    if "Model_Name" in completed.columns:
-
-
-        model_data = completed[
-            completed["Model_Name"].notna()
-        ].copy()
-
-
-        if len(model_data) > 0:
+        )
 
 
-            model_report = (
+        reports.append({
 
-                model_data
-                .groupby("Model_Name")
-                ["Return_%"]
-                .agg(
-                    [
-                        "count",
-                        "mean",
-                        lambda x:
-                        (x > 0).mean()*100
-                    ]
+            "Category":
+                "ML_MODEL",
+
+            "Name":
+                "Overall Accuracy",
+
+            "Trades":
+                len(completed),
+
+            "Average_Return":
+                round(
+                    completed["Return_5D"].mean(),
+                    3
+                ),
+
+            "Win_Rate":
+                round(
+                    accuracy,
+                    2
                 )
-            )
 
-
-            model_report.columns = [
-
-                "Trades",
-                "Average_Return",
-                "Win_Rate"
-
-            ]
-
-
-            model_report["Category"] = (
-                "MODEL"
-            )
-
-
-            reports.append(
-                model_report.reset_index()
-            )
+        })
 
 
 
-    # ======================================
-    # AI SCORE PERFORMANCE
-    # ======================================
-
-    if "AI_Final_Score" in completed.columns:
+        # ------------------------------
+        # Model Performance
+        # ------------------------------
 
 
-        completed["AI_Bucket"] = pd.cut(
+        reports += analyze_group(
+            completed,
+            "Model",
+            "ML_MODEL",
+            "Return_5D"
+        )
 
-            completed["AI_Final_Score"],
+
+
+        # ------------------------------
+        # AI Rating Performance
+        # ------------------------------
+
+
+        reports += analyze_group(
+            completed,
+            "AI_Rating",
+            "AI_RATING",
+            "Return_5D"
+        )
+
+
+
+        # ------------------------------
+        # ML Probability Buckets
+        # ------------------------------
+
+
+        completed["ML_Bucket"] = pd.cut(
+
+            completed["ML_Probability"],
 
             bins=[
 
                 0,
-                40,
-                60,
-                80,
+                10,
+                20,
+                30,
+                50,
                 100
 
             ],
 
             labels=[
 
-                "<40",
-                "40-60",
-                "60-80",
-                "80-100"
+                "0-10",
+                "10-20",
+                "20-30",
+                "30-50",
+                "50+"
 
             ]
 
@@ -149,191 +252,55 @@ def analyze_feedback():
 
 
 
-        score_report = (
+        reports += analyze_group(
+            completed,
+            "ML_Bucket",
+            "ML_PROBABILITY",
+            "Return_5D"
+        )
 
-            completed
-            .groupby(
+
+
+        # ------------------------------
+        # AI Final Score Buckets
+        # ------------------------------
+
+
+        if "AI_Final_Score" in completed.columns:
+
+
+            completed["AI_Bucket"] = pd.cut(
+
+                completed["AI_Final_Score"],
+
+                bins=[
+
+                    0,
+                    40,
+                    60,
+                    80,
+                    100
+
+                ],
+
+                labels=[
+
+                    "<40",
+                    "40-60",
+                    "60-80",
+                    "80-100"
+
+                ]
+
+            )
+
+
+            reports += analyze_group(
+                completed,
                 "AI_Bucket",
-                observed=False
+                "AI_SCORE",
+                "Return_5D"
             )
-            ["Return_%"]
-            .agg(
-
-                [
-                    "count",
-                    "mean",
-                    lambda x:
-                    (x > 0).mean()*100
-                ]
-
-            )
-
-        )
-
-
-
-        score_report.columns = [
-
-            "Trades",
-            "Average_Return",
-            "Win_Rate"
-
-        ]
-
-
-
-        score_report["Category"] = (
-            "AI_SCORE"
-        )
-
-
-        reports.append(
-            score_report.reset_index()
-        )
-
-
-
-    # ======================================
-    # STRATEGY PERFORMANCE
-    # ======================================
-
-    if "Strategy" in completed.columns:
-
-
-        strategy_report = (
-
-            completed
-            .groupby("Strategy")
-            ["Return_%"]
-            .agg(
-
-                [
-                    "count",
-                    "mean",
-                    lambda x:
-                    (x > 0).mean()*100
-                ]
-
-            )
-
-        )
-
-
-
-        strategy_report.columns = [
-
-            "Trades",
-            "Average_Return",
-            "Win_Rate"
-
-        ]
-
-
-
-        strategy_report["Category"] = (
-            "STRATEGY"
-        )
-
-
-        reports.append(
-            strategy_report.reset_index()
-        )
-
-
-
-    # ======================================
-    # MARKET REGIME PERFORMANCE
-    # ======================================
-
-    if (
-        "Market_Regime" in completed.columns
-        and completed["Market_Regime"].notna().sum() > 0
-    ):
-
-
-        regime_report = (
-
-            completed
-            .groupby("Market_Regime")
-            ["Return_%"]
-            .agg(
-
-                [
-                    "count",
-                    "mean",
-                    lambda x:
-                    (x > 0).mean()*100
-                ]
-
-            )
-
-        )
-
-
-        regime_report.columns = [
-
-            "Trades",
-            "Average_Return",
-            "Win_Rate"
-
-        ]
-
-
-
-        regime_report["Category"] = (
-            "MARKET_REGIME"
-        )
-
-
-        reports.append(
-            regime_report.reset_index()
-        )
-
-
-
-    # ======================================
-    # AI DECISION PERFORMANCE
-    # ======================================
-
-    if "AI_Decision" in completed.columns:
-
-
-        decision_report = (
-
-            completed
-            .groupby("AI_Decision")
-            ["Return_%"]
-            .agg(
-
-                [
-                    "count",
-                    "mean",
-                    lambda x:
-                    (x > 0).mean()*100
-                ]
-
-            )
-
-        )
-
-
-        decision_report.columns = [
-
-            "Trades",
-            "Average_Return",
-            "Win_Rate"
-
-        ]
-
-
-        decision_report["Category"] = (
-            "AI_DECISION"
-        )
-
-
-        reports.append(
-            decision_report.reset_index()
-        )
 
 
 
@@ -341,33 +308,39 @@ def analyze_feedback():
     # SAVE RESULTS
     # ======================================
 
+
     if reports:
 
 
-        final = pd.concat(
-
-            reports,
-
-            ignore_index=True
-
+        final = pd.DataFrame(
+            reports
         )
 
 
         final.to_csv(
-
-            OUTPUT_FILE,
-
+            OUTPUT,
             index=False
-
         )
 
 
-        print("\nFeedback analytics saved:")
-        print(OUTPUT_FILE)
+        print(
+            "\nSaved:"
+        )
+
+        print(
+            OUTPUT
+        )
 
 
-        print("\n")
-        print(final)
+        print(
+            "\n"
+        )
+
+        print(
+            final.to_string(
+                index=False
+            )
+        )
 
 
     else:
@@ -378,6 +351,7 @@ def analyze_feedback():
 
 
 
-if __name__ == "__main__":
+
+if __name__=="__main__":
 
     analyze_feedback()

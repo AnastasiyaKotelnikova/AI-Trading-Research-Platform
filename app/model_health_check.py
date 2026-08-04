@@ -3,8 +3,8 @@ import pandas as pd
 from datetime import datetime
 
 
-MODEL_METRICS = (
-    "data/models/model_metrics.csv"
+CHAMPION_TRACKER = (
+    "data/models/model_champion_tracker.csv"
 )
 
 MODEL_MONITORING = (
@@ -35,27 +35,21 @@ def check_champion_model():
     section("CHAMPION MODEL STATUS")
 
 
-    if not os.path.exists(MODEL_METRICS):
+    if not os.path.exists(CHAMPION_TRACKER):
 
         print(
-            "Model metrics file missing"
+            "Champion tracker missing"
         )
 
         return
 
 
-
     df = pd.read_csv(
-        MODEL_METRICS
+        CHAMPION_TRACKER
     )
 
 
-    champion = df[
-        df["Status"] == "Champion"
-    ]
-
-
-    if len(champion) == 0:
+    if len(df) == 0:
 
         print(
             "No champion model found"
@@ -65,42 +59,43 @@ def check_champion_model():
 
 
 
-    row = champion.iloc[-1]
+    row = df.iloc[-1]
 
 
     print(
-        "Model:",
-        row["Model"]
+        "Active Model:",
+        row.get(
+            "Active_Model",
+            "UNKNOWN"
+        )
     )
 
 
     print(
-        "Accuracy:",
-        row["Accuracy"]
+        "Completed Trades:",
+        row.get(
+            "Completed_Trades",
+            "N/A"
+        )
     )
 
 
     print(
-        "F1:",
-        row["F1"]
+        "Win Rate:",
+        row.get(
+            "Win_Rate",
+            "N/A"
+        )
     )
 
 
     print(
-        "Precision:",
-        row.get("Precision","N/A")
-    )
-
-
-    print(
-        "Recall:",
-        row.get("Recall","N/A")
-    )
-
-
-    print(
-        "Training Records:",
-        row.get("Training_Records","N/A")
+        "Average Return:",
+        row.get(
+            "Average_Return",
+            "N/A"
+        ),
+        "%"
     )
 
 
@@ -123,7 +118,8 @@ def check_live_predictions():
 
 
     df = pd.read_csv(
-        MODEL_PERFORMANCE
+        MODEL_PERFORMANCE,
+        low_memory=False
     )
 
 
@@ -133,9 +129,19 @@ def check_live_predictions():
     )
 
 
+    # =====================================
+    # Only completed evaluations count
+    # =====================================
+
     completed = df[
-        df["Prediction_Result"].notna()
-    ]
+        df["Prediction_Result"].isin(
+            [
+                "SUCCESS",
+                "FAILED",
+                "NEUTRAL"
+            ]
+        )
+    ].copy()
 
 
     print(
@@ -157,22 +163,39 @@ def check_live_predictions():
     )
 
 
+
     if len(completed) > 0:
 
 
-        print(
-            "\nAverage Return:"
-        )
+        # =====================================
+        # Live prediction return monitoring
+        # Uses 5D outcome, not training target
+        # =====================================
+
+        if "Return_5D" in completed.columns:
 
 
-        print(
-            round(
-                completed["Return_20D"]
-                .mean(),
-                2
-            ),
-            "%"
-        )
+            print(
+                "\nAverage Return:"
+            )
+
+
+            print(
+                round(
+                    completed["Return_5D"]
+                    .mean(),
+                    2
+                ),
+                "%"
+            )
+
+
+        else:
+
+            print(
+                "\nReturn_5D column missing"
+            )
+
 
 
         print(
@@ -186,7 +209,6 @@ def check_live_predictions():
             ]
             .value_counts()
         )
-
 
 
 def check_monitoring():

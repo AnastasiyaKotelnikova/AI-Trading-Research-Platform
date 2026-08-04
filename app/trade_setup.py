@@ -42,10 +42,17 @@ def generate_trade_setup(row):
         atr_stop = price - (atr * 1.5)
 
 
-        stop_loss = max(
+        stop_loss = min(
             atr_stop,
             sma20 * 0.97
         )
+
+        # Stop must always be below entry
+        if stop_loss >= price:
+
+            stop_loss = price - (
+                atr * 1.5
+            )
 
 
     except Exception:
@@ -56,39 +63,57 @@ def generate_trade_setup(row):
     # Dynamic Targets
     # -------------------------
 
+    recent_high = None
+
     try:
 
         recent_high = history["High"].iloc[-21:-1].max()
 
 
-        # If price already broke resistance
-        if price > recent_high:
+        resistance_target = recent_high
 
-            target_1 = price + (atr * 3)
-
-            target_2 = price + (atr * 6)
-
-
-        else:
-
-            # Resistance-based targets
-
-            target_1 = recent_high
-
-            target_2 = recent_high + (
-                atr * 3
-            )
+        atr_target = price + (
+            atr * 3
+        )
 
 
-    except Exception:
+        # Choose stronger upside target
+        target_1 = max(
+            resistance_target,
+            atr_target
+        )
 
-        target_1 = price + (atr * 3)
 
-        target_2 = price + (atr * 5)
+        target_2 = target_1 + (
+            atr * 3
+        )
 
-    # Ensure Target 1 is above current price
+
+    except Exception as e:
+
+        print(
+            "Target calculation warning:",
+            row["Symbol"],
+            e
+        )
+
+
+        target_1 = price + (
+            atr * 3
+        )
+
+        target_2 = price + (
+            atr * 6
+        )
+
+
+    # Ensure Target 1 is above price
     if target_1 <= price:
-        target_1 = price + (atr * 2)
+
+        target_1 = price + (
+            atr * 3
+        )
+
 
     # -------------------------
     # Risk Reward
@@ -97,6 +122,16 @@ def generate_trade_setup(row):
     risk = price - stop_loss
 
     reward = target_1 - price
+
+
+    # -------------------------
+    # Risk Reward
+    # -------------------------
+
+    risk = price - stop_loss
+
+    reward = target_1 - price
+
 
 
     if risk > 0:
@@ -109,6 +144,11 @@ def generate_trade_setup(row):
     else:
 
         risk_reward = 0
+
+        # Prevent unrealistic RR
+        if risk_reward > 5:
+
+            risk_reward = 5
 
     print(
         f"{row['Symbol']} | "

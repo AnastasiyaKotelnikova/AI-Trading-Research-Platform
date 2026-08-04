@@ -216,7 +216,7 @@ def run():
 
             row["Price"] = features["Close"]
 
-
+            row["History"] = history
 
             trade = generate_trade_setup(row)
 
@@ -604,6 +604,7 @@ def run():
         results_df
     )
 
+
     # -------------------------
     # Trade Quality Filter
     # -------------------------
@@ -611,31 +612,6 @@ def run():
     results_df = apply_trade_quality_filter(
         results_df
     )
-
-    results_df = add_ai_decisions(
-        results_df
-    )
-
-    results_df = add_portfolio_selection(
-        results_df
-    )
-
-    # -------------------------
-    # AI Investment Analyst
-    # -------------------------
-
-
-    generate_portfolio_report(
-
-        results_df,
-
-        market_regime["Market_Regime"]
-        if market_regime
-        else None
-
-    )
-
-
 
 
 
@@ -646,32 +622,74 @@ def run():
     def classify_ai_rating(row):
 
 
-        score = row["AI_Final_Score_Adjusted"]
+        score = row.get(
+            "AI_Final_Score_Adjusted",
+            0
+        )
 
 
-        confidence = row["AI_Confidence"]
+        confidence = row.get(
+            "AI_Confidence",
+            0
+        )
+
+
+        ml_probability = row.get(
+            "ML_Probability",
+            0
+        )
+
+
+        # ---------------------------------
+        # ML safety filter
+        # ---------------------------------
+
+        if ml_probability < 15:
+
+            return "PASS"
 
 
 
-        if score >= 75 and confidence >= 60:
+        if (
+            ml_probability < 20
+            and score < 50
+        ):
+
+            return "PASS"
+
+
+
+        if (
+            score >= 75
+            and confidence >= 60
+        ):
 
             return "STRONG BUY"
 
 
 
-        elif score >= 60 and confidence >= 45:
+        elif (
+            score >= 60
+            and confidence >= 45
+        ):
 
             return "BUY"
 
 
 
-        elif score >= 40 and confidence >= 35:
+        elif (
+            score >= 40
+            and confidence >= 35
+        ):
 
             return "WATCHLIST"
 
 
 
-        elif score >= 30 and confidence >= 25:
+        elif (
+            score >= 30
+            and confidence >= 25
+        ):
 
             return "WATCH"
 
@@ -683,14 +701,10 @@ def run():
 
 
 
-
-
     results_df["AI_Rating"] = results_df.apply(
         classify_ai_rating,
         axis=1
     )
-
-
 
 
 
@@ -703,9 +717,31 @@ def run():
     )
 
 
+
+    # -------------------------
+    # AI Decision Engine
+    # -------------------------
+
+    print(
+        results_df[
+            [
+                "Symbol",
+                "AI_Rating",
+                "AI_Final_Score_Adjusted",
+                "AI_Confidence",
+                "ML_Probability",
+                "Historical_ML_Probability",
+                "Risk_Reward"
+            ]
+        ].to_string(index=False)
+    )
+
+
     results_df = add_ai_decisions(
         results_df
     )
+
+
 
     # -------------------------
     # AI Investment Analyst
@@ -717,7 +753,32 @@ def run():
 
 
 
+    # -------------------------
+    # Portfolio Selection
+    # -------------------------
 
+    results_df = add_portfolio_selection(
+        results_df
+    )
+
+
+
+    # -------------------------
+    # AI Portfolio Report
+    # -------------------------
+
+    generate_portfolio_report(
+
+        results_df,
+
+        market_regime["Market_Regime"]
+
+        if market_regime
+
+        else None
+
+    )
+    
 
     # -------------------------
     # Signal Explanations

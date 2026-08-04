@@ -1,6 +1,5 @@
 import os
 import pandas as pd
-from datetime import datetime
 
 from app.providers.yahoo import get_history
 
@@ -17,19 +16,41 @@ def update_prediction_results():
 
 
     df = pd.read_csv(
-        PREDICTION_FILE
+        PREDICTION_FILE,
+        low_memory=False
     )
 
-    # Force text columns
+
+    # =====================================
+    # Ensure required columns
+    # =====================================
+
+    if "Prediction_Result" not in df.columns:
+
+        df["Prediction_Result"] = None
+
+
     df["Prediction_Result"] = (
         df["Prediction_Result"]
         .astype("object")
     )
 
+
+    if "Price_After_5D" not in df.columns:
+
+        df["Price_After_5D"] = None
+
+
+    if "Return_5D" not in df.columns:
+
+        df["Return_5D"] = None
+
+
     df["Price_After_5D"] = pd.to_numeric(
         df["Price_After_5D"],
         errors="coerce"
     )
+
 
     df["Return_5D"] = pd.to_numeric(
         df["Return_5D"],
@@ -43,18 +64,23 @@ def update_prediction_results():
         return
 
 
+
     updated = False
+
 
 
     for index, row in df.iterrows():
 
 
-        # Skip already completed
+        # =====================================
+        # Skip completed predictions
+        # =====================================
 
-        if pd.notna(
-            row.get("Prediction_Result")
-        ):
-
+        if row["Prediction_Result"] in [
+            "SUCCESS",
+            "FAILED",
+            "NEUTRAL"
+        ]:
             continue
 
 
@@ -64,12 +90,64 @@ def update_prediction_results():
 
         try:
 
+
             history = get_history(
                 symbol
             )
 
 
             if history is None:
+
+                continue
+
+
+
+            # =====================================
+            # Normalize history dates
+            # =====================================
+
+            history = history.copy()
+
+
+            if not isinstance(
+                history.index,
+                pd.DatetimeIndex
+            ):
+
+
+                if "Date" in history.columns:
+
+
+                    history["Date"] = pd.to_datetime(
+                        history["Date"]
+                    )
+
+
+                    history = history.set_index(
+                        "Date"
+                    )
+
+
+                else:
+
+
+                    history.index = pd.to_datetime(
+                        history.index
+                    )
+
+
+
+            history = history.sort_index()
+
+
+
+            if "Close" not in history.columns:
+
+                print(
+                    symbol,
+                    "Missing Close column"
+                )
+
                 continue
 
 
@@ -80,34 +158,85 @@ def update_prediction_results():
             )
 
 
+
             if len(close_prices) < 25:
+
                 continue
 
 
 
-            current_price = (
-                close_prices.iloc[-1]
+            # =====================================
+            # Find actual 5 trading day future price
+            # =====================================
+
+            prediction_date = pd.to_datetime(
+                row["Date"]
             )
 
 
-            prediction_price = (
+
+            future_prices = history.loc[
+                history.index > prediction_date,
+                "Close"
+            ]
+
+
+
+            if len(future_prices) < 5:
+
+                continue
+
+
+
+            price_after_5d = (
+                future_prices.iloc[4]
+            )
+
+
+
+            entry_price = float(
                 row["Entry_Price"]
             )
 
 
+
+            if entry_price <= 0:
+
+                continue
+
+
+
             return_5d = (
-                (current_price - prediction_price)
+
+                (
+                    price_after_5d
+                    -
+                    entry_price
+                )
+
                 /
-                prediction_price
+
+                entry_price
+
                 *
+
                 100
+
             )
 
+
+
+            # =====================================
+            # Save actual outcome data
+            # =====================================
 
             df.loc[
                 index,
                 "Price_After_5D"
-            ] = current_price
+            ] = round(
+                price_after_5d,
+                2
+            )
 
 
             df.loc[
@@ -119,30 +248,24 @@ def update_prediction_results():
             )
 
 
-            probability = (
-                row["ML_Probability"]
-            )
+
+            # =====================================
+            # Long-only classification
+            # =====================================
+
+            if return_5d >= 1.0:
+
+                result = "SUCCESS"
 
 
-            if probability >= 50:
+            elif return_5d <= -1.0:
 
-                if return_5d > 0:
+                result = "FAILED"
 
-                    result = "SUCCESS"
-
-                else:
-
-                    result = "FAILED"
 
             else:
 
-                if return_5d <= 0:
-
-                    result = "SUCCESS"
-
-                else:
-
-                    result = "FAILED"
+                result = "NEUTRAL"
 
 
 
@@ -156,6 +279,7 @@ def update_prediction_results():
             updated = True
 
 
+
             print(
                 symbol,
                 result,
@@ -164,7 +288,9 @@ def update_prediction_results():
             )
 
 
+
         except Exception as e:
+
 
             print(
                 symbol,
@@ -174,21 +300,29 @@ def update_prediction_results():
 
 
 
+    # =====================================
+    # Save database
+    # =====================================
+
     if updated:
+
 
         df.to_csv(
             PREDICTION_FILE,
             index=False
         )
 
+
         print(
             "\nPrediction database updated"
         )
 
+
     else:
 
+
         print(
-            "\nNo new completed predictions"
+            "\nNo predictions updated"
         )
 
 
@@ -196,3 +330,4 @@ def update_prediction_results():
 if __name__ == "__main__":
 
     update_prediction_results()
+    

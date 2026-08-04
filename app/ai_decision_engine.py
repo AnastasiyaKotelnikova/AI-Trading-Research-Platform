@@ -1,11 +1,9 @@
 import pandas as pd
 
 
-
 def add_ai_decisions(df):
 
     df = df.copy()
-
 
 
     def evaluate(row):
@@ -40,11 +38,20 @@ def add_ai_decisions(df):
             ""
         )
 
+        ai_rating = row.get(
+            "AI_Rating",
+            ""
+        )
+
 
         reasons = []
 
 
-        if row.get("Rank_Score",0) >= 60:
+        # ---------------------------------
+        # Explanation Builder
+        # ---------------------------------
+
+        if row.get("Rank_Score", 0) >= 60:
 
             reasons.append(
                 "Strong technical ranking"
@@ -55,6 +62,12 @@ def add_ai_decisions(df):
 
             reasons.append(
                 "Strong current ML confirmation"
+            )
+
+        elif ml >= 30:
+
+            reasons.append(
+                "Moderate current ML confirmation"
             )
 
         else:
@@ -85,7 +98,66 @@ def add_ai_decisions(df):
             )
 
 
-        # Decision
+        # ---------------------------------
+        # AI Rating Safety Gate
+        # Final quality veto
+        # ---------------------------------
+
+        if ai_rating == "PASS":
+
+            reasons.append(
+                "AI Rating rejected setup"
+            )
+
+            return pd.Series(
+                [
+                    "PASS",
+                    ". ".join(reasons)
+                ]
+            )
+
+
+        # ---------------------------------
+        # ML Safety Gate
+        # ---------------------------------
+
+        if ml < 20:
+
+            reasons.append(
+                "ML probability below minimum threshold"
+            )
+
+            return pd.Series(
+                [
+                    "PASS",
+                    ". ".join(reasons)
+                ]
+            )
+
+
+        # ---------------------------------
+        # AI Rating Safety Gate
+        # ---------------------------------
+
+        if ai_rating == "PASS":
+
+            decision = "PASS"
+
+            reasons.append(
+                "AI Rating rejected setup"
+            )
+
+            return pd.Series(
+                [
+                    decision,
+                    ". ".join(reasons)
+                ]
+            )
+
+
+        # ---------------------------------
+        # Decision Engine
+        # ---------------------------------
 
         if (
 
@@ -100,22 +172,37 @@ def add_ai_decisions(df):
             decision = "HIGH CONVICTION"
 
 
-
         elif (
 
             score >= 60
-            and confidence >= 55
-            and ml >= 50
+            and confidence >= 45
+            and ml >= 30
+            and rr >= 2
 
         ):
 
             decision = "STRONG CANDIDATE"
 
 
+        elif (
+
+            score >= 60
+            and confidence >= 40
+            and historical_ml >= 60
+            and rr >= 2
+
+        ):
+
+            decision = "CANDIDATE"
+
+            reasons.append(
+                "Strong historical edge despite weaker current ML"
+            )
+
 
         elif (
 
-            score >= 45
+            score >= 50
             and confidence >= 35
 
         ):
@@ -123,17 +210,14 @@ def add_ai_decisions(df):
             decision = "CANDIDATE"
 
 
-
         elif score >= 30:
 
             decision = "WATCHLIST"
 
 
-
         else:
 
             decision = "PASS"
-
 
 
         return pd.Series(
@@ -142,7 +226,6 @@ def add_ai_decisions(df):
                 ". ".join(reasons)
             ]
         )
-
 
 
     df[
