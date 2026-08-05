@@ -14,6 +14,10 @@ OUTPUT_FILE = (
     "data/models/model_quality_report.csv"
 )
 
+RECOMMENDED_FILE = (
+    "data/models/recommended_champion.txt"
+)
+
 
 
 def evaluate_models():
@@ -47,6 +51,13 @@ def evaluate_models():
         )
 
 
+        # Remove duplicate columns if CSV schema changed
+        performance = performance.loc[
+            :,
+            ~performance.columns.duplicated()
+        ]
+
+
         performance["Evaluation_Date"] = pd.to_datetime(
             performance["Evaluation_Date"]
         )
@@ -65,11 +76,18 @@ def evaluate_models():
         )
 
 
+        # Remove old Model column if present
+        performance = performance.drop(
+            columns=[
+                "Model"
+            ],
+            errors="ignore"
+        )
+
+
         performance = performance.rename(
             columns={
-                "Active_Model": "Model",
-                "Win_Rate": "Win_Rate",
-                "Average_Return": "Average_Return"
+                "Active_Model": "Model"
             }
         )
 
@@ -81,7 +99,11 @@ def evaluate_models():
                 "Win_Rate",
                 "Average_Return"
             ]
-        ]
+        ].drop_duplicates(
+            subset=[
+                "Model"
+            ]
+        )
 
 
         df = metrics.merge(
@@ -146,7 +168,6 @@ def evaluate_models():
     # MODEL QUALITY SCORE
     # ================================
 
-
     df["Trading_Quality_Score"] = (
 
         df["F1"] * 100 * 0.40
@@ -184,6 +205,7 @@ def evaluate_models():
     )
 
 
+
     print(
         result[
             [
@@ -205,6 +227,27 @@ def evaluate_models():
     )
 
 
+
+    # ================================
+    # RECOMMEND CHAMPION
+    # ================================
+
+    recommended_model = (
+        result.iloc[0]["Model"]
+    )
+
+
+    with open(
+        RECOMMENDED_FILE,
+        "w"
+    ) as f:
+
+        f.write(
+            str(recommended_model)
+        )
+
+
+
     print(
         "\nSaved:"
     )
@@ -219,8 +262,9 @@ def evaluate_models():
     )
 
     print(
-        result.iloc[0]["Model"]
+        recommended_model
     )
+
 
 
 

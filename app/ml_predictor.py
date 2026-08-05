@@ -14,36 +14,50 @@ from app.historical_model_loader import (
 # Scanner ML Features
 # ==================================================
 
+
 FEATURE_COLUMNS = [
 
-    "RSI",
+    "Volume",
 
     "Return_5D",
 
+    "Return_10D",
+
     "Return_20D",
 
-    "Distance_From_High_%",
+    "RSI",
+
+    "RSI_Change",
+
+    "SMA20",
+
+    "SMA50",
 
     "Above_SMA20",
 
     "Above_SMA50",
 
-    "Breakout",
+    "SMA_Gap",
 
-    "Overextended",
+    "Momentum_Acceleration",
 
-    "Rank_Score",
+    "Average_Volume",
 
-    "Momentum_Score",
+    "RVOL",
 
-    "Trend_Score",
+    "Volatility_20D",
 
-    "Relative_Strength",
+    "ATR",
 
-    "Risk_Reward"
+    "ATR_Percent",
+
+    "Range_Position",
+
+    "Distance_From_52W_High",
+
+    "Volume_Trend"
 
 ]
-
 
 
 # ==================================================

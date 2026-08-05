@@ -38,9 +38,11 @@ def get_best_model():
 
 
             # newest champion record
+            champion = champion.reset_index()
+
             champion = champion.sort_values(
-                by="Evaluation_Date",
-                ascending=False
+                by=["Evaluation_Date", "index"],
+                ascending=[False, False]
             )
 
 
@@ -125,32 +127,43 @@ def get_best_model_info():
 
             row = champion.iloc[0]
 
+            metrics = None
+
+            metrics_file = "data/models/model_metrics.csv"
+
+            if os.path.exists(metrics_file):
+
+                metrics_df = pd.read_csv(metrics_file)
+
+                match = metrics_df[
+                    metrics_df["Model"] == row["Active_Model"]
+                ]
+
+                if not match.empty:
+                    metrics = match.iloc[-1]
+
 
             return {
-
 
                 "Model":
                     row["Active_Model"],
 
 
                 "Accuracy":
-                    row.get(
-                        "Accuracy",
-                        0
+                    float(
+                        row.get(
+                            "Accuracy",
+                            0
+                        )
                     ),
 
 
                 "F1":
-                    row.get(
-                        "F1",
-                        0
-                    ),
-
-
-                "Completed_Trades":
-                    row.get(
-                        "Completed_Trades",
-                        0
+                    float(
+                        row.get(
+                            "F1",
+                            0
+                        )
                     ),
 
 

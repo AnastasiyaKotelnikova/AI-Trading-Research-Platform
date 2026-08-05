@@ -1,6 +1,7 @@
 import pandas as pd
 import os
 from datetime import datetime
+from app.model_loader import get_best_model_info
 
 
 TRADE_DATABASE = (
@@ -45,6 +46,12 @@ def update_model_feedback():
     ]
 
 
+    model_info = get_best_model_info()
+
+    current_model = model_info.get(
+        "Model",
+        "Unknown"
+    )
 
     print(
         "Completed Trades:"
@@ -73,6 +80,8 @@ def update_model_feedback():
                 "%Y-%m-%d %H:%M:%S"
             ),
 
+        "Model":
+            current_model,    
 
         "Completed_Trades":
             len(completed),
