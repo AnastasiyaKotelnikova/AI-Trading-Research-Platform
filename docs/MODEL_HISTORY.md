@@ -1,634 +1,315 @@
-# AI Trading Research Platform — Model History
-
+AI Trading Research Platform — Model History
 
 Last Updated:
 
-2026-08-03
+2026-08-06
 
+Purpose
 
+This document records the evolution of every machine learning model used by the AI Trading Research Platform.
 
-# Purpose
+For each model version we document:
 
+training dataset
+feature set
+algorithm
+hyperparameters
+validation methodology
+evaluation metrics
+historical backtesting
+production deployment
+retirement decisions
+lessons learned
 
-This document tracks every important machine learning model experiment.
+The objective is to ensure every model decision is reproducible, transparent, and supported by quantitative evidence.
 
+Machine Learning Architecture Overview
 
-For each model version we record:
+The platform currently contains two independent machine learning paths.
 
+These systems solve different problems and are evaluated separately.
 
-- training dataset
-- feature set
-- algorithm
-- training changes
-- evaluation metrics
-- backtest results
-- acceptance/rejection decision
-- lessons learned
+They must never be merged without a documented experiment.
 
+ML Path 1 — Historical Prediction Model
+Purpose
 
-The purpose is to prevent repeating previous mistakes and maintain transparent model evolution.
+Predict the probability that historical market conditions lead to successful trades.
 
+Primary training module:
 
-
----
-
-# Machine Learning Architecture Overview
-
-
-The platform currently contains **two separate ML paths**.
-
-
-They serve different purposes and must not be confused.
-
-
-
----
-
-
-# ML Path 1 — Historical Prediction Model
-
-
-Purpose:
-
-
-Train machine learning models using historical market data to estimate the probability of future successful trade outcomes.
-
-
-Main training module:
-
-
-```
 app/train_model.py
-```
-
 
 Dataset:
 
-
-```
 data/historical_ml_dataset.csv
-```
 
+Target variable:
 
-Target:
-
-
-```
 Successful_Trade
-```
-
 
 Validation:
 
-
-Chronological split:
-
+Chronological split.
 
 Training:
 
 Before 2026-05-15
 
-
 Testing:
 
 After 2026-05-15
 
+This prevents future information leakage and better simulates real-world deployment.
 
+Historical Feature Set
 
-Purpose:
+The current historical model uses approximately twenty technical features including:
 
+Return_5D
+Return_10D
+Return_20D
+RSI
+RSI_Change
+SMA20
+SMA50
+Above_SMA20
+Above_SMA50
+SMA_Gap
+Momentum_Acceleration
+Average_Volume
+RVOL
+ATR
+ATR_Percent
+Volatility_20D
+Range_Position
+Distance_From_52W_High
+Volume_Trend
+Relative Strength
+ML Path 2 — Scanner Prediction Model
+Purpose
 
-Simulate future prediction using unseen historical periods.
+Evaluate current market opportunities during daily scanning.
 
+Primary module:
 
-
-Features include:
-
-
-- Return_5D
-- Return_10D
-- Return_20D
-- RSI
-- RSI_Change
-- SMA20
-- SMA50
-- Above_SMA20
-- Above_SMA50
-- SMA_Gap
-- Momentum_Acceleration
-- Average_Volume
-- RVOL
-- Volatility_20D
-- ATR
-- ATR_Percent
-- Range_Position
-- Distance_From_52W_High
-- Volume_Trend
-
-
-
-Current accepted model:
-
-
-```
-model_v33
-```
-
-
-
----
-
-# ML Path 2 — Scanner Research Prediction Path
-
-
-Purpose:
-
-
-Provide real-time ML confirmation inside the stock scanner and research ranking pipeline.
-
-
-Main module:
-
-
-```
 app/ml_predictor.py
-```
-
-
-This path is separate from historical model training.
-
-
-It works with current scanner-generated features:
-
-
-Examples:
-
-
-- RSI
-- Return_5D
-- Return_20D
-- Distance_From_High_%
-- Above_SMA20
-- Above_SMA50
-- Breakout
-- Overextended
-- Rank_Score
-- Momentum_Score
-- Trend_Score
-- Relative_Strength
-- Risk_Reward
-
-
 
 Outputs:
 
-
-```
 ML_Probability
-
 ML_Prediction
-
 ML_Model
-
 ML_Accuracy
-
 ML_F1
-```
 
+This model supports:
 
+AI Research Ranking
+Confidence scoring
+Portfolio evaluation
+Trade approval
+Final AI decisions
 
-Purpose:
+It is not the historical training model.
 
-
-Provide additional evidence for:
-
-
-- research ranking
-- AI confidence
-- final decision scoring
-
-
-
-Important:
-
-
-The scanner ML path and historical ML path use different feature structures.
-
-
-They should not be evaluated as the same model system.
-
-
-
----
-
-# Model Development Timeline
-
-
-
-# Early Models (v1 - v6)
-
+Model Development Timeline
+Early Models (v1 – v6)
 
 Status:
 
-
 RETIRED
-
-
 
 Purpose:
 
-
-Initial ML pipeline experiments.
-
-
+Initial proof-of-concept models.
 
 Characteristics:
 
+small datasets
+limited features
+basic validation
+simple classifiers
 
-- small datasets
-- early feature engineering
-- limited validation
-- basic classification testing
+Problems:
 
-
-
-Problems discovered:
-
-
-- insufficient historical samples
-- weak validation
-- possible bias
-
-
+insufficient historical data
+unstable performance
+weak validation
 
 Decision:
 
-
 Retired.
 
-
-
----
-
-# model_v7
-
+model_v7
 
 Status:
 
-
 REJECTED
-
-
-
-Reason:
-
-
-Failed to outperform existing models.
-
-
 
 Improvements:
 
-
-Introduced improved evaluation:
-
-
-- F1 score
-- Precision
-- Recall
-
-
-
-Decision:
-
-
-Rejected.
-
-
-
----
-
-# model_v8
-
-
-Status:
-
-
-REJECTED
-
-
+improved evaluation metrics
+F1 score
+Precision
+Recall
 
 Reason:
 
+Did not outperform previous baseline.
 
-Performance improvement was insufficient.
-
-
-
----
-
-# model_v9
-
+model_v8
 
 Status:
-
 
 REJECTED
 
-
-
 Reason:
 
+Marginal improvement.
 
-Improved metrics but failed champion comparison.
+Insufficient trading value.
 
-
-
----
-
-# model_v10 - model_v26
-
+model_v9
 
 Status:
 
+REJECTED
+
+Reason:
+
+Failed champion comparison.
+
+model_v10 – model_v26
+
+Status:
 
 RETIRED
 
-
-
 General improvements:
 
-
-- additional features
-- improved training pipeline
-- expanded evaluation
-
-
+additional technical indicators
+larger datasets
+improved preprocessing
+better training pipeline
 
 Limitations:
 
-
-Models were still affected by:
-
-
-- limited historical data
-- possible leakage
-- insufficient validation
-
-
+dataset size still limited
+possible leakage
+unrealistic validation
 
 Decision:
 
-
 Retired.
 
-
-
----
-
-# model_v27
-
+model_v27
 
 Status:
 
-
-RETIRED ❌
-
-
+RETIRED
 
 Previous Champion:
 
-
 Yes
 
-
-
-Reported metrics:
-
+Reported Metrics:
 
 Accuracy:
 
 98.3%
 
-
-
 F1:
 
 96.1%
 
+Why model_v27 Was Retired
 
+Although model_v27 reported extremely high classification metrics, the results were determined to be unrealistic.
 
----
+Issues discovered:
 
-# Why model_v27 Was Retired
+small historical dataset
+potential information leakage
+optimistic validation
+unrealistic market performance
 
+Conclusion:
 
-model_v27 produced extremely strong classification metrics.
+Classification accuracy alone is not sufficient for selecting production trading models.
 
+The model was permanently retired.
 
-However, investigation showed the results were not reliable for trading research.
+Dataset Expansion Phase
 
+The historical training dataset was expanded substantially.
 
+Improvements:
 
-Problems identified:
+significantly more historical examples
+additional market regimes
+additional stocks
+improved chronological validation
+reduced leakage risk
 
+Dataset:
 
-## 1. Dataset limitations
-
-
-The training dataset was too small compared with later expanded datasets.
-
-
-
-## 2. Possible data leakage
-
-
-The validation methodology did not sufficiently protect against future information contamination.
-
-
-
-## 3. Unrealistic market prediction performance
-
-
-A model achieving near-perfect classification accuracy in market prediction requires strong evidence.
-
-
-The results did not survive realistic validation.
-
-
-
-## 4. Poor benchmark quality
-
-
-High classification metrics alone do not guarantee profitable trading decisions.
-
-
-
-Decision:
-
-
-model_v27 was removed as a performance benchmark.
-
-
-
-Important lesson:
-
-
-A lower-scoring realistic model is more valuable than an unrealistic high-scoring model.
-
-
-
----
-
-# Dataset Expansion Phase
-
-
-Major improvement:
-
-
-The historical ML dataset was expanded significantly.
-
-
-
-Previous problems addressed:
-
-
-✓ More historical examples
-
-✓ More stocks
-
-✓ More market conditions
-
-✓ Improved chronological validation
-
-✓ Reduced leakage risk
-
-
-
-Current dataset:
-
-
-File:
-
-
-```
 data/historical_ml_dataset.csv
-```
 
+Training observations:
 
+Approximately 3.5 million
 
-Training records:
+Testing observations:
 
+Approximately 98 thousand
 
-3,504,289
-
-
-
-Testing records:
-
-
-98,034
-
-
-
-Validation:
-
-
-Chronological future simulation.
-
-
-
----
-
-# model_v32
-
+model_v32
 
 Status:
 
-
 REJECTED
-
-
 
 Algorithm:
 
-
 Random Forest
-
-
 
 Configuration:
 
-
-```
 n_estimators = 500
-
 max_depth = 20
-
 min_samples_leaf = 10
-```
-
-
 
 Results:
-
 
 ROC-AUC:
 
 0.669
 
-
-
 F1:
 
 0.467
 
-
-
-Reason:
-
-
-Did not exceed acceptance criteria.
-
-
-
 Decision:
-
 
 Rejected.
 
-
-
----
-
-# model_v33
-
+model_v33
 
 Status:
 
-
-CURRENT CHAMPION ✅
-
-
+CURRENT CHAMPION
 
 Accepted:
 
-
 2026-07-28
-
-
 
 Algorithm:
 
-
 Random Forest
-
-
 
 Configuration:
 
-
-```
 n_estimators = 500
 
 max_depth = 20
@@ -638,427 +319,270 @@ min_samples_leaf = 10
 max_features = sqrt
 
 class_weight = balanced
-```
-
-
 
 Dataset:
 
+Expanded historical ML dataset.
 
-Expanded historical ML dataset
-
-
-
-Features:
-
-
-21 technical and market features.
-
-
-
----
-
-# Validation Results
-
+Validation Results
 
 Accuracy:
 
-
 0.551
 
-
-
 F1:
-
 
 0.467
 
-
-
 ROC-AUC:
-
 
 0.669
 
+Trading Backtest
 
-
----
-
-# Trading Backtest
-
-
-Trades:
-
+Historical Trades:
 
 210
 
-
-
 Win Rate:
-
 
 46.7%
 
-
-
 Average Return:
-
 
 0.448%
 
+These metrics were evaluated together rather than relying solely on classification accuracy.
 
+Champion Selection Logic
 
----
+Models are ranked using multiple evaluation criteria.
 
-# Champion Selection Logic
+Current weighting:
 
-
-The platform does not select models using accuracy alone.
-
-
-
-Current scoring:
-
-
-```
-F1:
-20%
-
-
-ROC-AUC:
+ROC-AUC
 30%
 
-
-Average Return:
+Average Return
 30%
 
-
-Win Rate:
+F1
 20%
-```
 
+Win Rate
+20%
 
+model_v33 achieved the highest combined production score and became the current champion.
 
-model_v33 score:
+Production Integration (2026-08)
 
+During the August development cycle, the machine learning system was fully integrated into the production research pipeline.
 
-0.430
+The deployed model now propagates through every downstream component.
 
+The following fields are automatically preserved:
 
+ML_Model
 
-Previous champion score:
+ML_Accuracy
 
+ML_F1
 
-0.192
+Combined_ML_Probability
 
+These values flow into:
 
+AI Research Engine
+AI Decision Engine
+Portfolio Manager
+Risk Manager
+Trade Management
+Trade History Database
+Model Feedback Loop
 
-Decision:
+Every approved trade now records exactly which model generated the prediction.
 
+This establishes full traceability between model versions and future trading performance.
 
-model_v33 accepted as current champion.
+Trade History Integration
 
+The trade history database now permanently stores model metadata for every approved trade.
 
+Tracked fields include:
 
----
+Model_Name
 
-# Current Model Files
+Model_Accuracy
 
+Model_F1
+
+Additional AI metadata stored with every trade:
+
+Final_AI_Status
+
+Final_AI_Reason
+
+Final_Conviction_Score
+
+Expected_Value
+
+Trade_Grade
+
+Trade_Execution_Status
+
+Portfolio_Action
+
+Risk_Status
+
+This allows historical trades to be linked directly back to the originating model version.
+
+Model Feedback Loop
+
+A new evaluation component has been implemented.
+
+Primary module:
+
+app/model_feedback_loop.py
+
+Purpose:
+
+Evaluate actual trading performance by model version.
+
+Completed trades are grouped by:
+
+Model_Name
+
+Current metrics include:
+
+completed trades
+winning trades
+losing trades
+win rate
+average return
+best trade
+worst trade
+
+The report also preserves:
+
+Model_Accuracy
+
+Model_F1
+
+Output:
+
+data/models/model_feedback_report.csv
+
+This infrastructure enables future comparison between successive model versions using real trading outcomes.
+
+Current Model Files
 
 Champion model:
 
-
-```
 data/models/champion_model.pkl
-```
-
-
-
-Version:
-
-
-```
-model_v33
-```
-
-
 
 Metrics history:
 
-
-```
 data/models/model_metrics.csv
-```
-
-
 
 Feature importance:
 
-
-```
 data/models/feature_importance.csv
-```
 
+Prediction history:
 
+data/models/model_predictions.csv
 
----
+Monitoring:
 
-# Current Model Usage
+data/models/model_monitoring.csv
 
+Feedback report:
 
-The champion model is used for:
+data/models/model_feedback_report.csv
+Current Production Usage
 
+The champion model is now integrated into:
 
-- historical probability estimation
-- ML confirmation
-- research ranking support
-- AI decision scoring
+market scanner
+AI Research Engine
+confidence scoring
+portfolio evaluation
+trade approval
+trade management
+trade history
+model feedback reporting
 
+It remains research only and is not approved for automated live trading.
 
+Future Model Experiments
 
-It is NOT approved for:
+Planned research includes:
 
+XGBoost
 
-- automatic live trading
-- real money execution
+Compare gradient boosting against Random Forest.
 
+LightGBM
 
+Evaluate high-performance tree ensembles.
 
-Required before live trading:
+CatBoost
 
+Compare categorical boosting performance.
 
-- walk-forward validation
-- longer paper trading
-- market regime testing
-- risk analysis
-- model monitoring
+Neural Networks
 
+Investigate deep learning after additional historical validation.
 
+Planned Evaluation Improvements
 
----
+Future validation work includes:
 
-# Current Model Evaluation Philosophy
+Probability Calibration
 
+Ensure predicted probabilities match observed success frequency.
 
-Future models must demonstrate:
+Walk-Forward Validation
 
+Repeated chronological retraining rather than a single train/test split.
 
-## Predictive quality
-
-
-- F1
-- ROC-AUC
-- Precision
-- Recall
-- Calibration
-
-
-
-## Trading quality
-
-
-- number of trades
-- win rate
-- average return
-- drawdown
-- risk-adjusted metrics
-
-
-
-## Reliability
-
-
-- no leakage
-- realistic validation
-- stability across market periods
-
-
-
----
-
-# Future Model Experiments
-
-
-
-## XGBoost
-
-
-Purpose:
-
-
-Compare gradient boosting performance against Random Forest.
-
-
-
-## LightGBM
-
-
-Purpose:
-
-
-High-performance tree-based research.
-
-
-
-## CatBoost
-
-
-Purpose:
-
-
-Alternative boosting approach.
-
-
-
-## Neural Networks
-
-
-Purpose:
-
-
-Research after dataset and validation systems mature.
-
-
-
----
-
-# Planned Evaluation Improvements
-
-
-Future improvements:
-
-
-## Probability Calibration
-
-
-Predicted probabilities should match historical success frequency.
-
-
-
-Example:
-
-
-A 70% confidence prediction should historically produce approximately 70% successful outcomes.
-
-
-
----
-
-
-## Walk-Forward Validation
-
-
-Replace:
-
-
-Train once → Test once
-
-
-
-With:
-
-
-Train period
-
-↓
-
-Validation
-
-↓
-
-Move forward
-
-↓
-
-Retrain
-
-
-
----
-
-
-## Risk Metrics
-
+Risk Metrics
 
 Add:
 
-
-- Sharpe ratio
-- Sortino ratio
-- Maximum drawdown
-- Profit factor
-- Expectancy
-- CAGR
-
-
-
----
-
-# Model Training Rules
-
+Sharpe Ratio
+Sortino Ratio
+Maximum Drawdown
+Profit Factor
+Expectancy
+CAGR
+Model Training Requirements
 
 Every future model must record:
 
+training date
+dataset size
+feature count
+added features
+removed features
+algorithm
+hyperparameters
+validation method
+evaluation metrics
+backtest performance
+deployment decision
+retirement reason (if applicable)
+Model Evaluation Philosophy
 
-Date:
+The platform does not optimize for the highest classification accuracy.
 
+Models are selected using a combination of:
 
-Dataset size:
+predictive performance
+historical trading results
+realistic validation
+reproducibility
+robustness across market conditions
+transparent decision making
 
-
-Feature count:
-
-
-Features added:
-
-
-Features removed:
-
-
-Algorithm:
-
-
-Hyperparameters:
-
-
-Validation method:
-
-
-Metrics:
-
-
-Backtest results:
-
-
-Decision:
-
-
-Reason:
-
-
-
----
-
-# Important Lesson
-
-
-The objective is not to create the model with the highest accuracy.
-
-
-The objective is to create the model that survives realistic market testing.
-
-
-The platform prioritizes:
-
-
-✓ realistic performance
-
-✓ reproducibility
-
-✓ risk control
-
-✓ transparent decisions
-
-✓ continuous improvement
-
-
+The objective is to build machine learning models that continue to perform under realistic market conditions rather than models that only achieve impressive offline metrics.
