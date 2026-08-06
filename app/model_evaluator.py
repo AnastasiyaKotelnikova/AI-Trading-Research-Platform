@@ -1,7 +1,7 @@
 import pandas as pd
 
 
-DATABASE_FILE = "data/trade_database.csv"
+TRADE_DATABASE = "data/trade_history.csv"
 
 
 

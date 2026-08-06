@@ -1,16 +1,9 @@
 import pandas as pd
 import os
 from datetime import datetime
-from app.model_loader import get_best_model_info
 
 
-TRADE_DATABASE = (
-    "data/trade_database.csv"
-)
-
-PERFORMANCE_FILE = (
-    "data/models/model_predictions.csv"
-)
+TRADE_DATABASE = "data/trade_history.csv"
 
 OUTPUT_FILE = (
     "data/models/model_feedback_report.csv"
@@ -19,7 +12,6 @@ OUTPUT_FILE = (
 
 
 def update_model_feedback():
-
 
     print("\n========== MODEL FEEDBACK LOOP ==========\n")
 
@@ -41,17 +33,38 @@ def update_model_feedback():
 
 
 
+    # Only completed trades
     completed = df[
-        df["Result"].notna()
+        df["Status"] == "CLOSED"
+    ].copy()
+
+
+
+    if "Model_Name" not in completed.columns:
+        completed["Model_Name"] = "UNKNOWN"
+
+
+
+    # Remove missing model names
+    completed = completed[
+        completed["Model_Name"].notna()
     ]
 
 
-    model_info = get_best_model_info()
 
-    current_model = model_info.get(
-        "Model",
-        "Unknown"
+    # Convert Return to numeric
+    completed["Return_%"] = pd.to_numeric(
+        completed["Return_%"],
+        errors="coerce"
     )
+
+
+
+    completed = completed[
+        completed["Return_%"].notna()
+    ]
+
+
 
     print(
         "Completed Trades:"
@@ -73,81 +86,151 @@ def update_model_feedback():
 
 
 
-    report = {
-
-        "Evaluation_Date":
-            datetime.now().strftime(
-                "%Y-%m-%d %H:%M:%S"
-            ),
-
-        "Model":
-            current_model,    
-
-        "Completed_Trades":
-            len(completed),
+    reports = []
 
 
-        "Winning_Trades":
-            len(
-                completed[
-                    completed["Return_%"] > 0
-                ]
-            ),
+
+    for model, trades in completed.groupby(
+        "Model_Name",
+        dropna=False
+    ):
 
 
-        "Win_Rate":
+        wins = trades[
+            trades["Return_%"] > 0
+        ]
 
-            round(
-                (
-                    len(
-                        completed[
-                            completed["Return_%"] > 0
-                        ]
-                    )
+
+
+        losses = trades[
+            trades["Return_%"] <= 0
+        ]
+
+
+
+        report = {
+
+
+            "Evaluation_Date":
+                datetime.now().strftime(
+                    "%Y-%m-%d %H:%M:%S"
+                ),
+
+
+
+            "Model":
+                model,
+
+
+
+            "Completed_Trades":
+                len(trades),
+
+
+
+            "Winning_Trades":
+                len(wins),
+
+
+
+            "Losing_Trades":
+                len(losses),
+
+
+
+            "Win_Rate":
+                round(
+                    len(wins)
                     /
-                    len(completed)
-                )
-                *
-                100,
+                    len(trades)
+                    *
+                    100,
 
-                2
-            ),
+                    2
+                ),
 
 
-        "Average_Return":
 
-            round(
-                completed["Return_%"]
-                .mean(),
+            "Average_Return":
+                round(
+                    trades["Return_%"]
+                    .mean(),
 
-                2
+                    2
+                ),
+
+
+
+            "Best_Trade":
+                round(
+                    trades["Return_%"]
+                    .max(),
+
+                    2
+                ),
+
+
+
+            "Worst_Trade":
+                round(
+                    trades["Return_%"]
+                    .min(),
+
+                    2
+                ),
+
+
+
+        }
+
+
+
+        # Capture model metrics if stored
+        if "Model_Accuracy" in trades.columns:
+
+            report["Model_Accuracy"] = (
+                trades["Model_Accuracy"]
+                .dropna()
+                .iloc[0]
+                if not trades["Model_Accuracy"]
+                .dropna()
+                .empty
+                else None
             )
 
-    }
+
+        if "Model_F1" in trades.columns:
+
+            report["Model_F1"] = (
+                trades["Model_F1"]
+                .dropna()
+                .iloc[0]
+                if not trades["Model_F1"]
+                .dropna()
+                .empty
+                else None
+            )
+
+
+
+        reports.append(report)
 
 
 
     output = pd.DataFrame(
-        [report]
+        reports
     )
 
 
 
-    if os.path.exists(
-        OUTPUT_FILE
-    ):
-
-        old = pd.read_csv(
-            OUTPUT_FILE
-        )
-
-        output = pd.concat(
-            [
-                old,
-                output
-            ],
-            ignore_index=True
-        )
+    # Rank models by real trading performance
+    output = output.sort_values(
+        by=[
+            "Average_Return",
+            "Win_Rate"
+        ],
+        ascending=False
+    )
 
 
 
@@ -157,12 +240,24 @@ def update_model_feedback():
     )
 
 
+
     print(
         "\nFeedback report saved:"
     )
 
     print(
         OUTPUT_FILE
+    )
+
+
+    print(
+        "\nModel Performance:"
+    )
+
+    print(
+        output.to_string(
+            index=False
+        )
     )
 
 

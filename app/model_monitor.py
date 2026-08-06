@@ -2,9 +2,7 @@ import pandas as pd
 import os
 
 
-DATABASE_FILE = (
-    "data/trade_database.csv"
-)
+TRADE_DATABASE = "data/trade_history.csv"
 
 METRICS_FILE = (
     "data/models/model_metrics.csv"

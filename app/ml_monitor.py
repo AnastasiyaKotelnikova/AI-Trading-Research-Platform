@@ -2,7 +2,7 @@ import os
 import pandas as pd
 
 
-DATASET_FILE = "data/ml_training_dataset.csv"
+TRADE_DATABASE = "data/trade_history.csv"
 
 MODEL_FILE = "data/models/champion_model.pkl"
 

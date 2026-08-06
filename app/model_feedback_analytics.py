@@ -2,7 +2,7 @@ import pandas as pd
 import os
 
 
-TRADE_DB = "data/trade_database.csv"
+TRADE_DATABASE = "data/trade_history.csv"
 PREDICTION_DB = "data/models/model_predictions.csv"
 
 OUTPUT = "data/models/model_feedback_analytics.csv"

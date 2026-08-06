@@ -44,7 +44,26 @@ def build_trade_database():
         df = pd.read_csv(path)
 
 
-        df["Scan_Date"] = file[:10]
+        scan_id = file.replace(
+            "_signals.csv",
+            ""
+        )
+
+        df["Scan_Date"] = scan_id[:10]
+
+        df["Scan_ID"] = scan_id
+        
+
+        # Ensure model tracking columns exist
+        for column in [
+            "Model_Name",
+            "Model_Accuracy",
+            "Model_F1",
+            "Model_Date"
+        ]:
+
+            if column not in df.columns:
+                df[column] = None
 
 
         records.append(df)
@@ -61,6 +80,15 @@ def build_trade_database():
     database = pd.concat(
         records,
         ignore_index=True
+    )
+
+    database = database.drop_duplicates(
+        subset=[
+            "Symbol",
+            "Scan_ID",
+            "Model_Name"
+        ],
+        keep="last"
     )
 
 
