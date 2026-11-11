@@ -19,7 +19,136 @@ C:\Users\anast\scanner-project
 
 All notable changes to this project are documented here.
 
+---
 
+# [2026-11-10]
+
+## Development Resumption, Repository Review, and Documentation Update
+
+### Development Resumption
+
+Development resumed after approximately 2.5 months.
+
+The primary objective is to verify and stabilize the existing AI research platform before introducing new functionality.
+
+**Current Development Phase:** Phase 3 — AI Research Engine
+
+**Phase 3 Progress:** Approximately 95% implemented
+
+**Current Milestone:** Reliable AI Research Validation
+
+---
+
+### Repository and Data Review
+
+Reviewed the current repository state and historical market-data cache.
+
+Observations:
+
+- Development branch: `main`
+- Historical price-cache files observed: 717 CSV files
+- Historical cache files modified on November 10: 9
+- Historical data coverage verification remains pending
+- Stock-universe exclusion rules require verification, including LUCY
+
+The repository contains unfinished local code and data modifications that must be preserved.
+
+No complete end-to-end pipeline validation was established during this checkpoint.
+
+---
+
+### Model Governance Review
+
+Confirmed the previously documented model-governance architecture.
+
+**Current historical research champion:** `model_v33`
+
+**Retired model:** `model_v27`
+
+Existing modules include:
+
+- `app/model_quality_evaluator.py`
+- `app/champion_manager.py`
+- `app/model_champion_tracker.py`
+- `app/model_feedback_loop.py`
+
+The immediate unfinished task is to verify model-quality evaluation and champion-management integration in `app/daily_pipeline.py`.
+
+Model promotion must remain subject to eligibility checks, reproducible evaluation, and appropriate trading evidence.
+
+---
+
+### Trade-History Review
+
+The current trade-history review identified three OPEN research trades:
+
+- KOD
+- CNMD
+- REZI
+
+These records require historical exit reconciliation.
+
+Historical exit evaluation must use the original trade rules and historical prices without lookahead bias or arbitrary closing prices.
+
+Previously generated model-feedback statistics must remain separate from current trade-history observations until their provenance is verified.
+
+---
+
+### Documentation Updates
+
+Began updating project documentation to reflect the November development checkpoint.
+
+Documents being reviewed include:
+
+- `PROJECT_STATUS.md`
+- `ROADMAP.md`
+- `AI_PROJECT_MEMORY.md`
+- `ARCHITECTURE.md`
+- `CHANGELOG.md`
+- `DEVELOPMENT_RULES.md`
+- `EXPERIMENT_LOG.md`
+- `NEXT_CHAT_START_GUIDE.md`
+
+Documentation is being updated directly on GitHub before synchronization to the local development repository.
+
+---
+
+### Backup and Repository Safety
+
+Created a full project backup on USB.
+
+**Local repository:**
+
+`C:\Users\anast\scanner-project`
+
+**USB backup:**
+
+`E:\AI-Trading-Research-Backup`
+
+The backup was created before the current GitHub documentation updates were synchronized to the local repository.
+
+Therefore, the USB documentation copy must be refreshed after synchronization.
+
+Local unfinished development changes must not be overwritten during this process.
+
+---
+
+### Next Development Tasks
+
+1. Complete documentation review and synchronization.
+2. Verify historical market data and stock-universe exclusions.
+3. Complete model-governance integration and validation.
+4. Reconcile open research trades.
+5. Build professional historical backtesting.
+6. Implement walk-forward validation.
+7. Add risk-adjusted performance metrics and benchmark comparisons.
+8. Improve probability and confidence calibration.
+9. Expand portfolio-level risk management.
+10. Strengthen model monitoring and controlled retraining.
+
+**Development Rule:** Validate and reuse existing components before creating new modules.
+
+No automated real-money trading is approved.
 
 ---
 
@@ -658,24 +787,44 @@ It is not:
 
 # Future Planned Changes
 
+## Immediate — Phase 3 Completion
 
-Upcoming:
+- Historical data coverage and exclusion-rule verification
+- Model-quality evaluator integration validation
+- Champion-manager integration validation
+- Open research-trade reconciliation
+- Model feedback consistency checks
 
+## Next — Phase 4 Professional Backtesting
 
-- walk-forward validation
+- Historical backtesting engine improvements
+- Walk-forward validation
+- Rolling retraining tests
+- SPY/QQQ benchmark comparison
+- Transaction-cost simulation
+- Equity curves
+- Maximum drawdown
+- Sharpe ratio, Sortino ratio, and CAGR
+- Market-regime analysis
 
-- professional backtesting
+## Next — Phase 5 Portfolio Intelligence
 
-- benchmark comparison
+- Portfolio risk budgeting
+- Sector exposure controls
+- Correlation analysis
+- Concentration limits
+- Portfolio optimization
+- Volatility targeting
 
-- probability calibration
+## Later Development
 
+- Probability calibration
 - SHAP explainability
+- Model drift monitoring
+- Controlled retraining and rollback
+- Paper trading framework
+- Dashboard improvements
+- Cloud infrastructure
+- Optional broker integration after successful validation
 
-- model monitoring
-
-- paper trading framework
-
-- portfolio optimization
-
-- optional broker integration
+**Priority:** Reliable research validation before paper trading or live execution.
