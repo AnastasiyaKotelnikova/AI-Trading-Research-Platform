@@ -14,7 +14,7 @@ C:\Users\anast\scanner-project
 
 Last Updated:
 
-2026-08-08
+2026-11-10 
 
 # Purpose
 
@@ -158,31 +158,28 @@ A model with excellent classification metrics but no demonstrated trading perfor
 
 ---
 
-# 4. Trading Eligibility Rules
+## Trading Evidence Verification — November 2026
 
-A model must have actual completed trading history before it can be considered trading-eligible.
+The existing model-quality evaluator uses:
 
-Current eligibility rule:
+`Completed_Trades > 0`
 
-```text
-Completed_Trades > 0
-```
+as its documented trading-eligibility requirement.
 
-Models without completed trades may remain in the model registry for research purposes.
+This is a minimum software eligibility condition, not proof of statistical reliability or real-world profitability.
 
-However, they must not automatically become the recommended trading champion.
+Before completed trades are used for model promotion, verify:
 
-This prevents models with high historical ML metrics but no demonstrated trading behavior from outranking models with actual trading evidence.
+1. The source of the trade records.
+2. Whether the trades are historical simulations, research records, paper trades, or actual executed trades.
+3. That entry and exit prices are supported by historical market data.
+4. That trade outcomes follow the documented strategy rules.
+5. That no future information was used to generate earlier decisions.
+6. That the evaluated trade sample is sufficiently representative.
 
-Future eligibility rules may become stricter as the sample size grows.
+Previously generated model-feedback statistics must not be interpreted as verified live trading results.
 
-Potential future requirements include:
-
-* minimum completed-trade count
-* minimum observation period
-* minimum stability
-* acceptable drawdown
-* acceptable risk-adjusted return
+Future model-governance improvements should introduce stronger minimum sample-size, stability, and risk requirements.
 
 ---
 
@@ -273,33 +270,56 @@ The champion manager must not automatically promote an unproven model simply bec
 
 # 7. Current Champion Governance
 
-The current accepted model is:
+The current historical research champion is:
 
-```text
-model_v33
-```
+`model_v33`
 
-It is the current champion for continued research.
+**Status:** Current Research Champion — Not Production Approved
 
-Current observed performance includes:
+The previously recorded model-governance evaluation reported:
 
-* F1: 0.4674
-* Accuracy: 55.14%
-* Completed Trades: 272
-* Win Rate: 30.88%
-* Average Return: 2.65%
+| Metric | Value |
+|---|---|
+| F1 Score | 0.4674 |
+| Accuracy | 55.14% |
+| Completed Trades | 272 |
+| Win Rate | 30.88% |
+| Average Return | 2.65% |
 
-These results do not constitute proof of long-term profitability.
+These values are historical evaluation snapshots.
 
-The trading sample must continue to grow and be validated through professional backtesting and out-of-sample testing.
+The source and consistency of the completed-trade statistics must be verified against the current trade-history database and feedback outputs.
 
-The current champion should therefore be treated as:
+The current research champion must not be treated as a production-ready trading model.
 
-```text
-Current Research Champion
-```
+### Model Retirement
 
-not as a production-ready trading model.
+`model_v27` remains retired and excluded from current champion selection.
+
+Its earlier classification results must not be used as the benchmark for new models.
+
+### November 2026 Governance Priority
+
+The model-governance architecture includes:
+
+- `app/model_quality_evaluator.py`
+- `app/champion_manager.py`
+- `app/model_champion_tracker.py`
+- `app/model_feedback_loop.py`
+
+The immediate unfinished development task is to verify integration and execution order within `app/daily_pipeline.py`.
+
+Required checks:
+
+1. Correct model-quality evaluation.
+2. Exclusion of retired models.
+3. Correct trading-eligibility decisions.
+4. Consistent champion recommendation and active champion status.
+5. Reliable handling of missing or invalid data.
+6. Correct downstream outputs.
+7. Failure logging and reproducibility.
+
+Do not replace the champion until a challenger demonstrates validated improvement under documented governance rules.
 
 ---
 
@@ -631,6 +651,38 @@ Feedback is evidence for:
 
 Do not interpret a small trading sample as statistically conclusive.
 
+## Historical Trade Reconciliation Rules
+
+The November 2026 review identified three OPEN research trades:
+
+- KOD
+- CNMD
+- REZI
+
+These trades must be reconciled using historical market data and the strategy rules applicable to their original entry dates.
+
+### Required Procedure
+
+1. Preserve the original trade records before modifying them.
+2. Confirm entry date, entry price, stop loss, targets, and maximum holding period.
+3. Retrieve historical prices covering the complete evaluation period.
+4. Evaluate exits chronologically.
+5. Apply documented stop-loss, target, and time-exit rules.
+6. Handle missing data explicitly.
+7. Record the historical exit date, price, outcome, and calculation method.
+8. Recalculate model feedback only after trade outcomes have been verified.
+
+### Prohibited Practices
+
+- Closing historical trades using arbitrary current prices.
+- Selecting favorable exits after observing future price movements.
+- Inventing prices for missing historical sessions.
+- Changing original stop-loss or target values retrospectively without documenting the change.
+- Treating simulated trades as actual broker executions.
+- Overwriting original research records without preserving an audit trail.
+
+Historical reconciliation must be reproducible and free of lookahead bias.
+
 ---
 
 # 16. Champion Manager Rules
@@ -757,10 +809,36 @@ Review:
 Commit:
 
 ```text
-git add .
-git commit -m "Description of change"
+git status --short
+git add docs/ARCHITECTURE.md
+git diff --cached
+git commit -m "docs: update architecture"
 git push
 ```
+
+## Git Synchronization and Backup Safety
+
+The local repository may contain unfinished source-code changes, generated data, and untracked files.
+
+Before synchronizing with GitHub:
+
+1. Inspect `git status --short`.
+2. Identify changes made directly on GitHub.
+3. Review local modifications before pulling or merging.
+4. Preserve unfinished work before attempting synchronization.
+5. Stage only the files intentionally included in a commit.
+6. Inspect staged differences before committing.
+7. Verify synchronization before updating backups.
+
+Do not run `git reset --hard` or other destructive commands to resolve synchronization differences without a verified backup and explicit review.
+
+Do not indiscriminately stage generated datasets or model outputs.
+
+The USB backup is a recovery copy and should not be assumed to contain the latest GitHub documentation until synchronization has been completed and verified.
+
+**Local repository:** `C:\Users\anast\scanner-project`
+
+**USB backup:** `E:\AI-Trading-Research-Backup`
 
 Good commit examples:
 
@@ -1061,67 +1139,86 @@ The immediate priority is validation quality, not automated execution.
 
 # 26. Current Development Priorities
 
-The current priority order is:
+**Checkpoint Date:** November 10, 2026
 
-## Priority 1 — Model Governance
+**Current Phase:** Phase 3 — AI Research Engine
 
-Improve:
+**Phase 3 Progress:** Approximately 95% implemented
 
-* model quality evaluation
-* trading eligibility
-* champion selection
-* champion/challenger logic
-* model-specific performance tracking
+**Current Milestone:** Reliable AI Research Validation
 
----
+Development resumed after approximately 2.5 months.
 
-## Priority 2 — Professional Backtesting
+The current objective is to validate and stabilize the existing platform before expanding into professional backtesting and paper trading.
 
-Build:
+## Priority 1 — Data and Research Integrity
 
-* walk-forward validation
-* benchmark comparison
-* transaction cost simulation
-* equity curves
-* drawdown
-* Sharpe
-* Sortino
-* CAGR
+- Verify historical market data coverage.
+- Validate stock-universe exclusions, including LUCY.
+- Check historical feature consistency.
+- Identify missing, stale, or inconsistent datasets.
+- Preserve reproducibility.
 
----
+## Priority 2 — Model Governance Integration
 
-## Priority 3 — Confidence Calibration
+- Validate `app/model_quality_evaluator.py`.
+- Validate `app/champion_manager.py`.
+- Verify integration in `app/daily_pipeline.py`.
+- Confirm retired-model exclusions.
+- Validate champion eligibility and recommendation outputs.
+- Verify failure handling.
 
-Develop:
+## Priority 3 — Trade-History Reconciliation
 
-* probability calibration
-* confidence reliability
-* threshold optimization
-* false-positive reduction
+- Review OPEN research trades KOD, CNMD, and REZI.
+- Reconstruct historical exits using documented trade rules.
+- Verify exit dates and prices.
+- Update model feedback only after reconciliation.
 
----
+## Priority 4 — Professional Backtesting
 
-## Priority 4 — Portfolio Intelligence
+- Build realistic historical backtesting.
+- Implement walk-forward validation.
+- Add transaction-cost assumptions.
+- Compare against SPY and QQQ.
+- Calculate drawdown, Sharpe, Sortino, and CAGR.
+- Validate results across different market conditions.
 
-Develop:
+## Priority 5 — Probability and Confidence Calibration
 
-* correlation analysis
-* sector exposure
-* risk budgeting
-* volatility targeting
-* portfolio optimization
+- Evaluate probability reliability.
+- Analyze false positives.
+- Improve confidence thresholds.
+- Validate calibration out of sample.
 
----
+## Priority 6 — Advanced Portfolio Intelligence
 
-## Priority 5 — Continuous Learning
+- Improve portfolio risk budgeting.
+- Add sector exposure controls.
+- Evaluate correlations.
+- Refine position sizing.
+- Introduce concentration limits.
+- Evaluate volatility targeting.
 
-Develop:
+## Priority 7 — Model Monitoring and Continuous Learning
 
-* rolling model monitoring
-* trade feedback integration
-* model degradation detection
-* retraining triggers
-* controlled model replacement
+- Monitor model degradation.
+- Detect data and prediction drift.
+- Establish controlled retraining triggers.
+- Maintain champion/challenger comparisons.
+- Introduce reproducible rollback procedures.
+
+## Priority 8 — Paper Trading Preparation
+
+- Validate the complete research pipeline.
+- Verify trade tracking and risk controls.
+- Implement realistic simulated execution.
+- Monitor performance over a meaningful observation period.
+- Keep paper trading separate from real-money execution.
+
+**Development Rule:** Reuse and validate existing modules before creating new systems.
+
+**Current Unfinished Task:** Model-governance integration and validation in `app/daily_pipeline.py`.
 
 ---
 
