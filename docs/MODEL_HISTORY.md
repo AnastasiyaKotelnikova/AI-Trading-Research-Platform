@@ -2,7 +2,9 @@ AI Trading Research Platform — Model History
 
 Last Updated:
 
-2026-08-06
+Last Updated:
+
+2026-11-10
 
 Purpose
 
@@ -264,6 +266,30 @@ Testing observations:
 
 Approximately 98 thousand
 
+### Dataset Provenance Verification — November 2026
+
+The historical dataset expansion records approximately:
+
+- 3,504,289 training observations
+- 98,034 testing observations
+
+These figures are preserved as historical experiment records.
+
+A separate project checkpoint identifies approximately 220,849 rows in `data/historical_ml_dataset.csv`.
+
+The relationship between these dataset sizes has not yet been verified.
+
+Before retraining or comparing future models:
+
+1. Identify the exact dataset version used for each experiment.
+2. Confirm the source files and generation method.
+3. Verify row counts and feature counts.
+4. Confirm training and testing date ranges.
+5. Check for duplicate observations and data leakage.
+6. Record the dataset version associated with each model.
+
+Do not silently replace historical dataset figures or assume that different dataset sizes describe the same training run.
+
 model_v32
 
 Status:
@@ -372,37 +398,112 @@ F1
 Win Rate
 20%
 
-model_v33 achieved the highest combined production score and became the current champion.
+model_v33 was accepted as the historical research champion under the documented model-selection framework. Its historical scores and trading results require continued validation before any production-readiness decision.
 
-Production Integration (2026-08)
+Status: CURRENT HISTORICAL RESEARCH CHAMPION, NOT PRODUCTION APPROVED.
 
-During the August development cycle, the machine learning system was fully integrated into the production research pipeline.
+## Model Governance Development — August 2026
 
-The deployed model now propagates through every downstream component.
+During August 2026, the project expanded model evaluation beyond classification metrics.
 
-The following fields are automatically preserved:
+### Model Quality Evaluator
 
-ML_Model
+Module:
 
-ML_Accuracy
+`app/model_quality_evaluator.py`
 
-ML_F1
+The evaluator was developed to combine:
 
-Combined_ML_Probability
+- F1 score
+- Win rate
+- Average return
+- Completed-trade count
 
-These values flow into:
+The documented eligibility rule is:
 
-AI Research Engine
-AI Decision Engine
-Portfolio Manager
-Risk Manager
-Trade Management
-Trade History Database
-Model Feedback Loop
+`Completed_Trades > 0`
 
-Every approved trade now records exactly which model generated the prediction.
+Models without completed trading records are excluded from recommended champion selection under this rule.
 
-This establishes full traceability between model versions and future trading performance.
+This is a minimum software eligibility requirement, not proof of sufficient trading evidence.
+
+### Historical Model Feedback Snapshot
+
+The August model-feedback evaluation reported the following values for `model_v33`:
+
+| Metric | Historical result |
+|---|---|
+| Completed trades | 272 |
+| Winning trades | 84 |
+| Losing trades | 188 |
+| Win rate | 30.88% |
+| Average return | 2.65% |
+| Best trade | 70.30% |
+| Worst trade | -9.96% |
+| F1 score | 0.4674 |
+
+These figures are separate from the original 210-trade historical backtest recorded in the `model_v33` development section.
+
+The two sets of results must not be combined or treated as identical evaluation samples.
+
+### Champion Governance
+
+Relevant modules:
+
+- `app/model_quality_evaluator.py`
+- `app/champion_manager.py`
+- `app/model_champion_tracker.py`
+- `app/model_feedback_loop.py`
+
+The model-quality evaluator and champion-management components were developed during August.
+
+The historical research champion remains `model_v33`.
+
+`model_v27` remains retired and excluded from active model evaluation.
+
+The provenance of the 272 completed trades and the end-to-end integration of model governance require additional verification.
+
+No automatic champion promotion should occur solely because a challenger has higher classification metrics.
+
+## Research Pipeline Integration — August 2026
+
+During August 2026, the machine learning architecture was connected to the broader AI research pipeline.
+
+The intended integration supports propagation of model predictions and metadata through downstream components.
+
+Model-related fields include:
+
+- `ML_Model`
+- `ML_Accuracy`
+- `ML_F1`
+- `Combined_ML_Probability`
+
+These fields support:
+
+- AI Research Engine
+- AI Decision Engine
+- Portfolio Manager
+- Risk Manager
+- Trade Management
+- Trade History Database
+- Model Feedback Loop
+
+The architecture is designed to preserve model identity and evaluation metadata so that research outcomes can be associated with their originating model.
+
+### Integration Validation Status
+
+As of November 10, 2026:
+
+- The core research integration architecture has been implemented.
+- End-to-end validation remains incomplete.
+- Model-governance execution order requires verification.
+- Downstream metadata consistency must be checked.
+- Error handling and missing-data behavior require testing.
+
+The existence of integration code does not establish that every execution path has been validated.
+
+This remains a research pipeline, not an approved automated live-trading system.
+
 
 Trade History Integration
 
@@ -436,6 +537,7 @@ Risk_Status
 
 This allows historical trades to be linked directly back to the originating model version.
 
+
 Model Feedback Loop
 
 A new evaluation component has been implemented.
@@ -446,7 +548,7 @@ app/model_feedback_loop.py
 
 Purpose:
 
-Evaluate actual trading performance by model version.
+Evaluate recorded research-trade outcomes and model-level performance by model version.
 
 Completed trades are grouped by:
 
@@ -472,7 +574,7 @@ Output:
 
 data/models/model_feedback_report.csv
 
-This infrastructure enables future comparison between successive model versions using real trading outcomes.
+This infrastructure supports future comparison between model versions using verified trade-outcome records. Historical simulations, research trades, paper trades, and actual broker executions must be distinguished when interpreting performance.
 
 Current Model Files
 
@@ -513,6 +615,95 @@ trade history
 model feedback reporting
 
 It remains research only and is not approved for automated live trading.
+
+
+## November 10, 2026 — Model Development Checkpoint
+
+**Current phase:** Phase 3 — AI Research Engine
+
+**Implementation estimate:** Approximately 95%
+
+**Current historical research champion:** `model_v33`
+
+**Retired model:** `model_v27`
+
+### Development Review
+
+Development resumed after approximately 2.5 months.
+
+The review identified unfinished model-governance integration and validation tasks.
+
+No new model training experiment or replacement champion was verified during this checkpoint.
+
+### Historical Research Champion
+
+`model_v33` remains the accepted historical research champion.
+
+Its original historical evaluation recorded:
+
+- ROC-AUC: 0.669
+- F1: approximately 0.467
+- Historical backtest: 210 trades
+- Historical backtest win rate: 46.7%
+- Historical backtest average return: 0.448%
+
+A separate August model-feedback snapshot recorded:
+
+- Completed trades: 272
+- Win rate: 30.88%
+- Average return: 2.65%
+
+These are distinct historical evaluation records.
+
+The relationship between the two trade populations and their underlying source data requires verification.
+
+### Current Trade-History State
+
+The November review identified three OPEN research trades:
+
+- KOD
+- CNMD
+- REZI
+
+Their exit outcomes require historical reconciliation using original entry information, historical market prices, and documented exit rules.
+
+No arbitrary current-price exits or retrospective selection of favorable exit prices should be used.
+
+### Outstanding Model-Governance Tasks
+
+1. Verify `app/model_quality_evaluator.py`.
+2. Verify `app/champion_manager.py`.
+3. Validate their integration with `app/daily_pipeline.py`.
+4. Confirm retired-model exclusions.
+5. Verify model-feedback data provenance.
+6. Validate champion recommendation and active champion consistency.
+7. Test failure handling and downstream outputs.
+8. Reconcile outstanding research trades.
+9. Confirm historical dataset versions and feature consistency.
+
+### Development Decision
+
+Retain `model_v33` as the historical research champion.
+
+Do not promote another model until its evaluation and trading evidence have been validated.
+
+Do not treat historical model-feedback metrics as proof of real-money profitability.
+
+### Next Model Development Stage
+
+After Phase 3 integration validation:
+
+- Professional historical backtesting
+- Walk-forward validation
+- Probability calibration
+- Risk-adjusted performance evaluation
+- Champion/challenger governance improvements
+- Controlled model monitoring and retraining
+
+**Status:** Research development continues. The platform is not approved for automated real-money trading.
+
+---
+
 
 Future Model Experiments
 
