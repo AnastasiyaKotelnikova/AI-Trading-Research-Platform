@@ -14,7 +14,7 @@ C:\Users\anast\scanner-project
 
 Last Updated:
 
-2026-08-08
+2026-11-10
 
 ---
 
@@ -42,6 +42,8 @@ docs/CHANGELOG.md
 docs/PROJECT_STATUS.md
 
 docs/NEXT_CHAT_START_GUIDE.md
+
+docs/SESSION_STATE.md
 ```
 
 These documents contain:
@@ -99,25 +101,25 @@ It is not approved for automated real-money trading.
 
 # Current Overall Status
 
-Platform Completion:
+**Checkpoint Date:** November 10, 2026
 
-Approximately 85%
+**Platform Completion:** Approximately 85% — historical planning estimate, pending reassessment.
 
-Current Development Phase:
+**Current Development Phase:** Phase 3 — AI Research Engine
 
-## Phase 3 — AI Research Engine
+**Phase 3 Implementation:** Approximately 95% implemented.
 
-Status:
+**Status:** Integration and validation pending.
 
-Advanced Development 🚧
+The platform contains the major components of the AI Research Engine, including market scanning, machine learning, research ranking, AI scoring, portfolio evaluation, risk management, trade management, model feedback, and champion governance.
 
-Phase 3 is substantially implemented.
+However, implementation progress does not mean that every component has been validated end to end.
 
-The project is now moving from basic architecture construction toward validation and reliability.
+The immediate objective is to stabilize and verify the existing architecture before moving into professional backtesting.
 
-The primary objective is no longer simply adding more AI layers.
+**Current Milestone:** Reliable AI Research Validation
 
-The next objective is determining whether the existing research system produces reliable and repeatable results.
+The platform remains a research system and is not approved for automated real-money trading. 
 
 ---
 
@@ -540,53 +542,45 @@ They must not be confused with the later recorded trade-history results.
 
 ---
 
-# Current Recorded Trading Evidence — model_v33
+# Model Feedback Performance — Historical Snapshot
 
-Current model feedback report:
+The August 2026 model-feedback report recorded the following statistics for `model_v33`.
 
-```text
-data/models/model_feedback_report.csv
-```
+Report:
 
-Current recorded completed-trade results:
+`data/models/model_feedback_report.csv`
 
-```text
-Completed Trades: 272
+| Metric | Historical snapshot |
+|---|---|
+| Completed Trades | 272 |
+| Winning Trades | 84 |
+| Losing Trades | 188 |
+| Win Rate | 30.88% |
+| Average Return | 2.65% |
+| Best Trade | 70.30% |
+| Worst Trade | -9.96% |
+| Model Accuracy | Approximately 55.14% |
+| Model F1 | Approximately 46.74% |
 
-Winning Trades: 84
+These figures are retained as historical model-feedback observations.
 
-Losing Trades: 188
+The source of the 272 completed trades and their relationship to the current trade-history database require verification.
 
-Win Rate: 30.88%
+The original `model_v33` historical backtest recorded a separate sample of 210 trades, with a 46.7% win rate and 0.448% average return.
 
-Average Return: 2.65%
+Do not combine these two samples or assume they represent the same evaluation period.
 
-Best Trade: 70.30%
+The current trade-history review identified three OPEN research trades:
 
-Worst Trade: -9.96%
-```
+- KOD
+- CNMD
+- REZI
 
-Stored historical model metrics may also appear in the feedback report:
+Their historical outcomes require reconciliation using historical prices and the original trade rules.
 
-```text
-Accuracy: 98.3%
+The historical feedback statistics must not be presented as verified real-money trading results.
 
-F1: 96.1%
-```
-
-These stored classification metrics are historical model metadata and must remain separate from current trading outcomes.
-
-The current trading results are more relevant when evaluating practical trading usefulness.
-
-However, the current sample is still insufficient to establish long-term strategy superiority.
-
-model_v33 therefore remains the:
-
-```text
-Current Research Champion
-```
-
-not a production-ready trading model.
+`model_v33` remains the **Current Historical Research Champion**, not a production-ready model.
 
 ---
 
@@ -1166,19 +1160,17 @@ The pipeline records:
 
 Status:
 
-```text
-data/logs/pipeline_status.json
-```
+Status file:
 
-Log:
+The November 2026 local repository review identified:
 
-```text
-data/logs/daily_pipeline.log
-```
+`data/pipeline_status.json`
 
-If a pipeline step fails, the pipeline stops and records the failed step.
+Earlier documentation referenced:
 
-Model feedback and champion tracking are now part of the normal downstream research workflow.
+`data/logs/pipeline_status.json`
+
+**Verification required:** Inspect `app/daily_pipeline.py` to confirm the actual output path and update all documentation consistently.
 
 ---
 
@@ -1548,8 +1540,10 @@ Review:
 After testing:
 
 ```powershell
-git add .
-git commit -m "Description of meaningful change"
+git status --short
+git add docs/NEXT_CHAT_START_GUIDE.md
+git diff --cached
+git commit -m "docs: update next chat start guide"
 git push
 ```
 
@@ -1614,57 +1608,76 @@ Always:
 
 # Current Recommended Next Task
 
-The highest-priority next development task is:
+## Phase 3 — Model Governance Integration and Validation
 
-## Professional Backtesting
+**Checkpoint:** November 10, 2026
 
-Do not immediately add another AI layer.
+The highest-priority unfinished task is validating the model-quality evaluator and champion-management integration in the daily pipeline.
 
-The existing architecture is sufficiently developed to begin serious validation.
+Relevant modules:
 
-The next work should focus on:
+- `app/daily_pipeline.py`
+- `app/model_quality_evaluator.py`
+- `app/champion_manager.py`
+- `app/model_champion_tracker.py`
+- `app/model_feedback_loop.py`
 
-```text
-Walk-Forward Validation
+### Recommended Work Sequence
 
-↓
+**Task 1 — Protect Existing Work**
 
-Benchmark Comparison
+- Review GitHub and local repository differences.
+- Preserve unfinished local code changes.
+- Verify the USB backup.
+- Avoid destructive Git operations.
+- Synchronize documentation safely before modifying the pipeline.
 
-↓
+**Task 2 — Validate Historical Data**
 
-Transaction Costs
+- Confirm historical data coverage.
+- Review the 717 observed historical price-cache CSV files.
+- Investigate the nine cache files modified on November 10.
+- Verify stock-universe exclusions, including LUCY.
+- Check for missing or inconsistent data.
 
-↓
+**Task 3 — Complete Model Governance Integration**
 
-Equity Curve
+- Inspect the existing daily pipeline.
+- Verify model-quality evaluation execution.
+- Verify champion-manager execution.
+- Confirm retired-model exclusions.
+- Validate recommended champion and active champion consistency.
+- Verify error handling and output files.
+- Record test results.
 
-↓
+**Task 4 — Reconcile Historical Research Trades**
 
-Maximum Drawdown
+Review the three OPEN research trades:
 
-↓
+- KOD
+- CNMD
+- REZI
 
-Sharpe Ratio
+Reconstruct their outcomes using original trade rules and historical market prices.
 
-↓
+Do not use arbitrary current prices or future information to determine historical exits.
 
-Sortino Ratio
+**Task 5 — Begin Professional Backtesting**
 
-↓
+After Phase 3 integration and data validation:
 
-CAGR
+- Implement walk-forward validation.
+- Compare performance against SPY and QQQ.
+- Model realistic transaction costs.
+- Calculate equity curves and maximum drawdown.
+- Calculate Sharpe, Sortino, and CAGR.
+- Evaluate performance across market regimes.
 
-↓
+### Development Rule
 
-Market Regime Analysis
+Do not redesign the architecture or create duplicate modules unless existing functionality is demonstrably insufficient.
 
-↓
-
-Position Sizing Validation
-```
-
-This should establish whether the existing research system has meaningful historical robustness.
+Do not begin automated real-money trading.
 
 ---
 
@@ -1714,115 +1727,182 @@ The next milestone is proving that the research system produces repeatable, risk
 
 # New Chat Opening Message
 
-Copy this into a new chat:
+Copy the following message into a new ChatGPT conversation:
 
-```text
-I am continuing my AI Trading Research Platform project.
+---
 
-First read these documents:
-
-docs/AI_PROJECT_MEMORY.md
-docs/MODEL_HISTORY.md
-docs/EXPERIMENT_LOG.md
-docs/ARCHITECTURE.md
-docs/ROADMAP.md
-docs/DEVELOPMENT_RULES.md
-docs/CHANGELOG.md
-docs/PROJECT_STATUS.md
-docs/NEXT_CHAT_START_GUIDE.md
-
-Use these documents as the source of truth.
+I am continuing development of my personal **AI Trading Research Platform**.
 
 Repository:
 
-AI-Trading-Research-Platform
+https://github.com/AnastasiyaKotelnikova/AI-Trading-Research-Platform
 
-Local path:
+Local Windows project:
 
-C:\Users\anast\scanner-project
+`C:\Users\anast\scanner-project`
 
-Current platform completion:
+USB backup:
 
-Approximately 85%
+`E:\AI-Trading-Research-Backup`
 
-Current phase:
+Python:
 
-Phase 3 — AI Research Engine
+`3.11.9`
 
-Current major milestone:
+Virtual environment:
 
-Reliable AI Research Validation
+`venv`
 
-Important model governance:
+## First — Review the Project Documentation
 
-model_v27 is permanently retired and must never be used as a benchmark.
+Read these documents before recommending code changes:
 
-Current research champion:
+1. `docs/AI_PROJECT_MEMORY.md`
+2. `docs/MODEL_HISTORY.md`
+3. `docs/EXPERIMENT_LOG.md`
+4. `docs/ARCHITECTURE.md`
+5. `docs/ROADMAP.md`
+6. `docs/DEVELOPMENT_RULES.md`
+7. `docs/CHANGELOG.md`
+8. `docs/PROJECT_STATUS.md`
+9. `docs/NEXT_CHAT_START_GUIDE.md`
+10. `docs/SESSION_STATE.md`, if available and verified
 
-model_v33
+Treat these as the project source of truth, but verify important implementation claims against the actual code and data.
 
-model_v33 remains the current research champion, not a production-ready trading model.
+Do not assume that older chat instructions override the current documentation.
 
-Current recorded model_v33 trading evidence:
+## Current Project Status
 
-272 completed trades
-30.88% win rate
-2.65% average return
-70.30% best trade
--9.96% worst trade
+Checkpoint date: November 10, 2026
+
+Overall project completion: Approximately 85%, historical planning estimate pending reassessment.
+
+Current phase: Phase 3 — AI Research Engine.
+
+Phase 3: Approximately 95% implemented; integration and validation remain pending.
+
+Current milestone: Reliable AI Research Validation.
+
+The platform is a research system, not an approved automated real-money trading system.
+
+## Current ML Architecture
 
 The platform has two separate ML paths:
 
-1. Historical ML Probability
-2. Scanner ML Probability
+1. Historical ML Prediction
+2. Scanner ML Prediction
 
-Do not merge these paths without architectural review.
+Do not merge them without architectural review.
 
-The platform now includes:
+Current historical research champion:
 
-- market data pipeline
-- feature engineering
-- historical ML
-- scanner ML
-- research ranking
-- AI scoring
-- AI confidence
-- AI decision engine
-- risk evaluation
-- trade management
-- trade history
-- open-trade monitoring
-- automated trade exits
-- trade performance
-- model feedback
-- model quality evaluation
-- champion management
-- daily pipeline status tracking
+`model_v33`
 
-The next major development priority is professional validation.
+Retired model:
 
-Focus next on:
+`model_v27`
 
-1. professional backtesting
-2. walk-forward validation
-3. benchmark comparison
-4. transaction-cost modeling
-5. equity curves
-6. maximum drawdown
-7. Sharpe ratio
-8. Sortino ratio
-9. CAGR
-10. market-regime analysis
-11. confidence calibration
-12. model monitoring
+`model_v27` is permanently excluded from active champion selection. Its historical 98.3% accuracy and 96.1% F1 must not be used as performance targets.
 
-Do not redesign the architecture unless necessary.
+Original `model_v33` historical evaluation:
 
-Do not create duplicate modules or competing systems.
+- ROC-AUC: 0.669
+- F1: 0.467
+- Historical backtest: 210 trades
+- Historical backtest win rate: 46.7%
+- Historical backtest average return: 0.448%
 
-Do not optimize only for classification accuracy.
+Separate August model-feedback snapshot:
 
-Do not use model_v27 as a benchmark.
+- Completed trades: 272
+- Win rate: 30.88%
+- Average return: 2.65%
 
-Do not move to live trading without professional validation and controlled paper trading.
-```
+The source of the 272 completed trades and its relationship to the current trade-history database require verification.
+
+Do not interpret these statistics as verified real-money trading performance.
+
+## November 2026 Development Checkpoint
+
+Development resumed after approximately 2.5 months.
+
+The November review identified:
+
+- 717 historical price-cache CSV files.
+- Nine historical cache files modified on November 10.
+- Stock-universe exclusions requiring verification, including LUCY.
+- Three OPEN research trades: KOD, CNMD, and REZI.
+- Unfinished model-governance integration and validation.
+
+No new champion was trained or approved during this checkpoint.
+
+## Current Unfinished Development Task
+
+Complete and validate model-governance integration.
+
+Relevant files:
+
+- `app/daily_pipeline.py`
+- `app/model_quality_evaluator.py`
+- `app/champion_manager.py`
+- `app/model_champion_tracker.py`
+- `app/model_feedback_loop.py`
+
+Verify the actual code before modifying any of these modules.
+
+Do not assume the current integration is complete merely because the modules exist.
+
+## Important Git Safety
+
+The local Windows repository contains unfinished modifications and generated data that must be preserved.
+
+Documentation is being updated directly on GitHub before local synchronization.
+
+Do not blindly run:
+
+- `git pull`
+- `git reset --hard`
+- `git add .`
+
+First review local changes, remote differences, and untracked files.
+
+Preserve unfinished work before synchronization.
+
+The USB backup was created before the current GitHub documentation updates and may contain older documentation.
+
+## Immediate Work Order
+
+1. Finish and verify documentation updates.
+2. Safely synchronize the Windows repository.
+3. Refresh and verify the USB backup.
+4. Verify historical data coverage and stock exclusions.
+5. Validate model-governance integration.
+6. Reconcile the three OPEN research trades.
+7. Verify model-feedback provenance.
+8. Begin professional backtesting and walk-forward validation.
+
+## Development Rules
+
+- Preserve the existing architecture.
+- Reuse existing modules when possible.
+- Do not create duplicate feedback, performance, or champion-management systems.
+- Do not treat historical metrics as proof of live profitability.
+- Do not use future information in historical trade evaluation.
+- Do not promote models without validated evidence.
+- Record experiments and model decisions.
+- Keep research, paper trading, and real-money execution separate.
+
+## How I Want to Work
+
+Proceed one step at a time.
+
+Before changing code, inspect the relevant existing files and explain the intended change.
+
+When providing code, give complete working file contents when requested, not placeholders.
+
+Preserve existing functionality and unfinished local work.
+
+Start by confirming the repository and documentation state, then identify the safest next action.
+
+---
