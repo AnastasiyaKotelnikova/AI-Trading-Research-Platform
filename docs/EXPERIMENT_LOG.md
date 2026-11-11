@@ -2,7 +2,7 @@
 
 Last Updated:
 
-2026-08-08
+2026-11-10
 
 # Purpose
 
@@ -227,49 +227,7 @@ Continue model comparison using realistic metrics.
 
 # EXP-006 — model_v33 Development
 
-Date:
-
-2026-07-28
-
-Objective:
-
-Develop a model using the expanded historical dataset and more realistic validation.
-
-Model:
-
-model_v33
-
-Algorithm:
-
-Random Forest
-
-Configuration:
-
-* n_estimators: 500
-* max_depth: 20
-* min_samples_leaf: 10
-* max_features: sqrt
-* class_weight: balanced
-
-Results:
-
-ROC-AUC:
-
-0.669
-
-F1:
-
-0.467
-
-Accuracy:
-
-0.551
-
-Training records:
-
-3,504,289
-
-Observed trading performance:
+Historical model-feedback snapshot:
 
 Completed trades:
 
@@ -291,13 +249,23 @@ Worst Trade:
 
 -9.96%
 
+These trading statistics were recorded in a subsequent model-feedback evaluation and are retained here as historical observations.
+
+The underlying trade population, evaluation period, and relationship to the current trade-history database require verification.
+
+These values must not be interpreted as independently verified real-money trading results.
+
 Decision:
 
-Retain model_v33 as the current active research champion.
+Retain `model_v33` as the current historical research champion.
 
 Reason:
 
-model_v33 is supported by actual completed trading history, unlike the previously retired high-metric model_v27.
+`model_v33` remains the accepted research model based on its documented historical evaluation and model-governance decisions.
+
+The previously retired `model_v27` must remain excluded.
+
+Future champion decisions require validated trading evidence, realistic historical evaluation, and reproducible model-governance checks.
 
 ---
 
@@ -816,6 +784,23 @@ Next:
 
 Use validated trading feedback as part of ongoing model monitoring and future retraining decisions.
 
+## November 2026 Verification Note
+
+The 272 completed trades and associated performance metrics remain preserved as the original August 2026 experiment output.
+
+The November development review did not independently reproduce these results.
+
+Before relying on these statistics for future champion promotion or retraining decisions, verify:
+
+1. The exact source of the 272 completed trades.
+2. The evaluation period and trade population.
+3. The relationship to `data/trade_history.csv`.
+4. Whether the records represent historical simulation, research tracking, paper trading, or actual executions.
+5. That entry and exit calculations follow the documented trade rules.
+6. That no future information was used to generate earlier trading decisions.
+
+Do not overwrite the original August results solely because later validation is pending.
+
 ---
 
 # EXP-018 — Live Trade Monitoring Foundation
@@ -932,6 +917,100 @@ Validate the complete end-to-end pipeline and identify any remaining integration
 
 ---
 
+# EXP-026 — November 2026 Development Resumption and Validation Review
+
+Date:
+
+2026-11-10
+
+Status:
+
+Review completed — Integration validation pending
+
+## Objective
+
+Resume development after approximately 2.5 months and identify the next required engineering tasks without duplicating existing functionality.
+
+## Files and Components Reviewed
+
+- `app/daily_pipeline.py`
+- `app/model_quality_evaluator.py`
+- Existing model-governance architecture
+- Historical market-data cache
+- Trade-history state
+- Project documentation
+
+This checkpoint was a repository and development-state review, not a completed end-to-end validation experiment.
+
+## Historical Data Observations
+
+- Historical price-cache CSV files observed: 717
+- Cache files modified on November 10: 9
+- Historical data coverage verification remains pending
+- Stock-universe exclusion rules require verification, including LUCY
+
+## Model Governance Observations
+
+Current historical research champion:
+
+`model_v33`
+
+Retired model:
+
+`model_v27`
+
+The existing model-governance architecture includes:
+
+- `app/model_quality_evaluator.py`
+- `app/champion_manager.py`
+- `app/model_champion_tracker.py`
+- `app/model_feedback_loop.py`
+
+The unfinished development task concerns model-quality evaluation and champion-management integration in `app/daily_pipeline.py`.
+
+## Trade-History Observations
+
+The current research trade-history review identified three OPEN trades:
+
+- KOD
+- CNMD
+- REZI
+
+Their historical exit outcomes require reconciliation.
+
+Previously generated model-feedback statistics must remain separate from current trade-history observations until the underlying records are verified.
+
+## Result
+
+The existing AI Research Engine architecture remains the development foundation.
+
+No major architectural redesign is required at this checkpoint.
+
+No new model was trained or accepted.
+
+No completed professional backtest or walk-forward validation was established.
+
+No new champion was promoted.
+
+## Decision
+
+Continue with `model_v33` as the current historical research champion while validating model governance and trade-history evidence.
+
+Prioritize stabilization and verification over adding new AI decision components.
+
+## Next Actions
+
+1. Verify historical data coverage and exclusions.
+2. Validate model-quality evaluator and champion-manager integration.
+3. Reconcile outstanding OPEN research trades.
+4. Verify model feedback and champion-selection evidence.
+5. Implement professional backtesting.
+6. Add walk-forward validation and risk-adjusted performance metrics.
+
+**Development status:** Phase 3 — approximately 95% implemented; integration and validation pending.
+
+---
+
 # Current Model State
 
 As of:
@@ -999,6 +1078,21 @@ model_v27 status:
 RETIRED / EXCLUDED
 
 model_v27 is not part of future model-quality evaluation or champion selection.
+
+## November 10, 2026 Model Status Note
+
+The August 8 model state above is retained as a historical snapshot.
+
+As of the November 10 development checkpoint:
+
+- `model_v33` remains the documented historical research champion.
+- `model_v27` remains retired and excluded.
+- No newly trained replacement champion has been verified.
+- Previously recorded model-feedback statistics require provenance verification.
+- The current trade-history review identified three OPEN research trades: KOD, CNMD, and REZI.
+- Model-governance integration and end-to-end pipeline validation remain unfinished.
+
+The current priority is to validate existing components and recorded research evidence before accepting new model improvements.
 
 ---
 
