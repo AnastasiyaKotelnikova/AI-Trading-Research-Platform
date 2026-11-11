@@ -1,6 +1,6 @@
 # AI Trading Research Platform — Project Memory
 
-**Last Updated:** 2026-08-06
+**Last Updated:** 2026-11-10
 
 ---
 
@@ -20,6 +20,7 @@ https://github.com/AnastasiyaKotelnikova/AI-Trading-Research-Platform
 
 ```
 C:\Users\anast\scanner-project
+
 ```
 
 ---
@@ -135,19 +136,19 @@ Before live deployment the system must complete:
 
 ---
 
-# Current Development Phase
-
-## Phase
-
-**Phase 3 — AI Research Engine**
-
----
-
 ## Overall Progress
 
-Approximately
+**Overall Platform Completion:** Approximately 85% (historical estimate; pending reassessment)
 
-**98% Complete**
+**Current Phase:** Phase 3 — AI Research Engine
+
+**Phase 3 Completion:** Approximately 95% implemented
+
+**Development Status:** Advanced Development — Integration and Validation in Progress
+
+The core AI research architecture is substantially implemented. Remaining work includes integration verification, professional backtesting, model governance validation, portfolio risk improvements, and controlled paper-trading preparation.
+
+These completion estimates are planning indicators, not independently verified measurements.
 
 ---
 
@@ -206,15 +207,24 @@ Completed
 
 ## Current Priorities
 
-The remaining work is focused almost entirely on validation rather than feature development.
+Development resumed on November 10, 2026, after approximately 2.5 months.
 
-Primary priorities are:
+The next stage emphasizes verification and validation rather than adding new AI decision components.
 
-1. Performance Analytics
-2. Walk-forward validation
-3. Confidence calibration
-4. Professional backtesting
-5. Paper trading infrastructure
+**Immediate priorities:**
+
+1. Verify historical market data coverage and stock-universe exclusions.
+2. Complete model-quality evaluator and champion-manager integration in the daily pipeline.
+3. Reconcile outstanding open research trades using historical prices.
+4. Validate model feedback and champion governance.
+5. Build professional historical backtesting.
+6. Implement walk-forward validation and rolling retraining tests.
+7. Add risk-adjusted performance analytics and benchmark comparisons.
+8. Improve probability and confidence calibration.
+9. Expand portfolio-level risk intelligence.
+10. Prepare controlled paper trading after successful validation.
+
+**Immediate development task:** Validate model-governance integration in `app/daily_pipeline.py` without overwriting unfinished local code changes.
 
 ---
 
@@ -499,11 +509,63 @@ F1 Score       : 0.467
 Trading Win Rate : 46.7%
 
 Average Return : 0.448%
+
 ```
 
 Although these classification metrics appear lower than previous versions, they are considered substantially more realistic and trustworthy.
 
 The platform now prioritizes reliability over artificially high validation scores.
+
+---
+
+## Model Evaluation and Trade Evidence — November 2026
+
+The current historical research champion remains `model_v33`.
+
+`model_v27` remains retired and excluded from current champion selection.
+
+### Historical Research Metrics
+
+Previously documented metrics for `model_v33`:
+
+- ROC-AUC: 0.669
+- F1 Score: 0.467
+- Historical research win rate: 46.7%
+- Historical average return: 0.448%
+
+These values describe a previously documented historical evaluation and must not be confused with current trade-history performance.
+
+### Model Quality Evaluator Snapshot
+
+A previously recorded model-quality evaluation reported:
+
+- F1 Score: 0.467437
+- Completed Trades: 272
+- Win Rate: 30.88%
+- Average Return: 2.65%
+- Trading Eligible: True
+
+These figures are retained as a historical evaluator snapshot. Their underlying trade population and relationship to the current trade-history database require verification.
+
+### Current Trade-History Review
+
+The November development review identified three OPEN research trades:
+
+- KOD
+- CNMD
+- REZI
+
+These records require historical exit reconciliation before they can be treated as completed trading evidence.
+
+Exit dates and prices must be determined using available historical market data and the documented trade-management rules. Do not close trades using arbitrary current prices or invented outcomes.
+
+### Model Governance
+
+The Model Quality Evaluator, Champion Manager, and Champion Tracker are implemented.
+
+Their integration and end-to-end behavior must be validated before the research engine is considered complete.
+
+Champion promotion must require reproducible evidence and appropriate eligibility checks. 
 
 ---
 
@@ -521,6 +583,7 @@ Unlike the historical model, this system focuses on identifying today's opportun
 
 ```
 ml_predictor.py
+
 ```
 
 Loads the trained model and performs inference.
@@ -1729,13 +1792,15 @@ Maintaining a detailed experiment history prevents repeated mistakes and support
 
 ---
 
-# Current Project Status
-
 ## Overall Completion
 
-Approximately
+**Overall Platform:** Approximately 85% — historical estimate pending reassessment
 
-**98% Complete**
+**Phase 3 — AI Research Engine:** Approximately 95% implemented
+
+**Current Milestone:** Reliable AI Research Validation
+
+The immediate objective is to verify and strengthen existing functionality before expanding into professional backtesting and paper trading.
 
 ---
 
@@ -1787,6 +1852,100 @@ Approximately
 - Explainable AI Enhancements
 - Paper Trading Infrastructure
 - Professional Backtesting Suite
+
+---
+
+# November 2026 Development Resumption
+
+**Date:** November 10, 2026
+
+**Repository:** AI-Trading-Research-Platform
+
+**Branch:** `main`
+
+**Development Environment:** Windows 11, Python 3.11.9, PowerShell, virtual environment `venv`
+
+## Current Development State
+
+The project resumed after approximately 2.5 months without active development.
+
+The first objective is to verify the existing implementation and data before introducing new functionality.
+
+### Historical Data
+
+- Historical price cache: 717 CSV files observed during the November review.
+- Nine cache files were modified on November 10.
+- Historical data coverage requires additional verification.
+- Stock-universe exclusions require verification, including the treatment of LUCY.
+
+### AI Research Engine
+
+The following components are already documented as implemented:
+
+- Research ranking and score normalization
+- Scanner and historical ML prediction paths
+- AI decision and final approval controllers
+- Portfolio management foundation
+- Risk management
+- Trade management
+- Execution analysis
+- Trade-history management
+- Model feedback
+- Model quality evaluation
+- Champion management
+
+The immediate priority is integration testing and reliable output validation, not rebuilding these components.
+
+### Unfinished Development Task
+
+The previously unfinished task involves validating the integration of:
+
+- `app/model_quality_evaluator.py`
+- `app/champion_manager.py`
+- `app/daily_pipeline.py`
+
+Before making code changes:
+
+1. Review the current local modifications.
+2. Verify existing module behavior and dependencies.
+3. Identify the exact missing integration or validation step.
+4. Make the smallest necessary changes.
+5. Test the affected pipeline stages.
+6. Document verified results.
+
+### Development Sequence
+
+1. Verify historical data and model governance.
+2. Reconcile open research trades.
+3. Complete professional backtesting.
+4. Add walk-forward validation and benchmark comparisons.
+5. Implement risk-adjusted performance analytics.
+6. Improve confidence calibration.
+7. Expand advanced portfolio risk controls.
+8. Strengthen monitoring and controlled retraining.
+9. Prepare controlled paper trading.
+
+### Repository and Backup Safety
+
+The project contains unfinished local changes that must be preserved.
+
+Documentation updates made directly on GitHub must be synchronized to the local repository before copying them to USB.
+
+**Local repository:** `C:\Users\anast\scanner-project`
+
+**USB backup:** `E:\AI-Trading-Research-Backup`
+
+After meaningful development milestones:
+
+1. Update `SESSION_STATE.md`.
+2. Update relevant permanent documentation.
+3. Verify code and data changes.
+4. Commit and push tested changes.
+5. Synchronize GitHub documentation.
+6. Back up to USB.
+7. Verify backup results.
+
+Do not overwrite unfinished local development work during Git synchronization.
 
 ---
 
